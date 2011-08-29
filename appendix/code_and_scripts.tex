@@ -1,0 +1,20 @@
+\section{Lua Script to use on Proxy Spread Master Plugin}
+
+\verb+ mysql-proxy --plugins=proxyspread_master --proxyspread-lua-script=spreadrepl.lua +\verb
+
+\vspace{10mm}
+
+\Large \textbf{spreadrepl.lua}\\
+\small
+
+\begin{lstlisting}
+function read_query(packet)
+
+	query = string.sub(packet, 2)
+	
+	--print("Seen the query: " .. query)	
+
+	spread_send_msg(query)
+
+end
+\end{lstlisting}

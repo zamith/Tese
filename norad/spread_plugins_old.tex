@@ -1,0 +1,212 @@
+\paragraph{}
+
+In this chapter we present the proposed implementation of group based replication using MySQL Proxy.
+
+
+\section{MySQL Proxy Plugin - A Solution}
+
+As we have seen, MySQL Proxy is a software tool that can sit between a MySQL client and a MySQL server inspecting, transforming and acting on data sent through it. Taking into account these functionalities the Proxy can be described as man in the middle. Another important characteristic of MySQL Proxy is the ability to handle the MySQL protocol.
+
+Our proposal is to exploit these properties in order to develop plugins to allow Group Based replication through it.  
+
+As stated on Chapter 2, MySQL replication mechanism relies on a binary log that keeps track of all changes made to a database. The master instance records the changes to its data and records it on a binary log being each of the records called a binary log event. The slaves copy those binary log events to itself in order to apply them on its own data.
+
+As so, in order to implement a mechanism of update distribution using a Group Communication protocol and the binary logging MySQL mechanism, we needed to intercept the whole communication that goes through the replication stream on the MySQL DBMS and distribute it through the Spread toolkit.
+
+The initial idea was to develop an application "man in the middle" that would put itself between master and slaves on the normal replication workflow.
+In this context thus appears the tool MySQL Proxy, as described in the previous chapter it is an application that puts itself between replication allowing to intercept all the communication stream that happens in replication and transform it as desired.
+
+Being this application open-source and has a plugin layer, it permits development of plugins and in our specific case plugins to intercept replication and allow group communication using the Spread Toolkit.
+
+Specifically the solution found was to develop plugins to the proxy so that by placing between replication stream it could intercept the binary logs written by the replication mechanism on the master side and thus send those binary log events through the group communication system Spread. On the slave's side these events would also be intercepted by Spread in order to construct the respective relay binary logs for appliance of those by the normal replication mechanism on the slave.
+
+As so, it was developed a plugin to allow the use of Spread in MySQL Proxy. Using the C API, it was possible to send and receive messages using the group communication protocol.
+
+
+\todo[inline]{Outras possíveis soluções passaram pela utilização do proxy entre vários masters de forma a fazer merge dos binlogs...}
+
+\subsection{Passive Replication}
+
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=0.9\textwidth]{images/arq_spreadplugin_passive.pdf}
+\caption{Passive replication Spread plugin architecture}
+\label{fig:spread_plugin_passive}
+\end{figure}
+
+Our first approach was designed for the passive replication (Figure~\ref{fig:spread_plugin_passive}), i.e., master/slave replication model. This approach takes advantage of the plugins in development by the MySQL Proxy development team:
+
+\begin{itemize}
+	\item master plugin
+	\item replicant plugin
+\end{itemize}
+
+These plugins simulate a master and a slave, respectively, i.e., the master plugin works as a MySQL server in master mode on the normal MySQL asynchronous replication feature. A replica connects to it, and it does all the necessary connection handling, thus creating the necessary binary log. After that the binary log events are sent through the Lua scripting layer.  
+On the other side of replication, the plugin replicant works as a MySQL slave. A master connects to it, does all the connection handling necessary and it reads a binary log to execute well on the respective backend. 
+ 
+Therefore, in this approach, the master-side proxy uses the plugin replicant to intercept the binary log events that would be written to the binary log and passes this information to the spread plugin in order to broadcast these event to the Spread Group Communication System. 
+ 
+On the replicas side, the proxy works with the master plugin in order to expose these binary log events to the MySQL backend, working this way as a master on the normal asynchronous replication model. The proxy plugin is then used to receive these events from the group to which is connection and forward them to master plugin so that these events are exposed to the MySQL backend.
+
+
+\todo[inline]{falar sobre os problemas com o envio e recepção de eventos dos binlogs e dizer que devido a limitações dos plugins master e replicant não se pode avançar aqui no entanto comprometemo-nos a resolver estes problemas.}
+
+\newpage
+
+\subsection{Active Replication}
+
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=0.9\textwidth]{images/arq_spreadplugin_active.pdf}
+\caption{Active replication Spread plugin architecture}
+\label{fig:spread_plugin_active}
+\end{figure}
+
+
+A plugin to work with the Spread Toolkit was developed. This plugin has the ability to send and receive messages from the Spread group communication system. Our approach is based on the Active replication approach (Figure~\ref{fig:spread_plugin_active}).
+
+A simple approach would be to use a Lua script to work with the proxy plugin leveraging the capabilities of the Lua hooks and using the "read\_query\_result" function. Using a script that never returns from the "read\_query\_result" and since this function polls on a blocking queue the script could wait until it gets a query form it and so passing it to the injection queue and finally returning from the callback when the query is done. This way, using the spread plugin it could fill the queue with the received queries from the group communication system using Lua or C global function.	
+
+\todo[inline]{outra solução passava por criar um plugin spread}
+
+However, since each plugin lives on a separate process each one will have its own connection handler. Thus, the spread plugin will not have any connection to use for packet injection as this approach states. A possible solution for this issue could be to add the spread functionalities for sending and receiving messages on the proxy plugin. However, on the replica side of the approach there will be no client connection since the queries source is the spread group communication system. As so, it is impossible to inject the queries on the injection queue since there is no connection and the state machine was not initialized. A natural solution to this problem would be to fake a connection and make it connect to the respective backend in order to inject the queries received from Spread.
+Faking this connection is not trivial since we need to send the correct MySQL packets so that the state machine enters the correct states until it reached the "CON\_STATE\_SEND\_QUERY" state. A naive approach would be to create a "socketpair()" and use that socket as a client and on the other side of it in the spread handling code. That way, we could trigger a network event to wake up the network handler thread. This could be done by for example writing a single byte to the socket so that the "network\_mysqld\_con\_accept(int G\_GNUC\_UNUSED event\_fd, short events, void *user\_data)" could create a connection and start the state machine. However, several issues need to be tackled in order to get this approach viable. The possibility to the connection to drop could be an issue, and the creating and handling of the MySQL packets is not straightforward.
+
+
+\todo[inline]{falar sobre a solução de usar o libssrcspread + luaevent:}
+
+
+Since we needed Lua to handle the queries received from Spread and pass them to the "read\_query()" Lua hook, some research was made. We came up with a pack of bindings for the Spread Group Communication System for several programming languages: C++, Lua, Perl, Python and Ruby. \footnote{http://www.savarese.com/software/libssrcspread/}. This bindings allow us to use the Spread API in a very simple way through Lua scripts. 
+On the other side, we needed to handle events on the Lua scripting layer. We came up with a package of libevent bindings for the Lua programming language.\footnote{http://code.matthewwild.co.uk/luaevent-prosody}.
+Using this tools, we could at a first glance set a new base event with the result of the "event\_init()" function on the chassis main loop, and add the necessary callbacks:\\
+
+\begin{lstlisting}
+
+require("luaevent")
+base = luaevent.core.new()
+base:addevent(mbox:descriptor(), luaevent.core.EV_READ,
+ readmsg, nil)
+
+\end{lstlisting}
+
+\vspace{5mm}
+
+And with the Spread bindings we could initialize, send and receive messages:\\
+
+\begin{lstlisting}
+
+require("ssrc.spread")
+
+mbox = ssrc.spread.Mailbox()
+mbox:join("repl")
+
+--send message:
+
+message = ssrc.spread.Message()
+
+message:write(q)
+   mbox:send(message, "repl")
+
+
+--receive message:
+
+function readmsg(ev)
+	mbox:receive()
+end
+
+
+
+\end{lstlisting}
+
+So, we needed a way to get the luaevent defined callbacks to call on the proxy plugin. This was not possible \todo[inline]{porquê?} ...
+
+Using the global Lua varible "proxy.global" we could set any type of variable. This works as a Lua table, i.e. an hashtable, so we could retain the result of the "event\_init" of the chassins main loop and pass it to the luaevent bindings.
+
+
+\todo[inline]{completar}
+
+The basis of all the approaches was to call the "query\_injection()" function to add queries on the injection queue so that they could be injected on the 
+MySQL server backend. But calling this function is not so straightforward. Analyzing the proxy plugin workflow we can infer that:
+
+The plugin start with "network\_mysqld\_proxy\_plugin\_apply\_config()". It starts an connection for the listening socket and calls the 
+"network\_mysqld\_proxy\_connection\_init" hook to it. This function register several callbacks like for example "con->plugins.con\_read\_query = 
+proxy\_read\_query;". Following this callbacks registration it calls "network\_mysqld\_lua\_setup\_global()". This function, defined on 
+"network-mysqld-lua.c" pusehs to the Lua stack the global name "proxy". If this one does not exist, it calls "network\_mysqld\_lua\_init\_global\_fenv()" 
+and creates the global object proxy with all the necessary properties, functions and variables including the returns definitions like for example the 
+"PROXY\_SEND\_QUERY". If it exists it registers on the proxy.global the backends array. Finally it is made the callbacks register for the listening socket, 
+with: "event\_set(\&(listen\_sock->event), listen\_sock->fd, EV\_READ|EV\_PERSIST, network\_mysqld\_con\_accept, con);". The handler 
+"network\_mysqld\_con\_accept" accepts the connection and opens a client connection. Finally it is added another event handler for this connection: 
+"network\_mysqld\_con\_handle()". This function implements the core state machine that does all the states handling for the connection. Including the 
+"CON\_STATE\_SEND\_QUERY" that writes an query to the socket server.
+
+Using an example we can follow the workflow of the state machine. So, the "read\_query" function it is called when the connection state machine is on the 
+"CON\_STATE\_READ\_QUERY" state. 
+
+What this function does is an switch of an state (ret), that comes from "ret = proxy\_lua\_read\_query(con)". "proxy\_lua\_read\_query()" resets the 
+injection queries queue and calls "network\_mysqld\_con\_lua\_register\_callback(con, con->config->lua\_script)" that setups the local script environment 
+before the hook function is called. After it, it does the loading of the Lua script "network\_mysqld\_lua\_load\_script(sc, lua\_script)" and setups the 
+global Lua tables with "network\_mysqld\_lua\_setup\_global(sc->L, g)". If everything goes without problems until this point it then call the "read\_query" 
+callback "lua\_getfield\_literal(L, -1, C("read\_query"))". Depending on the return value of this function it passes it to the "proxy\_lua\_read\_query" 
+function.
+
+In other words, we can report that for each state machine state it is called an callback. As we can see on "network-mysqld.c":\\ 
+
+\begin{lstlisting}
+case CON\_STATE\_INIT:
+	switch (plugin\_call(srv, con, con->state))
+\end{lstlisting}
+
+
+The plugin\_call function it is an macro that will execute the registered callback "con->plugins.con\_init = proxy\_init" defined on the proxy plugin with "NETWORK\_MYSQLD\_PLUGIN\_PROTO(proxy\_init)". On the end this callback will switch the state to "CON\_STATE\_CONNECT\_SERVER" and so on.
+
+Thus, on the "read\_query()" example when the state is in "CON\_STATE\_READ\_QUERY" the Lua script is loaded and then the callback is made.
+
+
+Other challenge was to load the Lua script in order to call the "quer\_injection()" function. Loading the script with "lua\_pcall(L, 1, 1, 0)" destroys the global Lua state. So after studying these problems, some new solutions have emerged. Being the first one to create a new state for the state machine. This state would be returned after "read\_query" so that after receiving an query send it through Spread, and after receiving an query from Spread call the "query\_injection" function. This way a new callback on the "network\_mysqld\_proxy\_connection\_init" could be added.
+However, besides being an complex solution it brings changes on the network core that are not desired since the purpose is to develop plugins to work with MySQL Proxy and not to change it's core components.
+
+
+
+	2) Criar um socket "fake" entre o código relativo ao spread e o proxy, ou seja, quando chega à parte de fazer a chamada à função query\_injection é 
+	escrito algo no socket de forma a despoletar um evento da mesma forma que funciona para o read\_query. Havendo neste caso um handler registado que chama 
+	a função query\_injection e faz o que tem a ser feito, retornando o necessário proxy.PROXY\_SEND\_QUERY. Aproveitando-se assim (e não sendo necessário 
+	alterar) o código já escrito do proxy relativo à máquina de estados, estado global do Lua, etc.
+
+
+The approach developed to overcome all the difficulties presented bellow was to develop two different plugins to work with the Spread Toolkit:
+
+\begin{itemize}
+	\item proxyspread\_master plugin;
+	\item proxyspread\_replicant plugin;
+\end{itemize}
+
+This model was designed for the active replication scenario, i.e., state machine replication model. In this model the proxy plugin is used with the spread plugin. Thus, in the master side, a query is made directly to the server directly on the proxy and this, through a Lua script executes a function that sends the query content to the Spread toolkit, using the spread plugin. So the message is sent to all nodes in the system and each one, using the spread plugin, detects a new message and through the proxy plugin injects the query directly on the respective backend.
+
+
+
+
+
+
+\section{Proxy Spread Master Plugin}
+
+
+The master plugin works in a simple way. It uses the proxy plugin features to detect new query events on the connection and using the Spread API and the ability to call C functions from the Lua scripting Layer it broadcasts the query events as a Spread message.
+
+\todo[inline]{melhorar descrição}
+
+\section{Proxy Spread Replicant Plugin}
+
+
+The replicant plugin works by receiving the queries from the Spread Group Communication System and applying them on the respective backend. Unfortunally, this is not as straightforward we thought is was in taking advantage of the backend connection and just inject the queries.
+
+MySQL does not accept anything that is written to the listening connection, i.e. it is necessary to start with the handshake and authentication. So we needed to simulate an MySQL client to handshake and authenticate with the MySQL server and deal correctly with the state machine. After that it could build and send the respective packets with the query content as normal "COM\_QUERY" packets.
+
+To handle new upcoming queries, an event is registered to watch for events on the Spread Mailbox. To avoid having a new connection for each received query and the overhead induced by that, the connection is made when the plugin starts and remains on the "CON\_STATE\_READ\_QUERY" state awaiting for new events. 
+
+\todo[inline]{melhorar descrição}
+
+\section{Summary}
+
+This chapter presents the solution proposed and its implementation. \todo[inline]{acabar}

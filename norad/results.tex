@@ -1,0 +1,414 @@
+%In this chapter we present and evaluate the group communication database replication model proposed and its costs using a workload widely used to measure the performance of commercial database servers.
+%Special attention is payed to the performance evaluation of the developed system in contrast to the replication model provided by the MySQL DBMS.
+
+%The chapter is organized as follows. Section 7.1 we present the motivation and questions we commit to answer with the experiments. In section 7.2 we describe the workload and setting used. Section 7.3 presents the results obtained and for each use case we devoted a section to describe and discuss the results.
+
+The purpose of this chapter is to present and evaluate the proposed group communication database replication model and its costs using a workload widely used to measure the performance of commercial database servers.
+Special attention is payed to the performance evaluation of the developed system in contrast to the replication model provided by the MySQL DBMS. 
+
+\section{Motivation}
+
+In Chapter 6 we describe the proposed and implemented solution based on MySQL Proxy. To evaluate the impact, performance and trade-offs of the solution we have committed to answer and provide real proofs for several questions related to the behaviour of the solution. Questions such as:
+
+\begin{itemize}
+	\item How does the solution behave in comparison with the MySQL's replication using the topologies of Chain and Master and Multiple Slaves.
+	\item What is the impact of performance with different number of TPC-C clients, and various values of think-times.
+	\item What is the impact of performance with different types of Spread Messages: FIFO and AGREED.
+	\item How does the solution behave with a different number of replicas.
+\end{itemize}	
+
+\section{Workload and Setting}
+
+In order to assess the distributed database used in the case study, we have chosen the workload model defined by the TPC-C benchmark\,\cite{Cou01}. We have used the same implementation used on the benchmarks described on chapter 4. 
+
+To obtain the delay values of the MySQL's replication method, two replication schemes were installed and configured. A six machines topology of master and multiple slaves, and a six machine topology in daisy chain. 
+
+The hardware used included six HP Intel(R) Core(TM)2 CPU 6400 - 2.13GHz processor machines, each one with one GByte of RAM and SATA disk drive. The operating system used is Linux, kernel 2.6.31-14, from Ubuntu Server with ext4 filesystem, and the database engine used is MySQL 5.1.54. All machines are connected through a LAN, and are named PD00 to PD07. Being PD00 the master instance, PD04 the remote machine in which the interrogation client executes, and the others the slave instances.
+
+The following benchmarks were done using the workload TPC-C with the scale factor (warehouses) of two, number of database connections (clients) twenty, forty, sixty, eighty and one hundred and the duration of 10 minutes.
+
+\section{Experimental Results}
+
+%usar o tt02. falar dos primeiros testes e usar o tt0 usado agora.
+
+%ao falar dos gráficos relembrar que é para dezenas de replicas. no caso de os ganhos serem a partir da sexta replica.
+
+Having the workload and setting defined, we have committed to evaluate the impact, performance and trade-offs on several different scenarios in order to answer the questions stated above.
+
+\clearpage
+
+\subsection{MySQL Replication}
+
+\subsubsection{Master and Multiples Slaves}
+
+\begin{table}[t]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrr}
+ \hline\hline
+Database connections (clients) & 20 & 40 & 60 & 80 & 100 \\
+\hline
+NOTPM (default think time) & 26.29 & 24.34 & 25.28 & 25.48 & 25.27 \\
+NOTPM (half think time) & 50.60 & 50.98 & 51.10 & 48.40 & 53.09 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{TPC-C new-order transactions per minute for master and multiple slaves topology}
+\label{tab:table_tpcc1}
+\end{table}
+
+
+\begin{table}[t]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrrrr}
+ \hline\hline
+ Replica & PD01 & PD02 & PD03 & PD05 & PD06 & PD07 \\
+\hline
+Number of samples & 408 & 394 & 402 & 408 & 390 & 399 \\
+Average delay ($\mu$s) & 323 & 279 & 288 & 292 & 276 & 287 \\
+99\% confidence interval ($\pm$) & 150 & 145 & 139 & 135 & 141 & 140 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{Results for master and multiple slaves topology with 100 clients.}
+\label{tab:table1}
+\end{table}
+
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_semproxy/tt1/histo.pdf}
+\caption{Replication delay values for Master and Multiple Slaves topology (default think-time)}
+\label{fig:mms_tt1}
+\end{figure}
+
+Results obtained with 100 TPC-C clients, default think time of the DBT-2 TPC-C and the Master and Multiple Slaves topology are presented in (Table~\ref{tab:table1}). It can be observed that all replicas get similar results and that the propagation delay is consistently measured close to 10 $\mu{}s$ with a small variability. 
+
+Results obtained for the same replication scheme and DBT-2 think time but with varying number of TPC-C clients, are presented in (Figure~\ref{fig:mms_tt1}). They show that propagation delay is similar between replicas and has little variation with the load imposed on the master re-affirming the propagation delay is similar between replicas and the master in a master and multiple slaves topology.
+
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_semproxy/tt02/histo.pdf}
+\caption{Replication delay values for Master and Multiple Slaves topology (half think-time)}
+\label{fig:mms_tt02}
+\end{figure}
+
+Same set of results but for half of the think time of DBT-2 TPC-C are presented in (Figure~\ref{fig:mms_tt02}).
+
+It can be observed that all replicas get similar results as in the previous set. We can state the same previous conclusions, being the only difference that the delay is slightly superior, in the overall. This can be justified with the largest value of new order transactions per minute as shown on (Table~\ref{tab:table_tpcc1}) that presents the values obtained from the DBT-2 TPC-C benchmark regarding the new-order transactions per minute for the varying number of clients.
+
+\clearpage
+
+\subsubsection{Chain}
+
+\begin{table}[t]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrr}
+ \hline\hline
+Database connections (clients) & 20 & 40 & 60 & 80 & 100 \\
+\hline
+NOTPM (default think time) & 23.94 & 24.60 & 26.30 & 27.05 & 25.79 \\
+NOTPM (half think time) & 54.19 & 50.90 & 52.20 & 53.10 & 50.88 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{TPC-C new-order transactions per minute for chain topology}
+\label{tab:table_tpcc2}
+\end{table}
+
+\begin{table}[t]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrrrr}
+ \hline\hline
+ Replica & PD01 & PD02 & PD03 & PD05 & PD06 & PD07 \\
+\hline
+Number of samples & 370 & 362 & 365 & 367 & 368 & 365 \\
+Average delay ($\mu$s) & 376 & 369 & 457 & 596 & 655 & 747 \\
+99\% confidence interval ($\pm$) & 188 & 275 & 333 & 428 & 489 & 585 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{Results for chain topology with 100 clients.}
+\label{tab:table2}
+\end{table}
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/chain/tt1_new/histo.pdf}
+\caption{Replication delay values for Chain topology (default think-time)}
+\label{fig:chain_tt1}
+\end{figure}
+
+Results obtained with 100 TPC-C clients and the chain topology are presented in (Table~\ref{tab:table2}). In contrast to master and multiple slaves, the delay now grows as the replica is farther away for the master. This configuration also gives an indication of how the ring topology would perform: As any replica would be, on average, half way to other masters, one should expect the same delay as observed here on replicas PD03 and PD05.
+
+Results obtained with varying number of TPC-C clients, default think time of the DBT-2 TPC-C implementation and the Chain scheme are presented in (Figure~\ref{fig:chain_tt1}). Results confirm that propagation delay grows as the replica is farther away from the master. In contrast to the previous experiments with ext3 filesystem, we can not conclude the propagation delay grows substantially with the load imposed on the master. However, results show that using the chain configuration for write scalability with suffer the same problem, thus limiting its usefulness.
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/chain/tt02/histo.pdf}
+\caption{Replication delay values for Chain topology (half think-time)}
+\label{fig:chain_tt02}
+\end{figure}
+
+
+Same set of results but for half of the think time of DBT-2 TPC-C are presented in (Figure~\ref{fig:chain_tt02}). It can be observed that all replicas get similar results as in the previous set allowing us to state the same previous conclusions
+
+We also present in (Table~\ref{tab:table_tpcc2}) the values obtained from the DBT-2 TPC-C benchmark regarding the new-order transactions per minute for the varying number of clients.
+
+
+
+\clearpage
+
+
+
+
+\begin{table}[h]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrr}
+ \hline\hline
+Database connections (clients) & 20 & 40 & 60 & 80 & 100 \\
+\hline
+NOTPM (default think time) & 24.64 & 25.28 & 25.14 & 25.64 & 24.28 \\
+NOTPM (half think time) & 52.99 & 50.58 & 50.48 & 51.99 & 51.40 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{TPC-C new-order transactions per minute for active replication with Proxy Spread Plugins with FIFO messages}
+\label{tab:table_tpcc3}
+\end{table}
+
+
+\begin{table}[h]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrrrr}
+ \hline\hline
+ Replica & PD01 & PD02 & PD03 & PD05 & PD06 & PD07 \\
+\hline
+Number of samples & 446 & 440 & 445 & 435 & 437 & 450 \\
+Average delay ($\mu$s) & 438 & 375 & 435 & 419 & 405 & 445 \\
+99\% confidence interval ($\pm$) & 126 & 104 & 130 & 121 & 120 & 126 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (default think-time) with 100 clients.}
+\label{tab:table3}
+\end{table}
+
+\begin{figure}[h]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo/tt1/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (default think-time)}
+\label{fig:mms_comproxy_tt1}
+\end{figure}
+
+\begin{figure}[h]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo/tt02/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (half think-time)}
+\label{fig:mms_comproxy_tt02}
+\end{figure}
+
+\vspace{15mm}
+
+\subsection{Proxy Spread Plugins - Active Replication}
+
+\subsubsection{FIFO Messages}
+
+
+Results obtained with an increasing number of TPC-C clients, default think time of the DBT-2 TPC-C implementation and using the developed solution with active replication and FIFO type of messages are presented in (Figure~\ref{fig:mms_comproxy_tt1}). These experiments were using the FIFO messages on the Group Communication protocol. FIFO messages are reliably delivered once to all members of its destination groups, and ordered with all the other FIFO messages form the same source. However, there are no ordering guaranteed of FIFO messages from different sources.
+
+Similarly to the Master and Multiple Slaves scheme using MySQL replication behaviour, using the developed solution it can be observed, as expected according to active replication properties that all replicas get similar get similar results and that the propagation delay has a small variability as shown on (Table~\ref{tab:table3}). Propagation delay does not grow substantially with the load imposed on the master. 
+
+This results show that propagation delay stands on the same range of values for all the replicas, thus defining the overhead imposed by the solution and the Group Communication protocol. We can observe that the maximum delay observe is about 500 $\mu{}s$. These results gives us the indication that propagation delay will not overcome that range of values, and so using this configuration for write scalability will have substantial gains in comparison with the ring scheme with the standard MySQL replication. From the fifth replica and forward, performance gains are visible and remarkable.  
+
+
+
+The same set of results but for half of the think of DBT-2 TPC-C time are presented in (Figure~\ref{fig:mms_comproxy_tt02}). In this scenario results are virtually identical, only one can note a slightly increase of propagation delay. Being this in the order of plus 50 $\mu{}s$.  
+
+We also present in (Table~\ref{tab:table_tpcc3}) the values obtained from the DBT-2 TPC-C benchmark regarding the new-order transaction per minute for the varying number of clients.
+
+
+\subsubsection{FIFO Messages - Varying number of replicas}
+
+In order to assess the impact of a varying number of replicas on the solution results, experiments with the number of 2 and 4 replicas were made. These experiments were set using the same settings used on the previous tests: increasing number of TPC-C clients of the DBT-2 TPC-C implementation, using the developed solution with active replication and FIFO messages.
+
+\vspace{20mm}
+\paragraph{2 Replicas\\ \\}
+
+\begin{figure}[h]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo_varrepl/tt1_2repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (default think-time, two replicas)}
+\label{fig:mms_comproxy_fifo_2repl_tt1}
+\end{figure}
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo_varrepl/tt02_2repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (half think-time, two replicas)}
+\label{fig:mms_comproxy_fifo_2repl_tt02}
+\end{figure}
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo_varrepl/tt1_4repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (default think-time, four replicas)}
+\label{fig:mms_comproxy_fifo_4repl_tt1}
+\end{figure}
+
+\begin{figure}[t]
+\centering 
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo_varrepl/tt02_4repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (half think-time, four replicas)}
+\label{fig:mms_comproxy_fifo_4repl_tt02}
+\end{figure}
+
+Results obtained with 2 replicas, default and half think time are presented in (Figure~\ref{fig:mms_comproxy_fifo_2repl_tt1}) and (Figure~\ref{fig:mms_comproxy_fifo_2repl_tt02}). 
+As desired, we can assess that the number of replicas in the configuration does not have impact on the overall performance, being the results similar to the ones obtained with the number of 6 replicas.
+
+\paragraph{4 Replicas\\ \\}
+\vspace{5mm}
+
+
+Results obtained with 4 replicas, default and half think time are presented in (Figure~\ref{fig:mms_comproxy_fifo_4repl_tt1}) and (Figure~\ref{fig:mms_comproxy_fifo_4repl_tt02}). Like the previous results for 2 replicas, results obtained with 4 replicas show that the number of replicas in the configuration does not interfere with the overall performance, being the results also similar with the ones with 6 replicas scenario.\\
+
+
+
+
+
+\clearpage
+\subsection{Agreed Messages}
+
+\begin{table}[h!]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrr}
+ \hline\hline
+Database connections (clients) & 20 & 40 & 60 & 80 & 100 \\
+\hline
+NOTPM (default think time) & 24.60 & 23.34 & 24.94 & 25.53 & 24.58 \\
+NOTPM (half think time) & 52.69 & 52.30 & 52.40 & 51.60 & 53.00 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{TPC-C new-order transactions per minute for active replication with Proxy Spread Plugins with AGREED messages}
+\label{tab:table_tpcc4}
+\end{table}
+
+\begin{table}[h!]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrrrr}
+ \hline\hline
+ Replica & PD01 & PD02 & PD03 & PD05 & PD06 & PD07 \\
+\hline
+Number of samples & 449 & 435 & 447 & 441 & 448 & 439 \\
+Average delay ($\mu$s) & 574 & 474 & 547 & 566 & 540 & 476 \\
+99\% confidence interval ($\pm$) & 152 & 130 & 149 & 151 & 147 & 138 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (default think-time) with 100 clients.}
+\label{tab:table4}
+\end{table}
+
+
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed/tt1/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (default think-time)}
+\label{fig:mms_comproxy_agreed_tt1}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed/tt02/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (half think-time)}
+\label{fig:mms_comproxy_agreed_tt02}
+\end{figure}
+
+
+Results obtained with an increasing number of TPC-C clients, default think time of the DBT-2 TPC-C implementation and using the developed solution with active replication and AGREED type of messages are presented in (Figure~\ref{fig:mms_comproxy_agreed_tt1}). The descriptive results obtained with 100 TPC-C clients are presented in (Table~\ref{tab:table4}). This experiments were similar to the previous showed, however they were using the AGREED messages on the Group Communication protocol. AGREED messages have all the properties of FIFO messages but are delivered in a causal ordering which is the same to all recipients. All the recipients will "agree" on the order of delivery
+
+This results show that the setup using AGREED messages introduces a small overhead. This reflects on a small increase on the propagation delay. However, this increase is of about 100 $\mu{}s$ thus reducing the global impact on the performance taking into account the properties gained through the use of AGREED messages on the Group Communication protocol.  
+
+
+
+The same set of results but for half of the think time are presented in (Figure~\ref{fig:mms_comproxy_agreed_tt02}). In this scenario results are virtually identical, only one can note a slightly decrease of propagation delay not remarkable.
+
+Like the previous setup with FIFO messages, this results show that propagation delay stands on the same range of values for all replicas. These results, even showing that the propagation delay is slightly larger, gives us the indication that delay will not overcome that range of values and so it has also substantial gains in comparison with standard MySQL replication on the ring schemes for write scalability.
+
+We also present in (Table~\ref{tab:table_tpcc4}) the values obtained from the DBT-2 TPC-C benchmark regarding the new-order transaction per minute for the varying number of clients.
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed_varrepl/tt1_2repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (default think-time, two replicas)}
+\label{fig:mms_comproxy_agreed_2repl_tt1}
+\end{figure}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed_varrepl/tt02_2repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (half think-time, two replicas)}
+\label{fig:mms_comproxy_agreed_2repl_tt02}
+\end{figure}
+
+\clearpage
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed_varrepl/tt1_4repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (default think-time, four replicas)}
+\label{fig:mms_comproxy_agreed_4repl_tt1}
+\end{figure}
+
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed_varrepl/tt02_4repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (half think-time, four replicas)}
+\label{fig:mms_comproxy_agreed_4repl_tt02}
+\end{figure}
+
+\clearpage
+
+\subsubsection{Agreed Messages - Varying number of replicas}
+
+\paragraph{2 Replicas\\ \\}
+
+Likewise the FIFO messages setup, in order to assess the impact of a varying number of replicas on the solution results, experiments with the number of 2 and 4 replicas were made. These experiments were set using the same settings used on the previous tests: increasing number of TPC-C clients of the DBT-2 TPC-C implementation, using the developed solution with active replication and FIFO messages.
+
+
+
+
+
+\paragraph{4 Replicas\\ \\}
+
+
+
+
+Like the previous results for 2 replicas, results obtained with 4 replicas show that the number of replicas in the configuration does not interfere with the overall performance, being the results also similar with the ones with 6 replicas scenario.
+
+
+\section{Summary}
+
+This chapter presents the usage of the implemented solution in a realist environment, specifically the workload defined by TPC-C. Assumptions of a better performance in comparison to the traditional replication mechanism of MySQL are confirmed by performance results. Also, we could present and discuss the results of active replication in comparison with ring or chain topologies. Besides the visible gain in performance as the hops increase, a great advantage is the possibility of having more than one master.
+ 

@@ -1,0 +1,83 @@
+
+
+\section{SQL Database Management System}
+\label{sec:rdbms}
+
+\begin{quote}
+	A method for structuring data in the form of sets of records or tuples so that relations between different entities and attributes can be used for data access and transformation. 
+\end{quote} 
+\begin{flushright}Burroughs, 1986\end{flushright}
+	
+This work focuses on the \ac{sql} kind of \ac{dbms} since it is the most widely used and, therefore the one used for the proof of concept.
+
+\subsection{Concept}
+A relational database is a database that is perceived by the user as a collection of two-dimensional tables that are manipulated a set at a time, instead of a record at a time.  
+
+It has a rigorous design methodology that is achieved through normalization\footnote{ the process of organizing data to minimize redundancy.}. Moreover it is easily modifiable by adding new tables and rows, even though the schema is rigid, i.e. all the rows in a table must have the same columns. 
+
+One of the main advantages of this approach is the very powerful and flexible join mechanism, based on algebraic set\footnote{ group of common elements where each member has some unique aspect or attribute} theory, providing fast responses to complex queries.
+
+Since its appearance a lot of work has been done in order to fasten the processing, from multi-threaded or parallel servers to the usage of indexes\footnote{ used to find rows with specific column values fast at the cost of slower writes and increased storage space.} and fast networks. 
+
+\subsection{Components}
+Every \ac{dbms}  has four common components, its building blocks. They may vary from one system to another, but the general purpose of each of these components is always the same.
+
+\subsubsection{Modeling language}
+First of all, there is the modeling language, that defines the schema of the database, that is, the way it is structured. These models range from the hierarchical, to the network, object, multidimensional and to the relational, that can be combined to provide an optimal system. The most commonly used is the relational structure, that uses two-dimensional rows and columns to store data, forming records, that can be connected to each other by key values. 
+
+In order to get more practical and faster systems, the most used model today is actual a relational model embedded with \ac{sql} .
+
+\subsubsection{Data Structure}
+Every database has it's own data structures (fields, records, files and objects) optimized to deal with very large amounts of data stored on a permanent data storage device (which is obviously slow, when compared to volatile memory).
+
+\subsubsection{Database Query Language}
+A database query language allows users to interrogate the database, analyze and update data, and control its security. Users can be granted different types of privileges, and the identity of said users is guaranteed using a password. The most widely used language nowadays is \ac{sql} , which provides the user with four main operations, know as CRUD (Create, Read, Update, Delete).  
+
+\subsubsection{Transactions}
+A \ac{rdbms} should have a transactional mechanism that assures the ACID properties:
+\begin{description}
+	\item[Atomicity] A jump from the initial state to the result state without any \textbf{observable} intermediate state. All or nothing (Commit/Abort) semantics. 
+	\item[Consistency] The transaction is a correct transformation of the state, i.e only consistent data will be written to the database.
+	\item[Isolation] No transaction should be able to interfere with another transaction. The outside observer sees the transactions as if they execute in some serial order.
+	\item[Durability] Once a transaction commits (completes successfully), it will remain so. The only way to get rid of what a committed transaction has done is to execute an inverse transaction (which is sometimes impossible). A committed transaction will be preserved through power losses, crashes and errors. 
+\end{description}
+
+Which guarantees that the integrity and consistency of the data is maintained despite concurrent accesses and faults.  
+
+\section{NoSQL}
+\label{sec:nosql}
+NoSQL \cite{seeger09} is a term used to refer to database management systems that, in some way, are different from the classic relational model. These systems, usually, do not use schemas and avoid complex queries, as joins. They also attempt to be distributed, open-source, horizontal scalable\footnote{``Horizontal scalability is the ability to connect multiple hardware or software entities, such as servers, so that they work as a single logical unit.'' - in \url{http://searchcio.techtarget.com/definition/horizontal-scalability} (10/1/2011)}, eventually consistent \cite{Vogels2008}, have easy replication\footnote{``Replication is the process of sharing information between databases (or any other type of server) to ensure that the content is consistent between systems.'' - \url{http://databases.about.com/cs/administration/g/replication.htm} (10/1/2011)} support and a simple \ac{api}.
+
+The term was first used in 1998 as the name of a relational database that did not provide a \ac{sql} interface. It resurfaced in 2009, as an attempt to label a set of distributed, non-relational data stores that did not, necessarily, provide ACID guarantees.
+
+The ``no:sql(east)'' conference in 2009, was really what jump started the current buzz on NoSQL. A wrong way to look at this movement is as an opponent to the relational systems, as the its main goals are to emphasize the advantages of Key-Value Stores, Document Databases, and Graph Databases.
+
+\subsection{Architecture}
+Relational databases are not tuned for certain data intensive applications, as serving pages on high traffic websites or streaming media, therefore show poor performance in these cases. Usually they are tuned either for small but frequent read/write transactions or for large batch transactions, used mostly for reading purposes. On the other hand, NoSQL addresses services that have heavy read/write workloads, as the Facebook's inbox search \cite{lakshmanMalik}.
+
+As stated earlier, NoSQL often provides weak consistency guarantees, as eventual consistency \cite{Vogels2008}, and many of these systems employ a distributed architecture, storing the data in a replicated manner, often using a distributed hash table \cite{Tanner}. This allows for the system to scale out with the addition of new nodes and to tolerate failure of a server.
+
+\subsection{Taxonomy}
+NoSQL implementations can be categorized according to the way they are implemented, being that they are a document store, a key/value store on disk or a cache in \ac{ram}, a tuple store, an object database, or as the one used in this work, an eventually-consistent key/value store.\\
+
+The differences between NoSQL and \ac{rdbms} will be summarized in Table \ref{tab:diff}:\\
+
+\begin{table}[h!b!p!]
+\scalebox{0.92}{
+\begin{tabular}{|*{7}{c|}}
+	\hline
+	 &Schema&Consistency&Queries&Usage&Storage\\
+	\hline
+	\multirow{2}{*}{NoSQL}&Usually&\multirow{2}{*}{Eventual}&\multirow{2}{*}{Simple}&Read/Write&\multirow{2}{*}{Replicated}\\
+	     &none   &        &      &Intensive&\\
+	\hline
+	\multirow{3}{*}{RDBMS}&\multirow{3}{*}{Yes}&\multirow{3}{*}{ACID}&\multirow{3}{*}{Complex}&Small frequent&\multirow{3}{*}{Local}\\
+	                      &   &    &       &read/write or&\\
+		                  &   &    &       &long batch transactions&\\
+	\hline	
+\end{tabular}
+}
+\caption{Differences between NoSQL and RDBMS}
+\label{tab:diff}
+\end{table}	  
+		

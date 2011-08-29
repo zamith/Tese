@@ -1,0 +1,46 @@
+Apache Derby is an open-source Java \ac{rdbms}, that has a very small footprint (about 2.6MB of disk-space for the base engine and embedded \ac{jdbc} driver \cite{derbySite}). The on-disk database format used in Derby is portable and platform-independent, meaning that the database can be moved from machine to machine with no need to modify the data, and that the database will work with any derby configuration \cite{derby10}. 
+
+A Derby database exists within a system (Fig. \ref{fig:derbystruct}), composed by a single instance of the Derby database engine and the environment in which it runs. It consists of zero or more databases, a system-wide configuration and an error log, both contained in the system directory \cite{derbyDev10}.
+
+\begin{figure}[htb]
+  \begin{center}
+    \leavevmode
+    \includegraphics[width=0.5\textwidth]{images/derbystruct}
+  \end{center}
+  \caption{Derby System Structure}
+  \label{fig:derbystruct}
+\end{figure}
+
+\section{Data Model}
+Derby's data model is relational, implying that data can be accessed and modified using \ac{jdbc} and standard \ac{sql}. The system has, however, two very different basic deployment options (or frameworks), the simple embedded option and the Derby Network Server option \cite{derby10}. 
+
+\begin{description}
+	\item[Embedded] In this mode Derby is started by a single-user Java application, and runs in the same Java virtual machine (JVM). This makes Derby almost invisible to the user, since it is started and stopped by the application, requiring very little or no administration. This has the particularity that only a single application can access the database at any one time, and no network access occurs. 
+	\item[Server (or Server-based)] In this mode Derby is started by an application that provides multi-user connectivity to Derby databases across a network. The system runs in the JVM that hosts the server, and other JVM's connect to it to access the database.
+\end{description}	
+
+\section{Querying}
+Querying in Derby is done, as previously mentioned, with the usage of \ac{sql}, more precisely features from \ac{sql}-92 \cite{derbySQL}.
+
+\ac{sql} scope includes data insert, query, update and delete, schema creation and modification, and data access control, and is the most widely used language for relational databases \cite{SQLintro}. \ac{sql} statements are executed by a database manager, who also has the function transforming the specification of a result table into a sequence of internal operations that optimize data retrieval. This transformation occurs in two phases: preparation and binding.
+
+All executable \ac{sql} statements must be prepared before they can be executed, with the result of this preparation being the executable or operational form of the statement. The method of preparing an \ac{sql} statement and the persistence of its operational form distinguish static \ac{sql} from dynamic \ac{sql} \cite{SQLibm}.
+
+\section{Consistency}
+Derby databases provide ACID guarantees, according to the ACID test \cite{derbydevIBM}. This means that operations with the database can be grouped together and treated as a single unit (atomicity), it makes sure that either all the operations in this single unit (\emph{transaction}) are performed, or none is (consistency), also, independent sets of database transactions are performed so that they don't conflict with each other (isolation) and it also guarantees that the database is safe against unexpected terminations (durability).
+
+\section{Patching Derby}
+
+The idea of patching Derby so that the data is stored in a different way is not entirely new and was firstly introduced by Knut Magne Solem\cite{derbyPatch}. In his approach all the tables whose name began with MEM were stored in memory, following the same strategy, our approach stores all the table whose name starts with \emph{TUPLE} in Cassandra.
+
+\subsection{Indexes}
+
+\todo[inline]{Explicar como Derby trata os indices}
+
+\missingfigure{}
+
+\todo[inline]{optimização feita para não ter de fazer dois fetches a BD}
+
+\subsection{Scans}
+
+\todo[inline]{Explicar como é feito uma range query no Derby}  

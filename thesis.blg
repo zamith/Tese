@@ -1,0 +1,51 @@
+This is BibTeX, Version 0.99c (Web2C 7.5.7)
+The top-level auxiliary file: thesis.aux
+The style file: abbrv.bst
+Database file #1: references.bib
+Warning--I didn't find a database entry for "Cou01"
+Warning--empty note in lakshmanMalik
+Warning--empty note in sarkissian09
+Warning--empty note in seeger09
+Warning--empty note in will10
+You've used 25 entries,
+            2118 wiz_defined-function locations,
+            632 strings with 6700 characters,
+and the built_in function-call counts, 6575 in all, are:
+= -- 646
+> -- 281
+< -- 4
++ -- 116
+- -- 90
+* -- 368
+:= -- 1133
+add.period$ -- 74
+call.type$ -- 25
+change.case$ -- 118
+chr.to.int$ -- 0
+cite$ -- 29
+duplicate$ -- 239
+empty$ -- 547
+format.name$ -- 90
+if$ -- 1366
+int.to.chr$ -- 0
+int.to.str$ -- 25
+missing$ -- 10
+newline$ -- 126
+num.names$ -- 50
+pop$ -- 142
+preamble$ -- 1
+purify$ -- 95
+quote$ -- 0
+skip$ -- 195
+stack$ -- 0
+substring$ -- 300
+swap$ -- 45
+text.length$ -- 4
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 100
+warning$ -- 4
+while$ -- 70
+width$ -- 27
+write$ -- 255
+(There were 5 warnings)

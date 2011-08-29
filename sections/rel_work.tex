@@ -1,0 +1,21 @@
+This kind of approach has not been attempted until now, so it is a novel way of handling data in a distributed environment, using \ac{sql}. There has been some development on the subject using other query languages as \ac{cql}, as for distributed transactions the studies mostly address the problem using some kind of leader. 
+
+
+\section{\ac{cql}}
+
+The \ac{cql} \cite{cql}, is a really novel approach to this matter, being developed by Eric Evans. His idea, is to develop an \ac{sql} like query language on top of Cassandra, bypassing an \ac{sql} interpreter altogether at the expense of not being compatible with actual \ac{sql}  code. Still, this would allow for much faster adaptation to Cassandra, for people with relational background. 
+
+\ac{cql} should be available in a first stage, with the release of Cassandra new stable version (0.8), and a select query will look somewhat like this \cite{cqlSelect}:
+
+\begin{center}
+\begin{verbatim}
+    SELECT (FROM)? <CF> [USING CONSISTENCY.<LVL>] WHERE 
+       <EXPRESSION> [ROWLIMIT X] [COLLIMIT Y] [ASC|DESC]
+\end{verbatim}
+\end{center}
+
+And would be replacing a lot of old methods for retrieving data as \emph{get()}, \emph{get\_slice()}, \emph{get\_range\_slices()}, and so on.	
+
+\section{Distributed Transactions}
+
+\todo[inline]{Falar de two e three phase commit e da eleição de lider. So uso o zookeeper para manter locks} 

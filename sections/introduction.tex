@@ -1,0 +1,95 @@
+Databases have been in use since the earliest days of electronic computing. Originally \ac{dbms}s were found only in large organizations with the computer hardware needed to support large data sets and systems tightly linked to custom databases. There was, obviously, a need for general-purpose database systems and for a standard, which appeared in 1971 proposed by CODASYL \cite{taylor1976codasyl}. They were known as navigational \ac{dbms}s.
+
+This approach had one big missing part, the capability of searching, which was bridged by Edgar Codd's relational model \cite{codd1970relational} in the 1970s. This model is often referred to when talking about the \ac{sql} model, which appeared shortly after and was loosely based on it.
+
+The \ac{sql} model uses almost the same tables and structure of the relational model, with the difference that it added a, by then standardized, querying language, \ac{sql}.
+
+In the last few years, these models have gone from big, monolithic entities to individual users, this made it necessary for them to be more modular and easier to set up. Other then that, with the increasing usage of the internet by every kind of business, there has also been a big increase on the usage of \emph{the cloud}\footnote{``Cloud computing is Internet-based computing, whereby shared servers provide resources, software, and data to computers and other devices on demand, as with the electricity grid.'' - \url{http://en.wikipedia.org/wiki/Cloud_computing} (11/1/2011)}.
+
+Distributed databases \cite{ozsu91distributeddatabase} have had an enormous growth with the massified usage of social networks, such as Facebook\footnote{\url{www.facebook.com}}. However, this does not imply that relational databases have been outdated. In order to understand the actual differences between these ways of storing and retrieving data one has to take a closer look at each of them. In doing so, we might find that they are not that incompatible, and that some benefits can be taken from a mix of both.
+
+On one hand there is the NoSQL approach, which offers higher scalability, meaning that it can run faster and support bigger loads. On the other hand, a \ac{rdbms} offers more consistency as well as much more powerful query capabilities and a lot of knowledge and expertise gained over the years \cite{stonebraker2010sql}.
+
+
+\section{Problem Statement}
+
+Since its appearance in 2009 the NoSQL movement and its implementations have raised a lot of followers, not as many, however, as those who are still using relational databases. In each of them it seems that the goods things are tightly coupled with the ``bad'' and that they are on completely opposing sides, leaving a common ground between them that is just now beginning to be explored. Since databases, both relational and distributed, are widely used, this common ground becomes a very interesting topic of investigation.
+
+Being distributed, NoSQL databases do not provide strong consistency in order to provided partition tolerance and availability, so important in scalable systems.
+
+Also, they lack a standardized query language such as \ac{sql}. Their reduced API makes it simpler to do operations as a \emph{get} or a \emph{put}, but harder to perform more complex queries and sometimes even impossible, as they do not provide a transactional system. 
+
+This problems does not occur in the relational world, where extensive work has been done in all of these areas. Still, given that they provide strong consistency and full ACID properties, relational databases do not scale as well specially horizontally.
+
+\section{Objectives}
+
+These two data management philosophies differ in many points, and usually, one is chosen, depending on the project requirements.
+\begin{quote}
+If you want to work with a lot of data and be able to run dynamic ad-hoc queries on it, you use a relational database with \ac{sql}. Using a key value store doesn't make any sense for that unless you want to easily be able to distribute your workload on several machines without having to go though the hassle of setting up a relational database cluster. If you want to just keep your objects in a persistent state and have high-performance access to them (e.g. a LOT of web applications), use a key value store.
+\end{quote} 
+\begin{flushright}in \url{http://buytaert.net/nosql-and-sql}, 25/11/2010\end{flushright}
+	
+In many cases this will lead to having to write different code to access different kinds of data, or using a polyglot \ac{orm}\footnote{A orm that outputs different code, according to the database in use, in spite of receiving the same input} as Ruby's DataMapper \cite{DM}, and in most of the cases this probably is not a very big problem, but nonetheless, it will make your code dependent of the \ac{dbms} you use. Another problem arises when you have legacy code you want to migrate from an \ac{sql} based \ac{dbms} to a NoSQL system. 	
+ 
+This work is going to try and bridge this gap by building a layer between the \ac{sql} code and interpreter, and the actual database underneath it, providing a way to run \ac{sql} queries on top of a NoSQL system (eg: Cassandra), at the cost of a possible reduction on performance.
+
+
+
+%The main objective of this work is to reach an intermediate point between a \ac{rdbms} and a fully distributed database, taking the major properties from each and merging them. These major properties are the ability to query the database with \ac{sql} and the ACID properties from the \ac{rdbms}, and the scalability from its distributed counterpart.   
+%
+%For that, it is necessary to understand how both of them work to find out how this merging can be done. There are some features that cannot be kept solely by the merging of the two, in those cases it is necessary to provide the appropriate mechanisms in order to achieve said features.
+
+% O comando \label{nome} define o marcador da parte especificada.
+% Você pode citar esta seção usando o comando \ref{nome}.
+% O "~" evita uma quebra de linha entre as palavras.
+
+% O Capítulo~\ref{intro} é uma introdução ao contexto do projeto.
+% Aqui vou exemplificar alguns comandos básicos e úteis para uma dissertação como incluir citações \cite{SJ07}.
+
+% Veja mais formas de fazer citações no texto da documentação do natbib.
+% O \texttt{natbib} é um ótimo pacote, pois é flexível \cite[ver detalhes em][]{Kirk2008}.
+% \citet{Emlet1987} mostra outro modo de citar trabalhos no texto e como grafar o nome das espécies \emph{Drosophila~melagonaster} e \emph{Clypeaster~subdepressus}.
+% Neste caso o uso do "~" foi por opção.
+
+\section{Contributions}
+
+This thesis proposes a new approach to MySQL replication that enables state-machine replication and primary-backup replication by combining the software tool MySQL Proxy and the Spread Group Communication System.
+The key to our implementation is to take advantage of the guarantees of reliability, order, message stability and message delivery guarantees for reliable messaging or fully ordered messaging of group communication, to build an mechanism of active and passive replication for the MySQL database management system.
+
+In detail, we make the following contributions:
+
+\begin{itemize}
+	\item \textbf{Evaluation and measuring of data freshness in scenarios of large scale replicated databases}\\
+		This contribution addresses the difficulty of measure accurately the impact of replication in data freshness by introducing a tool that can accurately measure replication delays for any workload and then apply it to the industry standard TPC-C benchmark \cite{Cou01}. We also evaluate data freshness by applying the tool to two representative MySQL configurations with a varying number of replicas and increasing workloads using the industry standard TPC-C on-line transaction processing benchmark \cite{Cou01}.
+		
+	\item \textbf{Documentation and analysis of the software tool MySQL Proxy}\\
+		We fully document, analyze and discuss the components and working of the software tool MySQL Proxy.
+		
+	\item \textbf{Development of plugins for group based replication using MySQL Proxy}\\
+		We propose a solution to implement group based replication using the software tool MySQL Proxy. The proposal exploits the plugin based architecture of MySQL Proxy to implement plugins to use the Spread Group Communication Toolkit for both active and passive replication.
+		
+	\item \textbf{Evaluation and performance analysis of the proposed solution}\\
+		We evaluate the developed solution using realistic workloads based on the industry standard TPC-C benchmark \cite{Cou01}. We analyze the behaviour of the solution under different conditions and configurations comparing it to the MySQL standard replication mechanism.
+\end{itemize}
+
+
+\section{Dissertation Outline}
+
+This thesis is organized as follows: Chapter 2 describes the state of the art in database replication; Chapter 3 introduces and discusses group-based replication; Chapter 4 presents the performance tests and the efforts done in order to measure the replication propagation delay in the MySQL Database Management System; Chapter 5 presents and documents the software tool MySQL Proxy; Chapter 6 presents the proposed approaches and solutions; Chapter 7 evaluates the solution implemented using realistic workloads; and finally Chapter 8 concludes the thesis, summarizing its contributions and describing possible future work. 
+
+\section{Related Publications}
+
+Portion of the work presented in this thesis has been previously published in the form of conference and workshop papers:
+
+\begin{itemize}
+	\item M. Araújo and J. Pereira. Evaluating Data Freshness in Large Scale Replicated Databases. In \textit{INForum}. 2010.
+\end{itemize}
+
+% Mencionei na seção~\ref{intro:problem} como citar um capítulo.
+% O modelo está dividido em 2 capítulos, sendo que o Capítulo~\ref{cap2} trata de um assunto (e.g., um artigo decorrente da sua pesquisa) enquanto o Capítulo~\ref{cap3} aborda outro.
+
+% O comando abaixo faz com que uma página em branco seja incluída após o fim do capítulo.
+% Use-o caso você precise criar uma página em branco para que os capítulos se iniciem sempre em páginas ímpares.
+% Também é útil para deixar as páginas certas e contadas para a impressão.
+
+% \clearpage{\pagestyle{empty}\cleardoublepage}

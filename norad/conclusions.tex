@@ -1,0 +1,40 @@
+\paragraph{}
+
+Large companies that provide online services guide them according to the information gathered from users and local data. These rapid growing services support a wide range of economic, social and public activities. Due to the need of having this information always available, data must be stored persistently. For that requirement databases are used. 
+ 
+To avoid data loss and unavailability, it is imperative to use replication. But one must take into account that since these large organizations are present in different places and data is stored in wide spread areas, strong consistency and availability are essential requirements. Also, updates to the database must be allowed at any replica. Unfortunately, when these properties are present, traditional replication protocols do not scale. A trade-off between consistency and performance arises.
+
+Group communication primitives provide a framework that promises to reduce the complexity of these problems. Taking into account that group communication provides a reliable, ordered and atomic mechanism of message multicasting, with group-based replication approaches, transactions or updates are propagated to all replicas thus achieving the required fault-tolerance and availability requirements. 
+
+This is the context of the proposed approach which aims to solve the database replication scalability and consistency problems detailed previously by introducing a tool that implements and allows state-machine or primary-copy replication suited for large scale replicated databases. In order to do that, we have proposed and developed plugins for the MySQL Proxy software tool. Briefly, two distinct approaches were taken:
+
+\begin{itemize}
+	\item Passive replication;
+	\item Active replication;
+\end{itemize}
+
+The work presented in Chapter 6 demonstrates and specifies how this was achieved. Particularly, to provide active replication for the MySQL Database Management System, one approach exploits group communication. In the other approach it exploits the traditional binary log replication mechanism of MySQL and group communication to provide passive replication. 
+
+Due to limitations of MySQL Proxy we could not obtain results for the passive replication solution, since it does not yet provide the complete mechanism for binary log events parsing and transformation. Therefore, the developed plugins are incomplete even if its architecture and behavior is fully thought and analyzed.
+
+Active replication plugins were fully developed and tested. The implementation details of this approach is shown in Section 6.2, and the workload results are presented in Chapter 7.
+
+The results show that this solution has a substantial performance gain compared with the traditional MySQL replication. The set of conducted experiments have shown that with active replication, the propagation delay stands on the same range of values for all replicas. When comparing with the ring scheme, from the fifth replica on the gains are visible and substantial.
+
+Despite that MySQL Proxy and group communication introduces a visible overhead on replication, when comparing to the tradition replication mechanism of MySQL one notices that the gains are relevant.
+
+We have shown that the solution can overcome the scalability problems of ring topologies without losing the ability to update the database at any replica, using a set of experiments with the realistic workload defined by TPC-C. Note that TPC-C, being write intensive, makes the master server be nearly entirely dedicated to update transactions. This is the case even at a small scale, as in the performed set of experiments. It mimics what would happen in a very large scale setup of database servers.
+
+This work is open-source and available at launchpad. Recently, it was proposed for evaluation and merge on the MySQL Proxy project by the developers team.\footnote{https://code.launchpad.net/\char`\~miguelaraujo/mysql-proxy-spread/trunk}
+
+
+\section{Future Work}
+
+This work presents important results for large scale replicated databases. Nevertheless, from the difficulties, knowledge and contributions we realize that there are some features and work that could be done in order to improve substantially not only the results but also the passive replication approach. 
+
+Regarding the passive replication plugins, it would be necessary to finish the work started by the MySQL Proxy developers team in order to have the \textit{replicant} and \textit{master} plugins fully functional. Taking into account that having these plugins working, we could complete the symbiosis with the spread plugins in order to provide the passive replication mechanism to MySQL.
+
+Although MySQL Proxy implements a threaded network I/O since version 0.8, further development on the spread plugins and on MySQL Proxy would be necessary, since transactions order could be affected by multithreading. Having several threads to handle the transactions could improve performance significantly, but the ordering trade-off would rise since it would allow transactions to be processed in a different orders that were applied. It would be interesting to evaluate the performance gains and trade-offs and propose a solution to allow the threaded network I/O option on MySQL Proxy.  
+
+Finally, taking into account that MySQL Proxy developer team announced that the next version will implement a multi-threaded approach to the scripting layer, we could exploit this to improve performance in the field of message multicasting. Having multi-threading on the Lua script layer, performance gains could be visible regarding that in our solution, Lua is responsible for handling and calling the message multicast containing the transactions or updates.
+

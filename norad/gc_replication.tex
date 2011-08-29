@@ -1,0 +1,185 @@
+
+High-availability, performance, and reliability requirements are mostly achieved by the data replication technique. Database replication it is commonly implemented using group communication primitives. These primitives provide a framework that reduces the complexity of the implementation. Replication commonly addresses the linearizability issue with two main models: primary-backup, also called passive replication, or state-machine, also called active replication.
+
+
+\section{Group Communication}
+
+A distributed system consists of multiple processes that communicate via communication links using message passing. These processes can behave according to their specification if they are correct or crash or behave maliciously if they are incorrect \cite{Guerraoui:1997p555}. This set of processes is known as group. A process group has the ability to control the distribution of messages and signals, i.e., a message sent to a process group is delivered to all the other processes. 
+
+A group represents a set of processes, as it can address all the processes into a single entity. For example, consider a replicated object \textit{x}. A group \textit{Gx} can represent the set of replicas of \textit{x}. As so, \textit{Gx} can be used to address a message to all the replicas of \textit{x} \cite{Guerraoui96fault-toleranceby}. A group can be used to send messages to all the constituents of it without naming them explicitly, i.e. the process addresses the message to the logical group address.
+
+%As in database replication, there are two main models for message interchanging in group communication: synchronous and asynchronous \cite{Guerraoui:1997p555}. Synchronous model since ensure that messages are received at the same instant it presumes a known value of message transmission delay. On the other hand, asynchronous model does not set a limit to message transmission delay since messages are delivered asynchronously.
+
+Since group communication protocols are based on groups of processes, i.e. recipients, communication takes into account the existence of multiple receivers for the messages. As so, message passing within the group must ensure properties such as reliability, and order.
+
+Group Communication provides group membership management to track the dynamic constitution of groups. Groups can be of two different kinds: static or dynamic \cite{Guerraoui96fault-toleranceby}. Groups are considered static if the membership is not changed during the system life-time. All initial members of the group remain with the membership even if they crash. If a recover is possible, the member remains member of the group. On the other hand, dynamic groups are the opposite, membership can change during the life-time of the system. If a replica crashes it leaves the group and if it recovers at any time it can rejoin the group.
+This states the notion of group membership and view. A group membership maintains group views, i.e., the set of processes believed to be correct at the moment. For the crashing process example, when it crashes it is removed from the Group and when it recovers it rejoins, the history of the group membership is constituted by the views \cite{Guerraoui:1997p555}.
+The group membership service is responsible for tracking correct and incorrect processes, creating and destroying groups, to add or withdraw processes to and from a group and to notify process members of membership changes.
+Group membership can be defined by the following properties \cite{Chockler:2001:GCS:503112.503113}:
+
+\begin{description}
+	\item Self inclusion:\\
+		Every view installed by a process includes itself, i.e. if a process \textit{p} installs view \textit{V}, then \textit{p} is a member of \textit{V}
+	\item Local monotonocity:\\
+		If a process \textit{p} installs view \textit{V} after installing view \textit{V’} then the identifier of \textit{V} is greater than that of \textit{V’}
+	\item Agreement:\\
+		Any two views with the same identifier contains the same set of processes.
+	\item Linear membership:\\
+		For any two consecutive views there is at least one process belonging to both views.
+\end{description}
+
+The definition of a group communication protocol involves properties such as reliability, order and atomicity. In order to obtain reliability in message passing, group communication use reliable multicast. A reliable multicast primitive can be defined as follows: If process \textit{p} is correct and reliably multicasts message \textit{m}, then every correct recipient eventually delivers \textit{m} \cite{Hadzilacos94amodular}.
+
+Sometimes there is a need to coordinate message transmission with the group membership service. This is achieved by \textit{view synchrony}. View synchrony synchronizes processes on membership changes. The definition is as follows \cite{Chockler:2001:GCS:503112.503113}: any two processes that install two consecutive views will deliver the same set of messages multicast between these views.
+
+To multicast the messages View Synchrony defines two primitives: \textit{VSCAST} and \textit{VSDELIVER}. Virtual Synchronous Multicast \textit{(VSCAST)} satisfies the following properties \cite{Chockler:2001:GCS:503112.503113}:
+
+\begin{description}
+	\item Integrity:\\
+		If a process \textit{p} delivers \textit{(VSDELIVER)} a message \textit{m}, then message \textit{m} was previously \textit{VSCAST(m, g)};
+	\item No Duplication:\\
+		If a process \textit{q} delivers \textit{(VSDELIVER)} \textit{m} and \textit{m'}, then {m $\neq$ m'};
+	\item View Synchrony:\\
+		If processes \textit{p} and \textit{q} install two consecutive views, \textit{V} and \textit{V'}, then any message delivered \textit{(VSDELIVER)} by \textit{p} in \textit{V} is also delivered \textit{(VSDELIVER)} by \textit{q} in \textit{V};
+	\item Termination:\\
+		If a process \textit{p} is correct and \textit{VSCAST(m, g)} in view \textit{V}, then each member \textit{q} of \textit{V} either delivers \textit{(VSDELIVER)} \textit{m} or installs a new view \textit{V'} in \textit{V}.
+\end{description}
+
+
+However virtual synchrony multicast is not enough in some particular cases, where there is a need to deliver messages sent to a set of processes at each site in the same order. \textit{TOCAST} provides a group communication primitive that guarantees that a message \textit{m}, sent to a group \textit{g} (\textit{TOCAST(m,g)}) is delivered (\textit{TODELIVER}) in the same order at every member of group \textit{g}.
+Total Order Multicast is defined as following \cite{Defago:2004:TOB:1041680.1041682}:
+
+\begin{description}
+	\item Integrity:\\
+		If a process \textit{p} delivers \textit{TODELIVER} a message \textit{m}, it does it so at most once and only if \textit{m} was previously \textit{TOCAST(m, g)}; 
+	\item Validaty:\\
+		If a process \textit{p} \textit{TOCAST} a message \textit{m}, then a correct process \textit{p'} eventually delivers \textit{(TODELIVER)} \textit{m};	
+	\item Agreement:\\
+		If a process \textit{p} \textit{TOCAST} a message \textit{m}, and a correct process \textit{p'} delivers \textit{(TODELIVER)} \textit{m} then all correct processes eventually also delivers \textit{(TODELIVER)} \textit{m}; 
+	\item Total Order:\\
+		If processes \textit{p} and a \textit{q} \textit{TOCAST(m, g)} and \textit{TOCAST(m', g)}, respectively, then two correct processes \textit{r} and \textit{s} deliver \textit{(TODELIVER)} \textit{m} and \textit{m'} in the same order.
+		
+\end{description}
+
+
+\section{Primary-Backup Replication}
+
+A classical approach for replication is to use a server as the primary and all the others as backups of this \cite{Al93theprimary-backup}. The client issue requests to the primary server only. This server has a main role to receive client invocations and to return to it the responses.
+
+This technique states that the replicas do not execute the client invocation but apply the changes produced by the invocation executed on the primary, i.e., the updates \cite{Wiesmann:2000p556}. The primary executes the client invocations and sends the updates to the replicas. However, updates need to be propagated in the same order according to the order in which the primary replica received the invocations. This way, linearizability is achieved because the order on the primary replica defines the total order of all servers \cite{Guerraoui:1997p555}.
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=0.9\textwidth]{images/primary_backup.pdf}
+\caption{Primary-Backup Replication}
+\label{fig:primary_backup}
+\end{figure}
+
+As seen in (Figure~\ref{fig:primary_backup}) The client starts by sending the request invocation to the primary server. This server executes the request which will give rise to a response. It then updates its state and coordinates with the other replicas by sending them the update information. Finally the primary server sends the response to the client once it receives the acknowledgment from all the correct replicas.
+
+However, linearizability is obtained if the primary does not crash since it states the total order on all invocations. If the primary crashes, three cases can be distinguished \cite{Guerraoui96fault-toleranceby}:
+
+\begin{itemize}
+	\item The primary crashes before sending the update message to the replicas;
+	\item The primary crashes after or while sending the update message, but before the client receives the response;
+	\item The primary crashes after the client has received the response;
+\end{itemize}
+
+In all the three cases a new primary replica has to be selected. For the first case, when the crash happens before the primary sends the update to the replicas the client will not receive any response so it will issue the request again. The new primary will considers the invocation as a new one. 
+In the second case, the client will also not receive any response, however since the crash happened after the update message was sent atomicity must be guaranteed, i.e. either the replicas receive the message or none. If none receives the update message then the process is similar to the fist case. Otherwise, if all the replicas receive the update then the state of each is updated as supposed but the client will not receive any response, issuing again the request invocation. The solution to this problem was to introduce information in order to know the invocation identification (invID) and respective response (red). Thus, avoiding to handle the same invocation twice. When the primary receives an invocation with the same identification (invID) it immediately send the response (res) back to the client.
+
+The great advantage of the primary-backup technique is that it allows non-deterministic operations, i.e. it is possible for each replica to have multi-threading. Besides that factor, it has a lower cost in terms of processing power compared to other replication techniques. However, when the primary fails it has some costs for re-electing a new primary and handle the crash. Concerning fault transparency, in contrast to the state-machine replication the crash of the primary is not transparent to the client since it increases the latency between invocation and reception of the response. However, the replicas crash is completely transparent to the client.
+
+%Concerning fault transparency, in contrast to active replication where the crash of a replica is fault transparent to the client, in primary backup replication although a backup's crash is transparent to the client the crash of a primary replica is not.
+
+%Concerning fault-tolerance, in contrast to active replication, the resulting service can be as fault tolerant as the primary server is.
+
+\subsection{Group communication and passive replication}
+
+At a first glance, the primary-backup technique does not need group communication to obtain primitives as \textit{TOCAST} because the primary replica is which defines the update sending order. However, when the primary replica crashes there is a need to select a new primary and handle the crash event so group communication is needed. There is a need to use the dynamic groups property of group communication protocols. Group members must agree on a unique sequence of views \cite{Guerraoui:1997p555}. 
+When the primary replica crashes, a new view is installed and a new primary replica is chosen. However, in this example, the primary backup crashes while sending an update and only some of the replicas receive that update. Due to this, a simple multicast primitive is not enough so the view-synchronous multicast\textit{(VSCAST)} is used.
+
+\section{State-Machine Replication}
+
+Since fault tolerance is commonly obtained with multiple servers with the same data, the state of each server must be distributed among all replicas. In this technique, the state update is received by all replicas in the same order \cite{Guerraoui96fault-toleranceby}.
+
+Contrasting with the primary-backup model, in active replication there is not a centralized control by one of the servers. This way fault-tolerance can be achiever in a greater scale since the multiple servers can fail independently without compromising the whole replicated system. Each replica has the same role in processing and distributing the updates, and consistency is guaranteed by assuming that all replicas receive the invocations of client processes in the same order \cite{Guerraoui:1997p555}.
+
+To obtain this level of consistency, the client requests must be propagated having the properties of order and atomicity, i.e., using the primitive Atomic Multicast or Total Order Multicast.
+
+The great advantage of this technique is the transparency obtained. A crash of a single replica is transparent to the client process since it does not need to repeat the request. So, the client is never aware nor needs to take in concern a replica failure. All the replicas process the request even if one fails. However, active replication introduces more costs to the replication since each invocation is processed by all replicas.
+
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=0.9\textwidth]{images/state_machine.pdf}
+\caption{State-Machine Replication}
+\label{fig:state_machine_repl}
+\end{figure}
+
+As in (Figure~\ref{fig:state_machine_repl}), the client starts by sending a request to the servers. This is achieved using an Atomic Multicast that guarantees the total order property needed for coordination. Then each replica processes the request in the same order since replicas are deterministic producing the same result, and reply with the request result to the client. In this phase the client usually waits for receiving the first response, or to receive a majority of identical responses \cite{Guerraoui96fault-toleranceby}.
+
+
+
+\subsection{Group communication and active replication}
+
+The state-machine approach, as described above requires that the invocations sent to all servers are atomic and on the same order. As so, this technique requires the total-order multicast primitive\textit{(TOCAST)}. 
+A process sends a message with an invocation, which is received by a replica that coordinates with the other replicas to guarantee the properties of the total-order multicast primitive: order, atomicity and termination. After that the replica can deliver the message \cite{Guerraoui:1997p555}.
+
+
+
+\section{Spread Group Communication Toolkit}
+
+The Spread toolkit is a group communication system \footnote{http://www.spread.org}. Spread provides reliability, ordering and stability 
+guarantees for message delivery. Spread supports a rich fault model that includes process crashes and recoveries and network partitions and merges under the extended virtual synchrony semantics. The standard virtual synchrony semantics is also supported \cite{Amir_thespreadtoolkit}. It provides besides group communication, an highly tuned application-level multicast and point to point support.
+
+Spread provides high performance messaging across local and wide area networks. The big question that arises is how Spread handles wide area networks and how it provides these characteristics in those scenarios since they bring three main difficulties. One of the difficulties is related to the variety of loss rates, latency and bandwidth over the different parts of the network. Other difficult is related to the significantly higher rate of packet loss in comparison to LAN networks. And finally, it is more complex to implement efficient reliability and ordering on the wide area multicast mechanism besides its limitations.
+
+The Spread group communication system addresses the above difficulties through three main structural design issues \cite{Amir_thespread}.
+It allows the utilization of different low level protocols to disseminate messages depending on the configuration of the network. And in particular, Spread integrates two low-level protocols: Ring and Hop. Ring protocol is meant to be used on local area networks and the Hop protocol in wide area networks.
+
+Spread is built following a daemon-client architecture. This brings several benefits, mainly the fact that this way membership changes have less impact and cost on the global system. Simple joins and leaves of processes are translated into a single message.
+
+Finally, spread decouples the message dissemination and reliability mechanisms from the global ordering and stability protocols. This allows messages to be forwarded to the network immediately as also supports the Extended Virtual Synchrony model \cite{302392} where data messages are only sent to the minimal necessary set of the network components, without compromising the strong semantic guarantees.
+
+Spread is highly configurable, allowing the user to configure it to their needs. It allows the user to control the type of communication mechanisms used and the layout of the virtual network. Spread can use a single daemon over the whole network or to use one daemon in every node running group communication applications. Each Spread daemon keeps track of the computers's membership, keeping track of processes residing on each machine and participating on group communication. Since this information is shared between the daemon, it created the lightweight process group membership.
+
+
+\subsection{Message Types for Data and Membership Messages}
+
+Spread allows different types of messages satisfying the ordering and reliability properties described above. The following flags as described on \footnote{http://www.spread.org/docs/spread\_docs\_4/docs/message\_types.html} set the message type: 
+
+\begin{description}
+	
+	\item UNRELIABLE\_MESS:\\
+	The message is sent unreliably, however it is possible to be dropped or duplicated even that duplications are very rare. 
+	
+	\item RELIABLE\_MESS:\\
+	The message will arrive once at all members of its destination group, it may be arbitrarily, but finitely delayed before arriving, and may arrive out of order with regards to other reliable messages.
+	
+	\item FIFO\_MESS:\\
+	The message has the reliable message properties, but it will be ordered with all other FIFO messages from the same source. However, nothing is guaranteed about the ordering of FIFO messages from different sources.
+	
+	\item CAUSAL\_MESS:\\
+	This type of message has all the properties of FIFO messages and in addition are causally ordered with regards to all sources.
+	
+	\item AGREED\_MESS:\\
+	These messages have all the properties of FIFO messages but will be delivered in a causal ordering which will be the same at all recipients, i.e. all the recipients will 'agree' on the order of delivery.
+	
+	\item SAFE\_MESS:\\
+	These messages have all the properties of AGREED messages, but are not delivered until all daemons have received it and are ready to deliver it to the application. This guarantees that if any one application receives a SAFE message then all the applications in that group will also receive it unless the machine or program crashes.
+		
+\end{description}
+
+Regarding data messages Spread allows to define a type of message that is used to identify a data/application message. This is defined by the flag: REGULAR\_MESS.
+
+Finally, a desired property in some use cases is the ability to not deliver a message to the application connection which sent it. However, one must be aware that if the application has multiple connections open which have joined the same group then other connections will receive it. This is defined by the flag: SELF\_DISCARD.
+
+\section{Summary}
+
+This chapter describes group communication primitives, introducing the theoretical basis of message passing primitives, groups and group membership and motivating the work on defining a replication protocol based on group communication by demonstrating the properties and guarantees of reliability, order, and message stability, as also message delivery guarantees as for example reliable messaging or fully ordered messages.
+
+Detailing these guarantees one can conclude the practical advantages of group-based replication. As so, we have described two main approaches for replication: primary-backup and state-machine, and how does group communication fits the needs of each.
+
+Taking into account the limitations of MySQL's replication discussed on the previous chapter, one can induce a possible solution for this problem using group communication. However the main concern when using MySQL asynchronous replication mechanism is the data freshness. But one questions how big is this delay. Several efforts were made in order to measure the delay and to assess the impact on replication topologies. These efforts and concluding results are presented on the following chapter.
+

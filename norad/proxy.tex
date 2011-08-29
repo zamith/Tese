@@ -1,0 +1,502 @@
+\paragraph{}
+
+This chapter introduces the software tool MySQL Proxy. MySQL Proxy is a simple program which sits between a MySQL client and a MySQL server and
+can inspect, transform and act on the data sent through it.
+
+Documentation on the internals and detailed operation for this software is scarce. Since version 0.8.1 documentation was introduced on the trunk branch of MySQL Proxy. However, it has been introduced gradually and so it still is incomplete and buggy. On this work, we complement and provide a foremost documentation by describing, analyzing and discussing the architecture and operation of this software tool.
+
+\section{Architecture}
+
+\nocite{mysqlproxy}
+
+MySQL Proxy is a software application that provides communication between MySQL servers and one or several MySQL clients. It communicates over the network 
+using the MySQL network protocol.
+A Proxy instance on his most basic configuration operates as Man in the Middle and pass the unchanged network packets from the client to the MySQL Server. It stands between servers and clients passing queries from the clients to the MySQL servers and returning the corresponding responses from the servers to the appropriate clients. So, this opens the possibility to change the packets when needed.
+This flexibility opens several other possibilities and it can be used for multiple purposes, being the most remarkable query analysis, query filtering and modification. Other possibilities include load balancing, failover, working as a pseudo MySQL server and client, query injection, connection pool and caching.
+
+MySQL Proxy communicates over the network using the standard MySQL protocol, so it can be used with any MySQL compatible client. This includes the MySQL command-line client, any clients that use the MySQL client libraries, and any connector that supports the MySQL network protocol.
+
+Being query interception the most basic feature of the Proxy it can be used for monitoring and altering the communication between the client and the corresponding server.
+With the Proxy it is possible to insert additional queries to send to the server and it can intercept and remove the results returned by this. A simple use case is to insert extra statements to each query sent to the server to obtain values of execution time, progress and then filter the results sent by the server to the client and separately log the monitoring results. 
+
+
+This feature of monitoring filtering and manipulation of queries does not require the user to make any modifications to the client or even implies that the client is aware that the Proxy is not a true MySQL server. The client communicates with the Proxy as with a MySQL server.
+
+MySQL Proxy is also able to do load balancing by distributing the load across several servers. The default method used is the Shortest Queue First. It sends new connections to the server with the least number of open connections.
+Another useful application of the Proxy is Failover. The application can be used to detect dead hosts and use custom load balancers to decide how to handle a dead host.
+
+
+MySQL Proxy embeds the Lua Scripting Language.\footnote{http://www.lua.org/} This programming language is simple and efficient. It can do object oriented programming, and it has scalars, tables, metatables and anonymous functions. It is also a language designed to be embedded into applications and widely used. The Proxy allows the use of Lua scripts and the basic query interception/changing is done using Lua scripts.
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=0.3\textwidth]{images/4layer_proxy.pdf}
+\caption{MySQL Proxy top-level architecture}
+\label{fig:4layer_proxy}
+\end{figure}
+
+%(Figure~\ref{fig:4layer_proxy}) illustrates the top-level architecture of MySQL Proxy. It was designed in a four layer application, being this layers the chassis, the low level protocol and protocol states, the plugins layer and finally the Lua scripting layer.
+
+(Figure~\ref{fig:4layer_proxy}) illustrates the top-level architecture of MySQL Proxy. It was designed in a four layer application, being this layers the chassis, the network core, the plugins layer and finally the Lua scripting layer.
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=0.6\textwidth]{images/4layer_proxy_detailed.pdf}
+\caption{MySQL Proxy detailed architecture}
+\label{fig:4layer_proxy_detailed}
+\end{figure}
+
+(Figure~\ref{fig:4layer_proxy_detailed}) illustrates a more detailed level of the architecture of MySQL Proxy. One can see that the Plugins layer is an abstract layer constituted by the loaded plugins. On the figure example, two plugins were loaded, Proxy and Admin. Under the Network Core layer there are several sub-layers, namely the chassis, libevent, mysql-protocol and liblua. These sub-layers constitute the top-level layer called chassis, being the main core of MySQL Proxy.
+
+\section{Chassis}
+
+The chassis is the main core of MySQL Proxy, providing the fundamental features that common applications need. Through it the application can load plugins and do whatever they implement. This means that the chassis itself can be used for any kind of application as it is not MySQL specific so the proxy features are carried out by the proxy plugin.
+
+
+The chassis implements the following list of features and functionalities:
+
+\begin{itemize}
+	\item Command-line option handling;
+	\item Config-file handling;
+	\item Logging;
+	\item Plugin loading/unloading;
+	\item Daemon (Unix) / service (Win32) support 
+\end{itemize}
+
+
+The chassis also provides at a first glance several configuration file and command line options as described below.
+
+\subsection{Config-file and Command-line Options}
+
+MySQL Proxy leverages functionalities provided by Glib2. Glib is a low-level core library that is the basis of GTK+\footnote{http://www.gtk.org/} and Gnome.\footnote{http://www.gnome.org/} It eases development in C by providing data structures handling, portability wrappers and interfaces for functionalities as event loops, threads, dynamic loading and others.
+
+MySQL Proxy uses Glib2 to provide parsing of configuration files and command-line options. Some of the functionalities of Glib2 that MySQL Proxy implements are the parsing with GOption and GKeyFile, the log facilities, and GModule.
+
+For parsing of options the method starts with extracting the basic command-line options, then it processes the \texttt{defaults-file}, and finally processes other command-line options to override the \texttt{defaults-file}.
+
+\subsubsection{Basic options}
+
+The basic options provided by the application are:
+
+\begin{itemize}
+	\item "--help", "-h". Shows the help menu;
+	\item "--version", "-V". Show the version of MySQL Proxy;
+	\item "--defaults-file=<file>". Configuration file; 
+\end{itemize}
+
+\subsubsection{Defaults File}
+
+The format of the defaults-file obeys to the key files syntax defined by freedesktop.\footnote{http://freedesktop.org/wiki/Specifications/desktop-entry-spec?action=show\&redirect=Standards\%2Fdesktop-entry-spec}
+MySQL Proxy uses Glib to parse this config files.\footnote{http://library.gnome.org/devel/glib/stable/glib-Key-value-file-parser.html}
+
+\subsubsection{Options}
+
+As most of front end applications, MySQL Proxy provides a set of command-line options. 
+Command-line and defaults-file share the same set of options. Depending on the type of option they accept values in different forms. As showed on table 
+\ref{tab:table_options}.
+
+\begin{table}[h!]
+\centering
+    \begin{tabular}{ | l | l | l |}
+    \hline
+    Type & Command-line & Defaults-file \\ \hline
+    no value & \texttt{---daemon} & \texttt{daemon=1} \\ \hline
+	single value & \texttt{---user=foo ; ---basedir=<dir>} & \texttt{user=foo ; basedir=dir} \\ \hline
+	multi value & \texttt{---plugins=proxy ---plugins=admin} & \texttt{plugins=proxy, admin} \\
+    \hline
+    \end{tabular}
+
+\caption{Command-line and Defaults-file options examples}
+\label{tab:table_options}
+\end{table}
+
+
+\subsection{Front end}
+
+MySQL Proxy front end, parses the options and provides the \texttt{main()} functions the necessary values to start the chassis and defaults of the application. The command: \texttt{\$ mysql\--proxy} loads, by default, the plugins: plugin-proxy and plugin-admin.
+
+
+\subsection{Plugin Interface}
+
+The chassis provides the bridge needed for the correct work of the plugin interface. It resolves the path for the plugins and load them in a portable way. 
+It checks versions, exposes the configuration options to the plugins and finally calls init and shutdown functions. %An interesting an useful characteristic of MySQL Proxy is that the chassis is not MySQL specific so it can load any kind of plugin as long as it exposes the init and shutdown functions.
+
+\section{Network Core}
+
+The network core, is responsible for the sockets handling as also the database protocol. It is the layer that enables the interaction between the client and the server.
+
+\subsection{MySQL Protocol}
+
+The communication between the MySQL clients and the Servers is done via the MySQL protocol. This is implemented by the Connectors (Connector/C), MySQL Proxy and MySQL Server itself for the slave instances. And it supports:
+
+\begin{itemize}
+	\item transparent encryption via "SSL"
+	\item transparent compression via "Compressed Packet"
+	\item a challenge-response "Auth Phase" to never send the clients password in cleartext
+	\item and a "Command Phase" which supports needs of "Prepared Statements" and "Stored Procedures"
+\end{itemize}
+
+Full documentation of the Protocol can be found on the MySQL Forge Website. \footnote{http://forge.mysql.com/wiki/MySQL\_Internals\_ClientServer\_Protocol}
+
+
+\subsection{Connection Life Cycle}
+
+MySQL protocol has four basic states on the connection life cycle. This basic phases/states are:
+
+\begin{itemize}
+	\item \textit{connect} \\ connection to the server
+	\item \textit{authentication} \\ authentication phase including the sending and receiving of authentication request
+	\item \textit{query} \\ execution of the query transactions on the server
+	\item \textit{disconnect} \\ disconnection of server
+\end{itemize}
+
+MySQL Proxy has the ability to change the default behaviour of the network core. A plugin can implement the listening side of a connection, the connection side of a connection or both. For example, the admin-plugin implements the listening side of a connection as it only "reads" what a supposed client is sending to a server. The client-plugin as implementing the connection side it connects to an server, authenticates and "reads" the server outputs.
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=0.5\textwidth]{images/mysql_protocol_sm.pdf}
+\caption{MySQL Protocol state-machine}
+\label{fig:protocol_state_machine}
+\end{figure}
+
+\subsubsection{State machine}
+
+MySQL Proxy uses a state-machine approach to map the basic states of the MySQL protocol. As shown in (Figure~\ref{fig:protocol_state_machine}), MySQL Proxy handles the basic states of MySQL protocol according to the basic hooks it implements. The basic procedure starts when the client connects. After receiving it, the server replies with the handshake packet. The client proceeds by sending the authentication packet with the necessary data. The server replies then with the result of the authentication processing. If the authentication is accepted, the client can send queries to the server in which the server replies with the result for each one. If the client wants to end the connection it sends a disconnect packet to the server.
+
+A typical workflow of proxy plugin taking into account the proxy state machine, starts with the modification of the connection state (\texttt{con->state}) to the state: \texttt{CON\_STATE\_CON\-NECT\_SERVER}. This happens due to the event handler that detects a client connection and starts the plugin state-machine. With this state alteration, the state-machine calls the \texttt{plugin\_call} handler function with the actual state which in turn calls the corresponding plugin function to connect to the server, and change the state in order to receive the handshake from the server. This state would be \texttt{CON\_STATE\_READ\_HANDSHAKE}. The connection state-machine will now call the \textit{plugin\_call} so that the necessary plugin function to read the handshake from the server is called. After the reading of the handshake the function can create the necessary authentication packet and change the state to \texttt{CON\_STATE\_SEND\_AUTH}. This way the corresponding plugin function to sent the authentication packet to the server will be called. And so, after the execution of this function the state is changed in order to read the result of the authentication sent to the server. This state is \texttt{CON\_STATE\_READ\_AUTH\_RESULT}. This alteration will call the \texttt{plugin\_call} function in order to execute the plugin function to read the authentication result sent by the server, evaluate it and finally change the state. Being that the authentication is complete, the client can start to send queries to the server. And so, the state is changed to \texttt{CON\_STATE\_READY\_QUERY}. In this stage, when the client performs a query, the proxy will pass it to the server and change the stat to \texttt{CON\_STATE\_READ\_QUERY\_RESULT} in order to read the result of the query appliance sent by the server. This connection stage will loop, until the client decides to finish the connection by sending the disconnect request.
+
+
+%set nonblocking mode on all network handles, and use select() or poll() to tell which network handle has data waiting. This is the traditional favorite. With this scheme, the kernel tells you whether a file descriptor is ready, whether or not you've done anything with that file descriptor since the last time the kernel told you about it. (The name 'level triggered' comes from computer hardware design; it's the opposite of 'edge triggered'. Jonathon Lemon introduced the terms in his BSDCON 2000 paper on kqueue().)
+
+
+\subsection{Concurrency}
+
+The network engine is meant to handle several thousand simultaneous connections. As some of the features of MySQL Proxy include load-balancing and fail-over, it is supposed to handle a large group of connections to the MySQL server backends.
+
+To achieve such scalability the Proxy was designed using an pure event driven asynchronous network approach. It exploits the socket ability to be set as nonblocking and use the the notifications (\textit{poll()}, \textit{select()}) to know when is the socket available to start the next I/O operation. This way, the implementation takes advantage of knowing when the sockets are available improving the I/O throughput. An event-driven design has a very small foot-print for idling connections. It just stores the connection state and let it wait for a event.\\
+
+%\subsubsection{libevent}
+
+Up to version 0.7, MySQL Proxy uses a pure event-driven, non-blocking networking approach\footnote{http://kegel.com/c10k.html\#nb} using libevent 1.4.x.\footnote{http://monkey.org/~provos/libevent/} Since version 0.8 of MySQL Proxy the chassis was improved with the implementation of a threaded network I/O in order to allow scaling with the number of 
+CPUs and network cards available.
+
+To enable network-threading MySQL Proxy must be started with the following option: \texttt{--event-threads={2 * no-of-cores} (default: 0)}.
+
+Without this option enabled the proxy executes the core functions in a single-threaded way. On a network or time event set the thread will execute the functions assigned to it. With multi-threading event-threads are created, being each one a simple small thread around the libevent \texttt{event\_base\_dispatch()} basic function.
+These event-threads have two states, idle and active. If they are executing the core functions they are active, when they are idle they wait for new evens to read and they can add them to their wait-list.
+
+So the main advantage of the threaded-network is that a connection can jump between event-threads. If an idle thread is taking the wait-for-event request it will eventually execute the code, and so when the connection has to wait for a event again it is unregistered from the thread and sends its wait-for-event request to the global event-queue so that another thread can catch it up.
+
+Up to version 0.8 the scripting layer is single-threaded. A global mutex protects the plugin interface, meaning that only one thread can be executing functions from the Lua layer. Even with the networking-threading enabled a connection is either sending packets or calling plugin functions on the Lua layer, meaning that the network events will be handled in parallel and will only wait if several connections call a plugin function.
+
+Usually the scripts are small and only make simple decisions leaving most of the work to the network layer.
+As so, the next version of MySQL Proxy (version 0.9) will implement a multi-threaded approach to the scripting layer. Allowing this way several scripting threads are the same time. This allows the scripting layer to call blocking or slow functions without interfering with the execution of other connections, i.e. the network layer lifecycle.
+
+%Lifting the global plugin mutex will mean we have to handle access to global structure differently. Most 
+%of the access is happening on connection-level (the way we do the event-threading) and only access to
+%global structures like "proxy.global.*" has to synchronized. For that we will look into using Lua lanes
+%to send data around between independent Lua-states.
+
+%\subsubsection{Implementation}
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=\textwidth]{images/thread_io.pdf}
+\caption{Thread I/O control flow}
+\label{fig:thread_io}
+\end{figure}
+
+MySQL Proxy implements network threading on \texttt{chassis-event-thread.c"}.
+The \texttt{chassis\_event\_thread\_loop()} is the event-thread itself. A typical control flow is depicted in (Figure~\ref{fig:thread_io}). In this example there are two event threads ("--event-threads=2"), each of which has its own \texttt{event\_base}. The \texttt{network\_mysqld\_con\_accept()} could be for example the proxy-plugin network event handler. It opens a socket to listen on and sets the accept handler which should get called whenever a new connection is made.
+
+The accept handler is registered on the main thread's \texttt{event\_base} (which is the same as the global chassis level \texttt{event\_base}).
+After setting up the \texttt{network\_mysqld\_con} structure it then calls the state machine handler \texttt{network\_mysqld\_con\_handle()}, still on the main thread.
+The state machine enters the initial state \texttt{CON\_STATE\_INIT} which currently will always execute on the main thread.
+
+When MySQL Proxy needs to interact with either the client or the server, either waiting for the socket to be readable or needing to 
+establish a connection to a backend, \texttt{network\_mysqld\_con\_handle()} will schedule an "event wait" request (a \texttt{chassis\_event\-\_op\_t}). It does so by 
+adding the event structure into a asynchronous queue and generating a file descriptor event by writing a single byte into the write file descriptor of the 
+\texttt{wakeup-pipe()}.
+
+
+% Descrição da implementação a um nível mais especifico do network-threading retirada da documentação do proxy -> penso que não interessa para o documento da tese
+\begin{comment}
+
+\subsubsection{Signaling all threads for new events requests}
+
+That pipe is a common hack in libevent to map any kind of event to a the fd-based event-handlers like poll:
+\begin{itemize}
+	\item the \texttt{event\_base\_dispatch()} blocks until a fd-event triggers
+	\item timers, signals, ... can't interrupt \texttt{event\_base\_dispatch()} directly
+	\item instead they cause a \texttt{write(pipe\_fd, ".", 1);} which triggers a fd-event which afterwards gets handled
+\end{itemize}
+
+In chassis-event-thread.c we use the pipe to signal that something is in the global event-queue to be
+processed by one of the event-threads ... see chassis\_event\_handle(). All idling threads will process
+that even and will pull from the event queue in parallel to add the event to their events to listen for.
+
+To add a event to the event-queue you can call chassis\_event\_add() or chassis\_event\_add\_local(). In general
+all events are handled by the global event base, only in the case where we use the connection pool we force
+events for the server connection to be delivered to the same thread that added it to the pool.
+
+If the event would be delivered to the global event base a different thread could pick it up and that would
+modify the unprotected connection pool data structure, leading to race conditions and crashes. Making the
+internal data structures thread safe is part of the 0.9 release cycle, thus only the minimal amount of
+thread safety is guaranteed right now.
+
+Typically another thread will pick up this request from the queue (although in theory it could end up on the same thread
+that issued the wait request) which will then add it to its thread-local event\_base to be notified whenever the file
+descriptor is ready.
+
+This process continues until a connection is closed by a client or server or a network error occurs causing the sockets to
+be closed. After that no new wait requests will be scheduled.
+
+A single thread can have any number of events added to its thread-local event\_base. It is only when a new blocking I/O
+operation is necessary that the events can travel between threads, but not at any other point. Thus it is theoretically
+possible that one thread ends up with all the active sockets while the other threads are idling.
+
+However, since waiting for network events happens quite frequently, active connections should spread among the threads
+fairly quickly, easing the pressure on the thread having the most active connections to process.
+
+Note that, even though not depicted below, the main thread currently takes part in processing events after the accept
+state. This is not ideal because all accepted connections need to go through a single thread. On the other hand, it has
+not shown up as a bottleneck yet.
+
+In more detail:
+
+
+\begin{figure}[htbp]
+\centering    
+\includegraphics[width=1.1\textwidth]{images/signaling_thread_io.png}
+\caption{bla bla bla}
+\label{fig:signaling_thread_io}
+\end{figure}
+
+\end{comment}
+
+
+\section{Plugins}
+
+As stated before, MySQL Proxy is in fact the "proxy-plugin".  
+While the chassis and core make up an important part, it is really the plugins that make MySQL Proxy so flexible.
+The MySQL Proxy stable package contains the plugins: "proxy-plugin"; "admin-plugin"; "debug-plugin"; "master-plugin"; "replicant-plugin";
+ 
+
+\subsection{Proxy plugin}
+
+The "plugin-proxy" accepts connections on its \texttt{--proxy-address} and forwards the data to one of the \texttt{--proxy-backend-addresses}.
+Its default behaviour can be overwritten with scripting by providing a \texttt{--proxy-lua-script}.
+
+\subsubsection{Options}
+
+\begin{table}[h!]
+\centering
+	\footnotesize
+    \begin{tabular}{ | l | l |}
+    \hline
+    Option & Description \\ \hline
+    --proxy-lua-script=<file>, & Lua script to load at starting \\
+ 	-s & \\ \hline
+	--proxy-address=<host:port|file>,  & listening socket.\\
+	 -P <host:port|file> & Can be a unix-domain-socket or a IPv4 address.\\
+	& Default :4040 \\ \hline
+	--proxy-backend-addresses=<host:port|file>, & :default: 127.0.0.1:3306\\
+	 -b <host:port|file> & \\ \hline
+	--proxy-read-only-backend-addresses=<host:port>, & only used if the scripting layer makes use of it\\
+	 -r <host:port|file> & \\ \hline
+  	--proxy-skip-profiling & unused option. deprecated:: 0.9.0 \\ \hline
+	 --proxy-fix-bug-25371 & unused option. deprecated:: 0.9.0 \\ \hline
+	--no-proxy & unused option. deprecated:: 0.9.0 \\ \hline
+	--proxy-pool-no-change-user & don't use "com-change-user" to reset\\
+	& the connection before giving a connection \\
+	& from the connection pool to another client \\	
+    \hline
+    \end{tabular}
+
+\caption{Proxy Plugin options}
+\label{tab:proxy_plugin_options}
+\end{table}
+
+The Proxy Plugin options are presented in (Table~\ref{tab:proxy_plugin_options}).
+
+\subsection{Admin plugin}
+
+The admin plugin implements the listening side of a connection, i.e. it reads what the client is sending to the respective backend server.
+
+\subsubsection{Options}
+
+\begin{table}[h!]
+\centering
+    \begin{tabular}{ | l | l |}
+    \hline
+    Option & Description \\ \hline
+    --admin-username=<username> & admin username \\ \hline
+	--admin-password=<password>  & admin password \\ \hline
+	--admin-address=<host:port> & admin address and port. default: :4041 \\ \hline
+	--admin-lua-script=<file> & admin lua script. default:\\ 
+	&   ../lib/mysql-proxy/admin.lua \\ \hline
+    \end{tabular}
+
+\caption{Admin Plugin options}
+\label{tab:admin_plugin_options}
+\end{table}
+
+The Admin Plugin options are presented in (Table~\ref{tab:admin_plugin_options}).
+
+
+\subsection{Debug plugin}
+
+
+The debug plugin accepts a connection from the mysql client and executes the queries as Lua commands.
+
+\subsubsection{Options}
+
+\begin{table}[h!]
+\centering
+    \begin{tabular}{ | l | l |}
+    \hline
+    Option & Description \\ \hline
+    --debug-address=<host:port> & debug address and port. default: :4043 \\ \hline
+    \end{tabular}
+
+\caption{Debug Plugin options}
+\label{tab:debug_plugin_options}
+\end{table}
+
+The Debug Plugin options are presented in (Table~\ref{tab:admin_plugin_options}).
+
+
+\subsection{Client plugin}
+
+
+The client plugin connects to the backend server, authenticates and reads the server outputs. 
+
+\subsubsection{Options}
+
+\begin{table}[h!]
+\centering
+    \begin{tabular}{ | l | l |}
+    \hline
+    Option & Description \\ \hline
+	--address=<host:port> & admin address and port. default: :4041 \\ \hline
+    --username=<username> & admin username \\ \hline
+	--password=<password>  & admin password \\ \hline
+    \end{tabular}
+
+\caption{Client Plugin options}
+\label{tab:client_plugin_options}
+\end{table}
+
+The Client Plugin options are presented in (Table~\ref{tab:admin_plugin_options}).
+
+
+\subsection{Master plugin}
+
+The master plugin acts like a MySQL master instance in a replication scenario. It reads the events from a file, Lua script or something else applied to the backend server and exposes them as a binlog-streams. In order to expose them and act like a master server it listens on the default port and handles the \texttt{COM\_BINLOG\_DUMP} command sent by the slave instances. It allows a MySQL server to connect to it using the \texttt{CHANGE MASTER TO ...} and \texttt{START SLAVE} commands in order to fetch and apply the binlog-streams. 
+
+\subsubsection{Options}
+
+\begin{table}[h!]
+\centering
+    \begin{tabular}{ | l | l |}
+    \hline
+    Option & Description \\ \hline
+	--master-address=<host:port> & master listening address and port. Default: :4041 \\ \hline
+    --master-username=<username> & username to allow log in. Default: root \\ \hline
+	--master-password=<password>  & password to allow log in. Default: \\ \hline
+	--master-lua-script & Lua script to execute by the master plugin. \\ \hline
+    \end{tabular}
+
+\caption{Master Plugin options}
+\label{tab:master_plugin_options}
+\end{table}
+
+The master plugin options are presented in (Table~\ref{tab:master_plugin_options}).
+
+\subsection{Replicant plugin}
+
+The replicant plugin acts like a MySQL slave instance. It connects to a master, sends the \texttt{COM\_BINLOG\_DUMP} and the corresponding arguments for the binlog file, position, username and password. After the connection is established, it parses the binlog-streams sent by the server in order to create the relay binlog or to apply them directly to the backend server, taking in account what is defined on the Lua script. 
+
+\subsubsection{Options}
+
+\begin{table}[h!]
+\centering
+	\footnotesize
+    \begin{tabular}{ | l | l |}
+    \hline
+    Option & Description \\ \hline
+	--replicant-master-address=<host:port> & master instance listening address and port. Default: :4040 \\ \hline
+    --replicant-username=<username> & slave instance username. \\ \hline
+	--replicant-password=<password>  & slave instance password. \\ \hline
+	--replicant-lua-script & Lua script to execute by the replicant plugin. \\ \hline
+	--replicant-binlog-file & master binlog file from which the replicant plugin should read. \\ \hline
+	--replicant-binlog-pos & master binlog file position from which the replicant plugin\\
+	& should start reading. \\ \hline
+	--replicant-use-semisync & use semi-synchronous replication. \\ \hline
+    \end{tabular}
+
+\caption{Replicant Plugin options}
+\label{tab:replicant_plugin_options}
+\end{table}
+
+The replicant plugin options are presented in (Table~\ref{tab:replicant_plugin_options}).
+
+\section{Scripting}
+
+Each MySQL Proxy plugin can be written in order to expose hooks to the scripting layer that get called where needed. 
+
+%\subsection{Hooks}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=0.65\textwidth]{images/hooks.pdf}
+\caption{Proxy Plugin hooks control flow}
+\label{fig:hooks}
+\end{figure}
+
+
+The proxy-plugin exposes some hooks that are called on different stages of the communication between the client and the backend. A typical control flow is show in (Figure~\ref{fig:hooks}). On proxy-plugin the hooks allow changing the normal connection lifecycle allowing the features of never connecting to a backend, replace or inject commands and even replace responses.
+
+\begin{comment}
+\begin{itemize}
+	\item never connect to a backend;
+	\item replace commands;
+	\item inject commands;
+	\item replace responses;
+\end{itemize}
+\end{comment}
+
+\subsubsection{Proxy plugin Hooks}
+
+\paragraph{connect\_server}
+Intercepts the connect() call to the backend server. If it returns nothing the proxy connects to the backend using the standard backend selection algorithm. On the other side if it is set to return \texttt{proxy.PROXY\_SEND\_RESULT} is doesn't connect to the backend, but returns the content of \texttt{proxy.response} to the client.
+
+\paragraph{read\_auth}
+Reads the authentication packet sent by the backend as a string. If it return nothing it forwards the authentication packet to the client. On the other hand it can be set to replace the backends packet with the content of \texttt{proxy.response} if set to return \texttt{proxy.PROXY\_SEND\_RESULT}.
+
+\paragraph{read\_auth\_result\\}
+Similar to the read\_auth function, except it is for the next stage of the authentication cycle. It can replace the clients packet with the content of \texttt{proxy.response} if set to return \texttt{proxy.PROXY\_SEND\_RESULT}.
+
+\paragraph{read\_query\\}
+Reads the command/query packet as a string. If nothing is set it forwards the command packet do the backend. It can send the first packet of \texttt{proxy.queries} to the backend if set to return \texttt{proxy.PROXY\_SEND\_QUERY}. This allows to add queries to the proxy.queries structure and inject them on the backend. It can also send to the client the content of \texttt{proxy.response} and do not send nothing to the client as the normal connection cycle does.
+
+\paragraph{read\_query\_result\\}
+Intercepts the response sent to a command packet. If nothing set it forwards the result-set to the client. If return set to \texttt{proxy.PROXY\_SEND\_RESULT} it sends to the client the content of \texttt{proxy.responde}, and with \texttt{proxy.PROXY\_IGNORE\_RESULT} it doesn't send the result-set to the client.
+
+\paragraph{disconnect\_client\\}
+Intercepts the \texttt{close()} function of the client connection.
+
+
+\section{Summary}
+
+%Having carefully analyzed, described and detailed database replication we have inferred the data freshness issue. Besides the obvious transactions latency in synchronous replication, we have focused our efforts in analyzing the asynchronous model and specially on measuring the delay of this model on MySQL Database Management System. 
+
+%Conclusions on the evaluation of the measurements of replication on MySQL and the analysis made on group communication lead us to the fact that active replication could be an option and solution to the freshness problem and to the single master limitation of MySQL. \todo[inline]{replicação passiva?}
+
+In this chapter we have presented the software tool MySQL Proxy. We have introduced and documented the characteristics of this tool underlining the fact that it operates similarly as Man in the Middle standing between servers and clients, and also between servers and servers namely master and slave instances. This characteristic makes it feasible to implement either active and passive replication transparently using MySQL Proxy to intercept requests.
+
+Inferring this property and taking advantage of the group communication characteristics we are headed to the main motivation of this work; proposing a mechanism of updated distribution that allows thousands of hundreds of replicas. Bringing all the pieces together we can propose a mechanism based on group communication, using the tool MySQL Proxy in order to accomplish our goal.
+
+
+
+

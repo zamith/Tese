@@ -1,0 +1,217 @@
+\paragraph{}
+
+%Asynchronous replication reduces response times as transactions can be executed and committed locally and only then propagated to other sites\,\cite{Kemme:2000p212}. In detail, being replicated asynchronously, data is first written on the master server and then is propagated to slaves, and so, specially in the case of hundreds of servers, slaves will take some time to obtain the most recent data. Lazy propagation thus opens up the possibility of having stale data in replicas and makes data freshness a key issue for correctness and performance.
+
+%Most database management systems implement asynchronous master-slave replication. The systems provide mechanisms for master-slave replication that allows configuring one or more servers as slaves of another server, or even to behave as master for local updates.
+
+MySQL allows almost any configuration of master and slaves, as long as each server has at most one master. As described in Chapter 2, this usually leads to a variety of  hierarchical replication topologies, but includes also a ring which allows updates to be performed at any replica, as long as conflicts are avoided.
+
+It is thus interesting to assess the impact of replication topology in MySQL, towards maximizing scalability and data freshness. This is not however easy to accomplish. First, it requires comparing samples obtained at different replicas and thus on different time referentials, or, when using a centralized probe, network round-trip has to be accounted for. Second, the number of samples that can be obtained has to be small in order not to introduce a probing overhead. Finally, the evaluation should be performed while the system is running a realistic workload, which makes it harder to assess the point-in-time at each replica with a simple operation.
+
+In this chapter we address these challenges by presenting the several efforts made in order to measure the asynchronous replication delay of the MySQL's Database Management System.
+
+%The chapter is organized as follows. In section 4.1 we introduce the issues that took us to propose and implement a solution to measure replication delay. In section 4.3 we describe the approach to address this problem. We present the problems that emerge in obtaining replication delay accurately and describe how we have managed to overcome them. We describe the implementation of the tool needed to interrogate the database instances. We present the workload used to obtain the results that motivate this work, and we also present the corresponding settings configured for the benchmarks. Finally, in Section 4.3 we present the obtained results and in Section 4.4 we present a discussion and evaluation of the results. 
+
+\section{Background}
+
+MySQL replication is commonly known as being very fast, as it depends strictly on the 
+the speed that the engine copies and replays events, the network, the seize of the binary log, and time between logging and execution of a query\,\cite{Schwartz:1118024}. However, there have not been many systematic efforts to precisely characterize the impact on data freshness.
+
+One approach is based on the use of a User Defined Function returning the system time with microsecond precision\,\cite{Schwartz:1118024}. Inserting this function's return value on the tables we want to measure and comparing it to the value on the respective slave's table we can obtain the time delay between them. But this measurements can only be achieved on MySQL instances running on the same server due to clock inaccuracies between different machines. 
+
+A more practical approach uses a Perl script and the Time::HiRes module to get the system time with seconds and microseconds precision.\footnote{http://datacharmer.blogspot.com/2006/04/measuring-replication-speed.html} The first step is to insert that time in a table on the master, including the time for the insertion. After this, the slave is queried to get the same record and immediately after the attainment of it the subtraction between system's date and time got from the slave's table is made, obtaining the replication time. 
+As with the method described above this one lacks of accuracy due to the same clock inaccuracies.
+
+\section{Approach}
+
+Our approach is based on using a centralized probe to periodically query each of the replicas, thus discovering what has been the last update applied. By comparing such positions, it should be possible to discover the propagation delay. There are however several challenges that have to be tackled to obtain correct results, as follows. \\
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=0.8\textwidth]{images/problem1.pdf}
+\caption{Impossibility to probe simultaneously master and slaves.}
+\label{fig:problem1}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=0.6\textwidth]{images/log_pos.pdf}
+\caption{Log position over the time}
+\label{fig:interrogation}
+\end{figure}
+
+
+\paragraph{Measuring updates.} The first challenge is to determine by how much two replicas differ and thus when two replicas have applied exactly the same amount of updates. Instead of trying to compare database content, which would introduce a large overhead, or using a simple database schema and workload that makes it easy, we use the size of the transactional log itself. Although this does not allow us to measure logical divergence, we can determine when two replicas are exactly with the same state.
+
+\paragraph{Non-simultaneous probing.} The second challenge is that, by using a single centralized probe one cannot be certain that several replicas are probed at exactly the same time. Actually, as shown in (Figure~\ref{fig:problem1}), if the same monitor periodically monitors several replicas it is unlikely that this happens at all. This makes it impossible to compare different samples directly.
+
+Instead, as shown in (Figure~\ref{fig:interrogation}) we consider time--log position pairs obtained by the monitor and fit a line to them (using the least-squares method). We can then  compute the distance of each point obtained from other replicas to this line along the time axis. This measures how much time such replica was stale.
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=0.8\textwidth]{images/problem2.pdf}
+\caption{Sampling twice without updates erroneously biases the estimate.}
+\label{fig:problem2}
+\end{figure}
+
+\paragraph{Eliminating quiet periods.} Moreover, as replication traffic tends to be bursty. If one uses repeated samples of a replica that stands still at the same log position, the estimate is progressively biased towards a (falsely) higher propagation delay, as shown in (Figure~\ref{fig:problem2}). This was solved by selecting periods where line segments obtained from both replicas have a positive slope, indicating activity.
+
+\paragraph{Dealing with variability.} Finally, one has to deal with variability of replication itself and over the network used for probing. This is done by considering a sufficient amount of samples and assuming that each probe happens after half of the observed round-trip. Moreover, a small percentage of the highest round-trips observed is discarded, to remove outliers.
+
+\subsection{Implementation}
+
+An application to interrogate the master instance and several replicas of the distributed database scheme was developed. This tool stores the results in a file for each instance.
+To obtain the log position it uses the MySQL API in order to obtain the replication log position. The temporal series of observed log positions are then stored in separate files, one for each node of the distributed database.
+
+Results are then evaluated off-line using the Python programming language and R statistics package. This script filters data as described and then adjusts a line to the values of the log files and compares them. This includes looking for periods of heavy activity and fitting line segments to those periods. With these line segments, the script compares each slave points with the corresponding segment on the master, if the segment does not exist for the selected point, the point is ignored. In the end, average is calculated based on the difference of values between slave points and corresponding segments on the master. A confidence interval can also be computed, using the variance computed from the same data.
+
+
+\subsection{Workload}
+
+In order to assess the distributed database used in the case study, we have chosen the workload model defined by TPC-C benchmark\,\cite{Cou01}, a standard on-line transaction processing (OLTP) benchmark which mimics a wholesale supplier with a number of geographically distributed sales districts and associated warehouses. Specifically, we used the Open-Source Development Labs Database Test Suit 2 (DBT-2), a fair usage implementation of the specification.
+
+Although TPC-C includes a small amount of read-only transactions, it is composed mostly by update intensive transactions. This choice makes the master server be almost entirely dedicated to update transactions even in a small scale experimental setting, mimicking what would happen in a very large scale MySQL setup in which all conflicting updates have to be directed at the master while read-only queries can be load-balanced across all remaining replicas.
+
+It simulated the activities found in complex OLTP environment by exercising a breadth of system components associated with such environments, which are characterized by:
+
+\begin{itemize}
+	\item The simultaneous execution of multiple transaction types that span a breadth of complexity;
+	\item On-line and deferred transaction execution modes;
+ 	\item Multiple on-line terminal sessions;
+ 	\item Moderate system and application execution time;
+ 	\item Significant disk input/output;
+ 	\item Transaction integrity (ACID properties);
+ 	\item Non-uniform distribution of data access through primary and secondary keys;
+ 	\item Databases consisting of many tables with a wide variety of sizes, attributes, and relationships; 
+ 	\item Contention on data access and update.
+\end{itemize}
+
+ In detail, the database is constituted by the following relations: \emph{warehous}, \emph{district}, \emph{customer}, \emph{stock}, \emph{orders}, \emph{order line}, \emph{history}, \emph{new order}, and \emph{item}. Each simulated client can request five different transaction types that mimic the following operations:
+ 
+\begin{description}
+ 	\item[New Order:] adding a new order to the system (with 44\% probability of occurrence);
+ 	\item[Payment:] updating customer's balance, district and warehouse statistics (with 44\% probability of occurrence);
+ 	\item[Orderstatus:] returning a given costumer latest order (with 4\% probability of occurrence);
+ 	\item[Delivery:] recording the delivery of products (with 4\% probability of occurrence);
+ 	\item[Stocklevel:] determining the number of recently sold items that have a stock level below a specified threshold (with 4\% probability of occurrence);
+\end{description}
+
+Each client is attached to a database server and produces a stream of transaction requests. When a client issues a request it blocks until the server replies, thus modeling a single threaded client process. After receiving a reply, the client is then paused for some amount of time (think-time) before issuing the next transaction request. The TPC-C model scales the database according to the number of clients. An additional warehouse should be configured for each additional ten clients. The initial sizes of tables are also dependent on the number of configured clients.
+
+During a simulation run, clients log the time at which a transaction is submitted, the time at which it terminates, the outcome (either abort or commit) and a transaction identifier. The latency, throughput and abort rate of the server can then be computed for one or multiple users, and for all or just a subclass of the transactions. The results of each DBT-2 run include also CPU utilization, I/O activity, and memory utilization.
+
+
+\subsection{Setting}
+
+Two replication schemes were installed and configured. A six machines topology of master and multiple slaves, and a six machine topology in daisy chain. 
+
+The hardware used included six HP Intel(R) Core(TM)2 CPU 6400 - 2.13GHz processor machines, each one with one GByte of RAM and SATA disk drive. The operating system used is Linux, kernel 2.6.31-14, from Ubuntu Server with ext4 filesystem, and the database engine used is MySQL 5.1.54. All machines are connected through a LAN, and are named PD00 to PD07. Being PD00 the master instance, PD04 the remote machine in which the interrogation client executes, and the others the slave instances.
+
+The following benchmarks were done using the workload TPC-C with the scale factor (warehouses) of two, number of database connections (clients) one hundred and the duration of twenty minutes.
+
+\subsubsection{MySQL Replication Setup}
+
+Two replication schemes were installed and configured. A five machines topology of master and multiple slaves was configured using the MySQL's asynchronous replication scheme. 
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=0.8\textwidth]{images/mms_benchmarks.pdf}
+\caption{Master and Multiple Slaves topology}
+\label{fig:multi_all}
+\end{figure}
+
+In (Figure \ref{fig:multi_all}), each computer represents a node in the topology. \\
+
+The other replication scheme used was the chain topology, in other words, the open ring topology. 
+
+
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=0.7\textwidth]{images/chain_benchmarks.pdf}
+\caption{Chain topology}
+\label{fig:ring_all}
+\end{figure}
+
+In (Figure \ref{fig:ring_all}), each computer represents a node in the topology. \\
+
+\clearpage
+
+\section{Results}
+
+\begin{table}[t]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table1.jpg}
+\begin{tabular}{lrrrrrrr}
+ \hline\hline
+ Replica & PD01 & PD02 & PD03 & PD05 & PD06 & PD07 \\
+\hline
+Number of samples & 43947 & 43923 & 43797 & 43729 & 43962 & 44001 \\
+Average delay ($\mu$s) & 3670 & 3419 & 3661 & 4121 & 3334 & 3565 \\
+99\% confidence interval ($\pm$) & 88 & 38 & 81 & 195 & 32 & 65 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{Results for master and multiple slaves topology with 100 clients.}
+\label{tab:table1_delay}
+\end{table}
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_semproxy/tt0_new/histo.pdf}
+\caption{Scalability of master and multiple slaves topology.}
+\label{fig:graph1}
+\end{figure}
+
+\begin{table}[t]
+\centering    
+%\includegraphics[width=0.9\textwidth]{images/table2.jpg}
+\begin{tabular}{lrrrrrrr}
+ \hline\hline
+ Replica & PD01 & PD02 & PD03 & PD05 & PD06 & PD07 \\
+\hline
+Number of samples & 40597 & 40110 & 39372 & 38822 & 38161 & 39057 \\
+Average delay ($\mu$s) & 3701 & 6505 & 9839 & 12409 & 15575 & 22341 \\
+99\% confidence interval ($\pm$) & 124 & 249 & 397 & 485 & 590 & 821 \\
+\hline
+\end{tabular}
+
+~\\
+\caption{Results for chain topology with 100 clients.}
+\label{tab:table2_delay}
+\end{table}
+
+\begin{figure}[t]
+\centering    
+\includegraphics[width=1\textwidth]{images/chain/tt0_new/histo.pdf}
+\caption{Scalability of the chain topology.}
+\label{fig:graph2}
+\end{figure}
+
+\begin{comment}
+Results obtained with 100 TPC-C clients and the master and multiple slaves topology are presented in (Table~\ref{tab:table1_delay}). It can be observed that all replicas get similar results and that the propagation delay is consistently measured close to 10\,ms with a small variability. This represents an upper bound on the worst case scenario staleness that a client can observe by reading from the master and any other replica if the replication connection is operational.
+
+Results with an different numbers of TPC-C clients can be found in (Figure \ref{fig:graph1}). They show that propagation delay grows substantially with the load imposed on the master. At the same time, as idle periods get less and less frequent due to the higher amount of information to transfer, the probability of a client being able to read stale data grows accordingly.
+\end{comment}
+
+Results obtained with 100 TPC-C clients and the master and multiple slaves topology are presented in (Table~\ref{tab:table1_delay}). It can be observed that all replicas get similar results and that propagation delay is consistently measured close to 10\,ms with a small variability. 
+
+Results obtained with an different number of TPC-C clients are show in (Figure~\ref{fig:graph1}). They show that propagation delay is similar between replicas and has little variation with the load imposed on the master. We can conclude that propagation delay is similar between replicas in a master and multiple slaves topology.
+Previously experiments with the same configuration but with ext3 filesystem showed that propagation delay grown substantially with the load imposed on the master. At the same time, as idle periods get less and less frequent due to the higher amount of information to transfer, the probability of a client being able to read stale data grown accordingly. However, with ext4 filesystem, propagation delay is similar between replicas and the setup behaves in the same way.\\
+
+\vspace{10mm}
+Results obtained with 100 TPC-C clients and the chain topology are presented in (Table~\ref{tab:table2_delay}). In contrast to master and multiple slaves, the delay now grows as the replica is farther away for the master. This configuration also gives an indication of how the ring topology would perform: As any replica would be, on average, half way to other masters, one should expect the same delay as observed here on replicas PD03 and PD05.
+
+Results with an increasing number of TPC-C clients can also be found in (Figure \ref{fig:graph2}),  showing that propagation delay still grow substantially with the load imposed on the master. This means that using the ring configuration for write scalability with suffer the same problem, thus limiting its usefulness.
+
+
+
+\section{Summary}
+
+We have committed to evaluate the consequences on data freshness of the choice of replication topologies and of a growing workload. Our approach measures freshness in terms of time required for updates performed at the master replica to reach each slave while using a realistic update-intensive workload, as the proposed tool can infer freshness from a small number of samples taken at different points in time at different replicas. Experimental results obtained with this tool show that, in both tested replication topologies, the delay grows with the workload which limits the amount of updates that can be handled by a single replica. Moreover, we can also conclude that in circular replication the delay grows as the number of replicas increases, which means that spreading updates across several replicas does not improve update scalability. Finally, the delay grows also with the number of slaves attached to each master, which means that read scalability can also be achieved only at the expense of data freshness.
+
+The conclusion is that the apparently unlimited scalability of MySQL using a combination of different replication topologies can only be achieved at the expense of an increasing impact in data freshness. The application has thus to explicitly deal with stale data in order to minimize or prevent the user from observing inconsistent results.
+
+It is thus interesting to propose and implement other replication mechanisms to overcome the limitation presented and discussed above. However, one must take into account that in order to achieve this goal it is mandatory to intercept the requests and/or the updates to obtain primary-copy or state-machine replication.

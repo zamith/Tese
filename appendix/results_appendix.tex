@@ -1,0 +1,86 @@
+\section{MySQL Replication}
+
+\subsection{Master and Multiples Slaves}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_semproxy/tt0_new/histo.pdf}
+\caption{Replication delay values for Master and Multiple Slaves topology (no think-time)}
+\end{figure}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_semproxy/tt03/histo.pdf}
+\caption{Replication delay values for Master and Multiple Slaves topology (one-third of think-time)}
+\end{figure}
+
+\clearpage
+
+\subsection{Chain}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/chain/tt0_new/histo.pdf}
+\caption{Replication delay values for Chain topology (no think-time)}
+\end{figure}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/chain/tt03/histo.pdf}
+\caption{Replication delay values for Chain topology (one-third of think-time)}
+\end{figure}
+
+\clearpage
+
+\section{Proxy Spread Plugins - Active Replication}
+
+\subsection{FIFO Messages}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo/tt03/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (one-third of think-time)}
+\end{figure}
+
+\clearpage
+
+
+\subsubsection{Varying number of replicas}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo_varrepl/tt03_2repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (one-third of think-time, two replicas)}
+\end{figure}
+
+\begin{figure}[h!]
+\centering 
+\includegraphics[width=1\textwidth]{images/mms_comproxy_fifo_varrepl/tt03_4repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with FIFO messages (one-third of think-time, four replicas)}
+\end{figure}
+
+\clearpage
+
+\subsection{AGREED Messages}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed/tt03/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (one-third of think-time)}
+\end{figure}
+
+\clearpage
+
+\subsubsection{Varying number of replicas}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed_varrepl/tt03_2repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (one-third of think-time, two replicas)}
+\end{figure}
+
+\begin{figure}[h!]
+\centering    
+\includegraphics[width=1\textwidth]{images/mms_comproxy_agreed_varrepl/tt03_4repl/histo.pdf}
+\caption{Replication delay values for active replication with Proxy Spread plugins with AGREED messages (one-third of think-time, four replicas)}
+\end{figure}

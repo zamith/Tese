@@ -1,0 +1,138 @@
+\begin{thebibliography}{10}
+
+\bibitem{derbySite}
+ASF.
+\newblock Apache derby official website.
+\newblock \url{http://db.apache.org/derby/} (in 14/12/2010), 2010.
+
+\bibitem{derbySQL}
+ASF.
+\newblock Derby support for sql-92 features.
+\newblock \url{http://db.apache.org/derby/docs/10.3/ref/rrefsql9241891.html}
+  (in 14/12/2010), 2010.
+
+\bibitem{Brewer2000}
+E.~Brewer.
+\newblock {Towards robust distributed systems}.
+\newblock In {\em Proceedings of the Annual ACM Symposium on Principles of
+  Distributed Computing}, volume~19, pages 7--10, 2000.
+
+\bibitem{derbydevIBM}
+R.~Brunner.
+\newblock Developing with apache derby.
+\newblock
+  \url{http://www.ibm.com/developerworks/opensource/library/os-ad-trifecta2/in%
+dex.html} (in 14/12/2010), 2006.
+
+\bibitem{Chang2008}
+F.~Chang, J.~Dean, S.~Ghemawat, W.~Hsieh, D.~Wallach, M.~Burrows, T.~Chandra,
+  A.~Fikes, and R.~Gruber.
+\newblock {Bigtable: A distributed storage system for structured data}.
+\newblock {\em ACM Transactions on Computer Systems (TOCS)}, 26(2):1--26, 2008.
+
+\bibitem{SQLintro}
+M.~Chapple.
+\newblock Sql fundamentals.
+\newblock \url{http://databases.about.com/od/sql/a/sqlfundamentals.htm} (in
+  14/12/2010), 2010.
+
+\bibitem{codd1970relational}
+E.~Codd.
+\newblock {A relational model of data for large shared data banks}.
+\newblock {\em Communications of the ACM}, 13(6):377--387, 1970.
+
+\bibitem{derbyDev10}
+Derby.
+\newblock {\em Derby Developer's Guide - Version 10.7}, 2010.
+
+\bibitem{derby10}
+Derby.
+\newblock {\em Getting Started with Derby - Version 10.7}, 2010.
+
+\bibitem{DM}
+DM.
+\newblock Datamapper.
+\newblock \url{http://datamapper.org/} (in 19/12/2010), 2010.
+
+\bibitem{cql}
+E.~Evans.
+\newblock Cql 1.0.
+\newblock \url{https://issues.apache.org/jira/browse/CASSANDRA-1703} (in
+  21/12/2010), 2010.
+
+\bibitem{cqlSelect}
+E.~Evans.
+\newblock Cql reads (aka select).
+\newblock \url{https://issues.apache.org/jira/browse/CASSANDRA-1704} (in
+  21/12/2010), 2010.
+
+\bibitem{Hastorun2007}
+D.~Hastorun, M.~Jampani, G.~Kakulapati, A.~Pilchin, S.~Sivasubramanian,
+  P.~Vosshall, and W.~Vogels.
+\newblock {Dynamo : Amazon ’ s Highly Available Key-value Store}.
+\newblock In {\em In Proc. SOSP}, pages 205--220. Citeseer, 2007.
+
+\bibitem{SQLibm}
+IBM.
+\newblock Structured query language (sql).
+\newblock
+  \url{http://publib.boulder.ibm.com/infocenter/db2luw/v9/index.jsp?topic=/com%
+.ibm.db2.udb.admin.doc/doc/c0004100.htm} (in 14/12/2010), 2006.
+
+\bibitem{Junqueira2007}
+F.~Junqueira, M.~Konar, A.~Kornev, and B.~Reed.
+\newblock {Zookeeper}.
+\newblock {\em Update}, 2007.
+
+\bibitem{lakshmanMalik}
+A.~Lakshman and P.~Malik.
+\newblock Cassandra - a decentralized structured storage system.
+\newblock 2009.
+
+\bibitem{ozsu91distributeddatabase}
+M.~T. Ozsu and P.~Valduriez.
+\newblock Distributed database systems: Where are we now.
+\newblock {\em IEEE Computer}, 24:68--78, 1991.
+
+\bibitem{sarkissian09}
+A.~Sarkissian.
+\newblock Wtf is a supercolunm? - an intro to the cassandra data model.
+\newblock 2009.
+
+\bibitem{seeger09}
+M.~Seeger.
+\newblock Key-value stores: a practical overview.
+\newblock 2009.
+
+\bibitem{derbyPatch}
+K.~M. Solem.
+\newblock A new approach for main-memory database.
+\newblock \url{https://issues.apache.org/jira/browse/DERBY-2798} (in
+  19/12/2010), 2007.
+
+\bibitem{stonebraker2010sql}
+M.~Stonebraker.
+\newblock {SQL databases v. NoSQL databases}.
+\newblock {\em Communications of the ACM}, 53(4):10--11, 2010.
+
+\bibitem{Tanner}
+T.~Tanner.
+\newblock {Distributed Hash Tables in P2P Systems - A literary survey}.
+\newblock {\em Technology}, pages 2--7, 2005.
+
+\bibitem{taylor1976codasyl}
+R.~Taylor and R.~Frank.
+\newblock {Codasyl data-base management systems}.
+\newblock {\em ACM Computing Surveys (CSUR)}, 8(1):67--103, 1976.
+
+\bibitem{Vogels2008}
+W.~Vogels.
+\newblock {EVENTUALLY CONSISTENT}.
+\newblock {\em Queue}, 6(6):14, Oct. 2008.
+
+\bibitem{will10}
+M.~Will.
+\newblock Cassandra for life science.
+\newblock 2010.
+
+\end{thebibliography}

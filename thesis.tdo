@@ -1,0 +1,4 @@
+\contentsline {todo}{{Falar de two e three phase commit e da elei\IeC {\c c}\IeC {\~a}o de lider. So uso o zookeeper para manter locks}}{5}{section*.16}
+\contentsline {todo}{{Explicar como Derby tratq os indices}}{13}{section*.24}
+\contentsline {todo}{Figure: {}}{13}{section*.24}
+\contentsline {todo}{{optimiza\IeC {\c c}\IeC {\~a}o feita para n\IeC {\~a}o ter de fazer dois fetches a BD}}{13}{section*.25}
