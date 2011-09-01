@@ -31,16 +31,58 @@ Derby databases provide ACID guarantees, according to the ACID test \cite{derbyd
 
 \section{Patching Derby}
 
-The idea of patching Derby so that the data is stored in a different way is not entirely new and was firstly introduced by Knut Magne Solem\cite{derbyPatch}. In his approach all the tables whose name began with MEM were stored in memory, following the same strategy, our approach stores all the table whose name starts with \emph{TUPLE} in Cassandra.
+The idea of patching Derby so that the data is stored in a different way is not entirely new and was firstly introduced by Knut Magne Solem\cite{derbyPatch}. In his approach all the tables whose name began with \emph{MEM} were stored in memory, following the same strategy, our approach stores in Cassandra all the tables whose name starts with \emph{TUPLE}.
 
-\subsection{Indexes}
+This implies re-writing all the classes and methods from the access part of the Derby engine, that uses a BTree by default and therefore are in the namesake package. As this implementation uses a Tuple Store, the name of the package was also tuplestore.
 
-\todo[inline]{Explicar como Derby trata os indices}
+When rewriting this classes some optimizations were made, such as the reutilization of connections since Derby creates one physical connection to the underlying database for each transaction, which could mean a reasonable overhead when a new one was created due to the cost of establishing the connection. To circumvent this, a pool of connections is created and if there is one free it is used, otherwise a new connection is opened, preventing some of the overhead. 
 
-\missingfigure{}
+\subsection{Records}
 
-\todo[inline]{optimização feita para não ter de fazer dois fetches a BD}
+\subsection{Indexing}
+Indexing is a way of sorting a number of records on multiple fields. Creating an index on a field in a table creates another data structure with the field value, and a pointer to the primary record. 
+
+The downside to indexing is that these indexes require additional space on the disk and processing time when inserting new data.
+
+\subsubsection{Derby Indexes}
+Parallel to the actual record handling classes, there are the ones responsible for the indexes, which can be of one of three types:
+
+\begin{description}
+	\item[Primary] Refers to primary keys. There can only be one per table and it must unambiguously match one, and only one, record.
+	\item[Unique] Resemble ordinary (secondary) indexes, except they prevent duplicates from being added.
+	\item[Secondary] Secondary or Ordinary indexes serve the same purposes as primary indexes, but on different values than the primary key.
+\end{description} 
+
+The creation of an index in the patched version of Derby depends on its type. 
+
+In the case where it is a primary index, Derby is informed about it (through a flag), but no actual index is created, since the record already contains that information and is indexed for it.
+
+On the rest of the cases, an index is created according to the model defined in chapter \todo{capitulo do modelo de dados do cassandra}.
+
+When fetching information that is indexed, Derby first estimates the cost of fetching using the index or not, based on the number and size of the rows, and acts accordingly.
+
+\begin{figure}[h]
+  \centering    
+  \includegraphics[width=0.9\textwidth]{images/derbyindexes}
+  \caption{Derby Indexes}
+  \label{fig:derbyindexes}
+\end{figure}
+
 
 \subsection{Scans}
 
 \todo[inline]{Explicar como é feito uma range query no Derby}  
+
+When performing a scan that involves fetching a row through an index, Derby gets the row for that index from which it extracts the location of the actual record and then does a second fetch, this time to the location pointed by the index.
+
+This is fine for unique and secondary indexes, but as explained in the previous section, in the case of primary indexes there is no need for the creation of a specific row for the index, thus making this two fetches mechanism redundant. Since this redundancy meant an unnecessary access to the database, which could incur in a large overhead, this matter had to be addressed. 
+
+The way this was solved was by storing in memory the whole row fetched in first place (through the index) and passing it on alongside with the actual record location. This allows for the controller of the fetch to use the information in memory, when it is available.   
+
+
+
+
+
+
+
+

@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2009.9.1)  29 AUG 2011 19:14
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2009.9.1)  31 AUG 2011 19:02
 entering extended mode
  file:line:error style messages enabled.
  %&-line parsing enabled.
@@ -741,7 +741,7 @@ File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
  [1{/usr/local/texlive/2008/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
 ] (./cover.tex
-<images/UM.jpg, id=144, 201.6333pt x 101.178pt>
+<images/UM.jpg, id=151, 201.6333pt x 101.178pt>
 File: images/UM.jpg Graphic file (type jpg)
  <use images/UM.jpg>
 (/usr/local/texlive/2008/texmf-dist/tex/latex/ucs/data/uni-0.def
@@ -754,10 +754,7 @@ LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <17.28> not available
 (Font)              Font shape `T1/ppl/b/n' tried instead on input line 2.
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10.95> not available
 (Font)              Font shape `T1/ppl/b/n' tried instead on input line 4.
-) [3] [4] (./sections/epigraph.tex
-(/usr/local/texlive/2008/texmf-dist/tex/latex/ucs/data/uni-32.def
-File: uni-32.def 2004/10/17 UCS: Unicode data U+2000..U+20FF
-)) [5]
+) [3] [4] (./sections/epigraph.tex) [5]
 [6
 
 ]
@@ -915,7 +912,7 @@ Overfull \hbox (19.10284pt too wide) in paragraph at lines 1--2
 rtable and platform-independent,
  []
 
-<images/derbystruct.pdf, id=332, 439.6425pt x 398.48875pt>
+<images/derbystruct.pdf, id=343, 439.6425pt x 398.48875pt>
 File: images/derbystruct.pdf Graphic file (type pdf)
 
 <use images/derbystruct.pdf>
@@ -929,20 +926,25 @@ has been already used, duplicate ignored
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.16 
-      <./images/derbystruct.pdf>] [12]
-Underfull \hbox (badness 10000) in paragraph at lines 40--41
+      <./images/derbystruct.pdf>] [12] [13]
+<images/derbyindexes.pdf, id=457, 472.76625pt x 283.0575pt>
+File: images/derbyindexes.pdf Graphic file (type pdf)
 
- []
+<use images/derbyindexes.pdf> [14pdfTeX warning (ext4): destination with the sa
+me identifier (name{figure.4.2}) has been already used, duplicate ignored
 
-) [13] [14
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.79 
+      <./images/derbyindexes.pdf>]) [15] [16
 
 ]
 Chapter 5.
-(./sections/cassandra.tex [15]
-<images/column.jpg, id=454, 183.68625pt x 100.375pt>
+(./sections/cassandra.tex [17]
+<images/column.jpg, id=521, 183.68625pt x 100.375pt>
 File: images/column.jpg Graphic file (type jpg)
  <use images/column.jpg>
-<images/supercolumn.jpg, id=456, 295.1025pt x 463.7325pt>
+<images/supercolumn.jpg, id=523, 295.1025pt x 463.7325pt>
 File: images/supercolumn.jpg Graphic file (type jpg)
 
 <use images/supercolumn.jpg>
@@ -951,7 +953,7 @@ Overfull \hbox (3.17255pt too wide) in paragraph at lines 39--40
 l-umn Fam-i-lies, which ``glue''
  []
 
-[16pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1
+[18pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
@@ -966,10 +968,10 @@ has been already used, duplicate ignored
 l.41 A
       pplications can specify the sort order of columns within a column fami...
  <./images/column.jpg> <./images/supercolumn.jpg>]
-<images/columnfamily.jpg, id=462, 680.5425pt x 518.93875pt>
+<images/columnfamily.jpg, id=529, 680.5425pt x 518.93875pt>
 File: images/columnfamily.jpg Graphic file (type jpg)
 
-<use images/columnfamily.jpg> [17pdfTeX warning (ext4): destination with the sa
+<use images/columnfamily.jpg> [19pdfTeX warning (ext4): destination with the sa
 me identifier (name{figure.5.3}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
@@ -980,19 +982,19 @@ Underfull \hbox (badness 10000) in paragraph at lines 66--67
 
  []
 
-) [18]
+) [20]
 Chapter 6.
-(./sections/fdtm.tex) [19
+(./sections/fdtm.tex) [21
 
-] [20
+] [22
 
 ]
 Chapter 7.
-(./sections/results.tex) [21] [22
+(./sections/results.tex) [23] [24
 
 ]
 Chapter 8.
-[23] (./thesis.bbl [24]
+[25] (./thesis.bbl [26]
 Underfull \hbox (badness 3849) in paragraph at lines 4--7
 []\T1/ppl/m/n/10.95 ASF.  Apache derby of-fi-cial web-site.  [][]$\T1/cmtt/m/n/
 10.95 http : / / db . apache . org / derby/$[][] \T1/ppl/m/n/10.95 (in
@@ -1004,7 +1006,9 @@ Underfull \hbox (badness 3199) in paragraph at lines 34--38
  http : / / databases . about . com / od / sql / a /
  []
 
-[25
+(/usr/local/texlive/2008/texmf-dist/tex/latex/ucs/data/uni-32.def
+File: uni-32.def 2004/10/17 UCS: Unicode data U+2000..U+20FF
+) [27
 
 ]
 Underfull \hbox (badness 2503) in paragraph at lines 76--81
@@ -1018,7 +1022,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 76--81
 . db2 . udb . admin . doc / doc /
  []
 
-) [26] (./thesis.aux)
+) [28] (./thesis.aux)
 
 LaTeX Warning: There were undefined references.
 
@@ -1028,13 +1032,13 @@ LaTeX Warning: There were undefined references.
 ### semi simple group (level 1) entered at line 36 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 15501 strings out of 493876
- 249572 string characters out of 1150569
- 324603 words of memory out of 3000000
- 18209 multiletter control sequences out of 10000+50000
+ 15536 strings out of 493876
+ 250226 string characters out of 1150569
+ 324695 words of memory out of 3000000
+ 18237 multiletter control sequences out of 10000+50000
  49727 words of font info for 96 fonts, out of 3000000 for 5000
  714 hyphenation exceptions out of 8191
- 54i,11n,78p,980b,10121s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 54i,11n,78p,980b,10193s stack positions out of 5000i,500n,10000p,200000b,50000s
 {/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/cm-super/cm
 -super-t1.enc}{/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/base/8r.enc}<
 /usr/local/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></usr/loca
@@ -1044,9 +1048,9 @@ xlive/2008/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2
 008/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2008/tex
 mf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2008/texmf-dist
 /fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on thesis.pdf (44 pages, 448649 bytes).
+Output written on thesis.pdf (46 pages, 481060 bytes).
 PDF statistics:
- 603 PDF objects out of 1000 (max. 8388607)
- 130 named destinations out of 1000 (max. 131072)
- 290 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 671 PDF objects out of 1000 (max. 8388607)
+ 136 named destinations out of 1000 (max. 131072)
+ 311 words of extra memory for PDF output out of 10000 (max. 10000000)
 

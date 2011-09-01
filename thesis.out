@@ -19,7 +19,9 @@
 \BOOKMARK [1][-]{section.4.2}{Querying}{chapter.4}
 \BOOKMARK [1][-]{section.4.3}{Consistency}{chapter.4}
 \BOOKMARK [1][-]{section.4.4}{Patching Derby}{chapter.4}
-\BOOKMARK [2][-]{subsection.4.4.1}{Indexes}{section.4.4}
+\BOOKMARK [2][-]{subsection.4.4.1}{Records}{section.4.4}
+\BOOKMARK [2][-]{subsection.4.4.2}{Indexing}{section.4.4}
+\BOOKMARK [2][-]{subsection.4.4.3}{Scans}{section.4.4}
 \BOOKMARK [0][-]{chapter.5}{Cassandra}{}
 \BOOKMARK [1][-]{section.5.1}{Data Model}{chapter.5}
 \BOOKMARK [1][-]{section.5.2}{Querying}{chapter.5}

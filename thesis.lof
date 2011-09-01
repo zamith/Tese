@@ -4,10 +4,11 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {4.1}{\ignorespaces Derby System Structure}}{11}{figure.4.1}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Derby Indexes}}{14}{figure.4.2}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Cassandra Column}}{16}{figure.5.1}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Cassandra SuperColumn}}{16}{figure.5.2}
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Cassandra ColumnFamily}}{17}{figure.5.3}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Cassandra Column}}{18}{figure.5.1}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Cassandra SuperColumn}}{18}{figure.5.2}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Cassandra ColumnFamily}}{19}{figure.5.3}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
