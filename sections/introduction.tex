@@ -29,7 +29,7 @@ If you want to work with a lot of data and be able to run dynamic ad-hoc queries
 \end{quote} 
 \begin{flushright}in \url{http://buytaert.net/nosql-and-sql}, 25/11/2010\end{flushright}
 	
-In many cases this will lead to having to write different code to access different kinds of data, or using a polyglot \ac{orm}\footnote{A orm that outputs different code, according to the database in use, in spite of receiving the same input} as Ruby's DataMapper \cite{DM}, and in most of the cases this probably is not a very big problem, but nonetheless, it will make your code dependent of the \ac{dbms} you use. Another problem arises when you have legacy code you want to migrate from an \ac{sql} based \ac{dbms} to a NoSQL system. 	
+In many cases this will lead to having to write different code to access different kinds of data, or using a polyglot \ac{orm}\footnote{An orm that outputs different code, according to the database in use, in spite of receiving the same input} as Ruby's DataMapper \cite{DM}, and in most of the cases this probably is not a very big problem, but nonetheless, it will make your code dependent of the \ac{dbms} you use. Another problem arises when you have legacy code you want to migrate from an \ac{sql} based \ac{dbms} to a NoSQL system. 	
  
 This work is going to try and bridge this gap by building a layer between the \ac{sql} code and interpreter, and the actual database underneath it, providing a way to run \ac{sql} queries on top of a NoSQL system (eg: Cassandra), at the cost of a possible reduction on performance.
 
@@ -53,37 +53,26 @@ This work is going to try and bridge this gap by building a layer between the \a
 
 \section{Contributions}
 
-This thesis proposes a new approach to MySQL replication that enables state-machine replication and primary-backup replication by combining the software tool MySQL Proxy and the Spread Group Communication System.
-The key to our implementation is to take advantage of the guarantees of reliability, order, message stability and message delivery guarantees for reliable messaging or fully ordered messaging of group communication, to build an mechanism of active and passive replication for the MySQL database management system.
+This thesis proposes a new approach to \ac{rdbms} by altering the underlying storage system using Apache Derby DB and Apache Cassandra.
+The major factor in this implementation is that it takes advantage of the scalability and replication features from Cassandra, and allies them with Derby's SQL engine. Also, it provides a completely separate library for fully distributed transactions using Cassandra and Cages. 
 
 In detail, we make the following contributions:
 
 \begin{itemize}
-	\item \textbf{Evaluation and measuring of data freshness in scenarios of large scale replicated databases}\\
-		This contribution addresses the difficulty of measure accurately the impact of replication in data freshness by introducing a tool that can accurately measure replication delays for any workload and then apply it to the industry standard TPC-C benchmark \cite{Cou01}. We also evaluate data freshness by applying the tool to two representative MySQL configurations with a varying number of replicas and increasing workloads using the industry standard TPC-C on-line transaction processing benchmark \cite{Cou01}.
+	\item \textbf{Development of a proof of concept on using NoSQL with SQL}\\
+		This contribution addresses the lack of a proof that this integration could be achieved without incurring into too much of an overhead. We evaluate this proof of concept with the TPC-W benchmark\cite{tpcw} to get a bottom line with which to access the overhead of having our transactional system. 
 		
-	\item \textbf{Documentation and analysis of the software tool MySQL Proxy}\\
-		We fully document, analyze and discuss the components and working of the software tool MySQL Proxy.
-		
-	\item \textbf{Development of plugins for group based replication using MySQL Proxy}\\
-		We propose a solution to implement group based replication using the software tool MySQL Proxy. The proposal exploits the plugin based architecture of MySQL Proxy to implement plugins to use the Spread Group Communication Toolkit for both active and passive replication.
+	\item \textbf{Development of a distributed transactions library for Cassandra}\\
+		We developed a fully distributed transactions library for Cassandra that uses Cages and Zookeeper, completed with a unit tests suite.
 		
 	\item \textbf{Evaluation and performance analysis of the proposed solution}\\
-		We evaluate the developed solution using realistic workloads based on the industry standard TPC-C benchmark \cite{Cou01}. We analyze the behaviour of the solution under different conditions and configurations comparing it to the MySQL standard replication mechanism.
+		We evaluate the developed solution using realistic workloads based on the interactions with the database from the TPC-W benchmark\cite{tpcw}. We analyze the behavior of the solution under different conditions and configurations comparing it to the standard Derby system.
 \end{itemize}
 
 
 \section{Dissertation Outline}
 
-This thesis is organized as follows: Chapter 2 describes the state of the art in database replication; Chapter 3 introduces and discusses group-based replication; Chapter 4 presents the performance tests and the efforts done in order to measure the replication propagation delay in the MySQL Database Management System; Chapter 5 presents and documents the software tool MySQL Proxy; Chapter 6 presents the proposed approaches and solutions; Chapter 7 evaluates the solution implemented using realistic workloads; and finally Chapter 8 concludes the thesis, summarizing its contributions and describing possible future work. 
-
-\section{Related Publications}
-
-Portion of the work presented in this thesis has been previously published in the form of conference and workshop papers:
-
-\begin{itemize}
-	\item M. Araújo and J. Pereira. Evaluating Data Freshness in Large Scale Replicated Databases. In \textit{INForum}. 2010.
-\end{itemize}
+This thesis is organized as follows: Chapter 2 describes the main features and differences between SQL DBMSs and NoSQL; Chapter 3 introduces the related work, with a special emphasis on distributed transactions ; Chapter 4 describes the most relevant features of Derby and presents the changes made to it; Chapter 5 describes the same things as Chapter 4, but for Cassandra; Chapter 6 introduces the proposed solution for distributed transaction in a peer-to-peer database, namely Cassandra; Chapter 7 evaluates the solution implemented using realistic workloads; and finally Chapter 8 concludes the thesis, summarizing its contributions and describing possible future work. 
 
 % Mencionei na seção~\ref{intro:problem} como citar um capítulo.
 % O modelo está dividido em 2 capítulos, sendo que o Capítulo~\ref{cap2} trata de um assunto (e.g., um artigo decorrente da sua pesquisa) enquanto o Capítulo~\ref{cap3} aborda outro.

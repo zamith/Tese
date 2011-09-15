@@ -1,20 +1,13 @@
 
 \paragraph{}
 
+\todo[inline]{Melhorar tradução}
 
-Existe nos dias de hoje uma necessidade crescente da utilização de replicação em bases de dados, sendo que a construção de aplicações de alta performance, disponibilidade e em grande escala dependem desta para manter os dados sincronizados entre servidores e para obter tolerância a faltas.
+Nos últimos anos houve um enorme crescimento na área das bases de dados distribuídas, especialmente com o movimento NoSQL. Estas bases de dados têm  como propósito não ter \emph{schema} nem ser tão rígidas, como as suas \emph{counterparts} relacionais, no que toca ao modelo de dados, por forma a atingir uma maior escalabilidade.
 
+A sua \emph{API de queries} tem tendêcia a ser bastante reduzida e simples (normalmente uma operação para inserir, uma para ler e outra para remover dados), o que lhes permite ter leituras e escritas muito rápidas. Todas estas propriedades podem também ser vistas como uma perda de capacidade tanto a nível de coerência como de poder de \emph{query}. Assim, houve a necessidade de expor os vários argumentos contra e a favor destas propriedades, bem como as tentativas que já foram e estão a ser feitas para aproximar estas duas tecnologias e o porquê de não serem satisfatórias.
 
-%A necessidade da utilização de replicação em bases de dados é cada vez maior nos dias de hoje sendo que, a construcção de aplicações de alta performance, disponibilidade e em grande escala dependem desta para manter os dados sincronizados entre servidores e para obter tolerância a faltas.
+Neste contexto, o trabalho apresentado nesta dissertação de mestrado é o resultado da avaliação de como integrar propriedades de bases de dados relacionais e não relacionais. A solução proposta usa o Apache Derby DB, o Apache Cassandra e o Apache Zookeeper, tendo benefícios e \emph{drawbacks} que foram identificados e analisados.
 
-%There is nowadays an increasing need for database replication, as the construction of high performance, highly available, and large-scale applications depends on it to maintain data synchronized across multiple servers and to achieve fault tolerance.
-
-%A replicação é uma técnica essencial para sistemas de grande escala, alta performance e disponibilidade. A construcção destes sistemas depende da replicação para resolver o problema de manter os dados sincronizados entre servidores e para obter tolerância a faltas.
-
-Uma abordagem particularmente popular, é o sistema código aberto de gestão de bases de dados MySQL e seu mecanismo interno de replicação assíncrona. As limitações impostas pelo MySQL nas topologias de replicação significam que os dados tem que passar por uma série de saltos ou que cada servidor tem de lidar com um grande número de réplicas. Isto é particularmente preocupante quando as actualizações são aceites por várias réplicas e em sistemas de grande escala. Observando as topologias mais comuns e tendo em conta a assincronia referida, surge um problema, o da frescura dos dados. Ou seja, o facto das réplicas não possuírem imediatamente os dados escritos mais recentemente. Este problema vai de encontro ao estado da arte em comunicação em grupo. %tendo em conta as características inerentes a este. Garantias como confiança, ordem, estabilidade, e entrega de mensagens.
-
-Neste contexto, o trabalho apresentado nesta dissertação de Mestrado resulta de uma avaliação dos modelos e mecanismos de comunicação em grupo, assim como as vantagens práticas da replicação baseada nestes. A solução proposta estende a ferramenta MySQL Proxy com plugins aliados ao sistema de comunicação em grupo Spread oferecendo a possibilidade de realizar, de forma transparente, replicação activa e passiva.
-
-Finalmente, para avaliar a solução proposta e implementada utilizamos o modelo de carga de referência definido pelo TPC-C, largamente utilizado para medir o desempenho de bases de dados comerciais. Sob essa especificação, avaliamos assim a nossa proposta em diferentes cenários e configurações.  % As premissas de um melhor desempenho em comparação com o mecanismo de replicação tradicional do MySQL são confirmadas pelos resultados de desempenho.
-
+Finalmente, para avaliar a solução proposta e implementada, usámos um \emph{workload} baseado naquele definido pela \emph{benchmark} TPC-W, largamente utilizada em servidores web transaccionais orientados para o negócio.Segundo esta especificação avaliámos a nossa proposta em diferentes cenários e configurações.
 

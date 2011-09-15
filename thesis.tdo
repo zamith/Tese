@@ -1,3 +1,7 @@
-\contentsline {todo}{{Falar de two e three phase commit e da elei\IeC {\c c}\IeC {\~a}o de lider. So uso o zookeeper para manter locks}}{5}{section*.16}
-\contentsline {todo}{{capitulo do modelo de dados do cassandra}}{14}{section*.25}
-\contentsline {todo}{{Explicar como \IeC {\'e} feito uma range query no Derby}}{14}{section*.26}
+\contentsline {todo}{{Melhorar tradu\IeC {\c c}\IeC {\~a}o}}{ix}{section*.6}
+\contentsline {todo}{{get reference}}{23}{section*.27}
+\contentsline {todo}{{sec\IeC {\c c}\IeC {\~a}o do Zk e Cages}}{33}{section*.32}
+\contentsline {todo}{{algoritmo}}{33}{section*.33}
+\contentsline {todo}{Figure: {O algoritmo transaccional}}{33}{section*.33}
+\contentsline {todo}{{Falar do cages e como funciona}}{34}{section*.34}
+\contentsline {todo}{{Falar um bocadinho de zookeeper, com principal enfase nos observers}}{34}{section*.35}

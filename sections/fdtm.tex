@@ -1,0 +1,27 @@
+With these changes to Derby we have gained scalability, fault and partition tolerance and kept durability. This of course came with the cost of loosing atomicity\footnote{Cassandra provides atomicity at the row level, which is fine when doing separate inserts at a time, but is not good enough when performing batch inserts, in our model}, isolation and consistency (we have eventual consistency). 
+
+In practical terms this means that transactions are not be possible with this system. To overcome these limitations we built a distributed transaction system that takes advantage of Cassandra's peer to peer architecture with the exception of a Zookeeper cluster to manage the locks. This cluster and why it is not a big limitation to the overall performance of the system are further explained in section \todo{secção do Zk e Cages}.
+
+\section{Algorithm}
+The adopted algorithm (Fig. \todo{algoritmo}) combines a mechanism of locks and a write ahead log with Cassandra's provided atomicity and idempotent operations.
+
+\missingfigure{O algoritmo transaccional}
+
+\section{Locks}
+Before the actual transaction can start, it must acquire the locks for the rows (or entire tables) it is going to use. These locks are kept in a Zookeeper cluster, using a library called Cages.
+
+The actual lock mechanism works by first asking for a lock for the table called \emph{any\_or\_all}, when attempting to lock the entire table this is a write lock, otherwise it is a read lock. In the second case there is a second step of asking for locks on the rows we need, since there can be many threads with read locks on the same table at the same time. This means that all threads can pass on to ask for locks in the rows, unless there is another wanting to lock the whole table. 
+
+Each lock is represented by a Path class, that encapsulates the path to lock as well as its type (table lock or not) and provides the necessary primitives to work with it. 
+
+Still this mechanism is not enough because it does not prevent deadlocks\footnote{If two threads want locks A and B, and one of them gets A and the other B, they will both be waiting on the other, which is the definition of a deadlock}. In order to do this, there has to be a globally accorded way of ordering the paths of the locks, for this we first compare the nesting of the path (table locks are less nested and therefore are sorted first), then we compare the actual name of the table\footnote{using Java strings default compareTo method} and at last, in the case of rows of the same table, we compare the name of the row. This comparison in done with a Comparator class, which provides a way to change the way paths are compared without changing the code of the actual system.
+
+\subsection{Cages}
+\todo[inline]{Falar do cages e como funciona}
+
+\subsection{Zookeeper}
+\todo[inline]{Falar um bocadinho de zookeeper, com principal enfase nos observers}
+
+
+
+      

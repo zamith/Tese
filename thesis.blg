@@ -2,50 +2,49 @@ This is BibTeX, Version 0.99c (Web2C 7.5.7)
 The top-level auxiliary file: thesis.aux
 The style file: abbrv.bst
 Database file #1: references.bib
-Warning--I didn't find a database entry for "Cou01"
 Warning--empty note in lakshmanMalik
 Warning--empty note in sarkissian09
 Warning--empty note in seeger09
 Warning--empty note in will10
-You've used 25 entries,
+You've used 32 entries,
             2118 wiz_defined-function locations,
-            632 strings with 6700 characters,
-and the built_in function-call counts, 6575 in all, are:
-= -- 646
-> -- 281
+            665 strings with 7656 characters,
+and the built_in function-call counts, 8162 in all, are:
+= -- 804
+> -- 341
 < -- 4
-+ -- 116
-- -- 90
-* -- 368
-:= -- 1133
-add.period$ -- 74
-call.type$ -- 25
-change.case$ -- 118
++ -- 142
+- -- 108
+* -- 439
+:= -- 1404
+add.period$ -- 96
+call.type$ -- 32
+change.case$ -- 146
 chr.to.int$ -- 0
-cite$ -- 29
-duplicate$ -- 239
-empty$ -- 547
-format.name$ -- 90
-if$ -- 1366
+cite$ -- 36
+duplicate$ -- 303
+empty$ -- 696
+format.name$ -- 108
+if$ -- 1709
 int.to.chr$ -- 0
-int.to.str$ -- 25
-missing$ -- 10
-newline$ -- 126
-num.names$ -- 50
-pop$ -- 142
+int.to.str$ -- 32
+missing$ -- 15
+newline$ -- 160
+num.names$ -- 62
+pop$ -- 186
 preamble$ -- 1
-purify$ -- 95
+purify$ -- 119
 quote$ -- 0
-skip$ -- 195
+skip$ -- 241
 stack$ -- 0
-substring$ -- 300
-swap$ -- 45
+substring$ -- 350
+swap$ -- 52
 text.length$ -- 4
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 100
+type$ -- 124
 warning$ -- 4
-while$ -- 70
-width$ -- 27
-write$ -- 255
-(There were 5 warnings)
+while$ -- 84
+width$ -- 34
+write$ -- 326
+(There were 4 warnings)

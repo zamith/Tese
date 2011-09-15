@@ -15,7 +15,7 @@
 \usepackage{fancyhdr}
 \usepackage{fancyvrb}
 %\usepackage{microtype}
-\usepackage{acronym}
+\usepackage[printonlyused,withpage]{acronym}
 \usepackage{multirow}
 \usepackage{cite}
 \usepackage{longtable}
@@ -122,16 +122,6 @@
 %\linespread{1.3}
 \pagestyle{headings}
 
-\acrodef{cql}[CQL]{Cassandra Querying Language}
-\acrodef{dbms}[DBMS]{Database Management System}
-\acrodef{rdbms}[RDBMS]{Relational Database Management System}
-\acrodef{sql}[SQL]{Structured Query Language}
-\acrodef{api}[API]{Application Programming Interface}
-\acrodef{orm}[ORM]{Object Relational Mapper}
-\acrodef{jvm}[JVM]{Java Virtual Machine}
-\acrodef{jdbc}[JDBC]{Java Database Connectivity}
-\acrodef{ram}[RAM]{Random Access Memory}
-
 \begin{document}
 
 
@@ -144,7 +134,7 @@
 	
 	%% cover
 	\thispagestyle{empty}
-	\input{cover.tex}
+	\input{cover2.tex}
 	
 	\newpage
 	
@@ -201,15 +191,33 @@
 	%% list of figures
 %	\cleardoublepage
 	\listoffigures
-%	\newpage
-%	\thispagestyle{plain}
-%	\mbox{}	
+    \newpage
+    \thispagestyle{plain}
+    \mbox{}	
 	%% list of tables
 %	\cleardoublepage
 	\listoftables
-
+	\newpage
+	\thispagestyle{plain}
+	\mbox{}
+    
+   \chapter*{List of Acronyms}
+    \begin{acronym}[TDMA]
+	  \acro{api}[API]{Application Programming Interface}
+	  \acro{cql}[CQL]{Cassandra Querying Language}
+	  \acro{dbms}[DBMS]{Database Management System}
+	  \acro{jdbc}[JDBC]{Java Database Connectivity}
+	  \acro{jvm}[JVM]{Java Virtual Machine}
+	  \acro{orm}[ORM]{Object Relational Mapper}
+	  \acro{ram}[RAM]{Random Access Memory}
+	  \acro{rdbms}[RDBMS]{Relational Database Management System}
+	  \acro{sql}[SQL]{Structured Query Language}	 
+	\end{acronym}
 %	\chapter*{}
 %	\newpage
+\newpage
+\thispagestyle{plain}
+\mbox{}
 \cleardoublepage
 	
 %%%%%% Content
@@ -220,19 +228,21 @@
 	\chapter{Introduction}
         \input{sections/introduction.tex}
 		\mbox{}
+    \chapter{SQL DBMS and NoSQL}
+        \input{sections/sql_nosql.tex}
+   	    \mbox{}	
 	\chapter{Related Work}
 	    \input{sections/rel_work.tex}
 		\mbox{}	
-    \chapter{SQL DBMS and NoSQL}
-        \input{sections/sql_nosql.tex}
-		\mbox{}
     \chapter{Derby}
        \input{sections/derby.tex}
    	   \mbox{}
 	\chapter{Cassandra}
+	\label{chap:cass}
        \input{sections/cassandra.tex}
        \mbox{}
 	\chapter{Fully Distributed Transactional Model}
+	\label{chap:fdtm}
        \input{sections/fdtm.tex}
    	   \mbox{}
     \chapter{Results and Performance Analysis}
@@ -242,7 +252,7 @@
 		\thispagestyle{plain}
 		\mbox{}
    \chapter{Conclusions}
-   	%\input{sections/conclusions.tex}
+   	\input{sections/conclusions.tex}
    	\newpage
    	\thispagestyle{plain}
    	\mbox{}

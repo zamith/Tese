@@ -2,13 +2,18 @@
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Two-phase commit successful run\cite {coulouris2005distributed}}}{11}{figure.3.1}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Derby System Structure}}{11}{figure.4.1}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Derby Indexes}}{14}{figure.4.2}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Derby System Structure}}{13}{figure.4.1}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Derby Indexes}}{17}{figure.4.2}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Querying with \emph {LIKE}}}{18}{figure.4.3}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces Cassandra Column}}{18}{figure.5.1}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Cassandra SuperColumn}}{18}{figure.5.2}
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Cassandra ColumnFamily}}{19}{figure.5.3}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces CAP Theorem}}{22}{figure.5.1}
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Cassandra Column}}{23}{figure.5.2}
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Cassandra Row}}{24}{figure.5.3}
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Cassandra ColumnFamily}}{24}{figure.5.4}
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Cassandra SuperColumn}}{25}{figure.5.5}
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Cassandra design to integrate with Derby}}{28}{figure.5.6}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

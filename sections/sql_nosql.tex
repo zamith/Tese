@@ -28,7 +28,7 @@ First of all, there is the modeling language, that defines the schema of the dat
 In order to get more practical and faster systems, the most used model today is actual a relational model embedded with \ac{sql} .
 
 \subsubsection{Data Structure}
-Every database has it's own data structures (fields, records, files and objects) optimized to deal with very large amounts of data stored on a permanent data storage device (which is obviously slow, when compared to volatile memory).
+Every database has its own data structures (fields, records, files and objects) optimized to deal with very large amounts of data stored on a permanent data storage device (which is obviously slow, when compared to volatile memory).
 
 \subsubsection{Database Query Language}
 A database query language allows users to interrogate the database, analyze and update data, and control its security. Users can be granted different types of privileges, and the identity of said users is guaranteed using a password. The most widely used language nowadays is \ac{sql} , which provides the user with four main operations, know as CRUD (Create, Read, Update, Delete).  
@@ -36,9 +36,9 @@ A database query language allows users to interrogate the database, analyze and 
 \subsubsection{Transactions}
 A \ac{rdbms} should have a transactional mechanism that assures the ACID properties:
 \begin{description}
-	\item[Atomicity] A jump from the initial state to the result state without any \textbf{observable} intermediate state. All or nothing (Commit/Abort) semantics. 
+	\item[Atomicity] A jump from the initial state to the result state without any \textbf{observable} intermediate state. All or nothing (Commit/Abort) semantics that is, when a statement is executed, every update within the transaction must succeed in order to be called successful.
 	\item[Consistency] The transaction is a correct transformation of the state, i.e only consistent data will be written to the database.
-	\item[Isolation] No transaction should be able to interfere with another transaction. The outside observer sees the transactions as if they execute in some serial order.
+	\item[Isolation] No transaction should be able to interfere with another transaction. The outside observer sees the transactions as if they execute in some serial order. That is, if two different transactions attempt to modify the same data at the same time, then one of them will have to wait for the other to complete.
 	\item[Durability] Once a transaction commits (completes successfully), it will remain so. The only way to get rid of what a committed transaction has done is to execute an inverse transaction (which is sometimes impossible). A committed transaction will be preserved through power losses, crashes and errors. 
 \end{description}
 
@@ -46,7 +46,7 @@ Which guarantees that the integrity and consistency of the data is maintained de
 
 \section{NoSQL}
 \label{sec:nosql}
-NoSQL \cite{seeger09} is a term used to refer to database management systems that, in some way, are different from the classic relational model. These systems, usually, do not use schemas and avoid complex queries, as joins. They also attempt to be distributed, open-source, horizontal scalable\footnote{``Horizontal scalability is the ability to connect multiple hardware or software entities, such as servers, so that they work as a single logical unit.'' - in \url{http://searchcio.techtarget.com/definition/horizontal-scalability} (10/1/2011)}, eventually consistent \cite{Vogels2008}, have easy replication\footnote{``Replication is the process of sharing information between databases (or any other type of server) to ensure that the content is consistent between systems.'' - \url{http://databases.about.com/cs/administration/g/replication.htm} (10/1/2011)} support and a simple \ac{api}.
+NoSQL \cite{seeger09} is a term used to refer to database management systems that, in some way, are different from the classic relational model. These systems, usually, do not use schemas and avoid complex queries, as joins. They also attempt to be distributed, open-source, horizontal scalable (see chapter \ref{chap:cass}), eventually consistent \cite{Vogels2008}, have easy replication\footnote{``Replication is the process of sharing information between databases (or any other type of server) to ensure that the content is consistent between systems.'' - \url{http://databases.about.com/cs/administration/g/replication.htm} (10/1/2011)} support and a simple \ac{api}.
 
 The term was first used in 1998 as the name of a relational database that did not provide a \ac{sql} interface. It resurfaced in 2009, as an attempt to label a set of distributed, non-relational data stores that did not, necessarily, provide ACID guarantees.
 
@@ -80,4 +80,14 @@ The differences between NoSQL and \ac{rdbms} will be summarized in Table \ref{ta
 \caption{Differences between NoSQL and RDBMS}
 \label{tab:diff}
 \end{table}	  
+
+\section{Case Study}
+To accomplish the goals proposed in the introduction, there was a need to choose one \ac{rdbms} and one NoSQL implementation in order to develop a solution as both a proof of concept and a way to get real results. The chosen systems were the Apache Derby as the database manager and the Apache Cassandra as the NoSQL implementation for the following reasons:
+
+\begin{itemize}
+	\item Written in Java
+	\item Open-source
+	\item Previous experience with both
+\end{itemize}
+
 		

@@ -1,4 +1,4 @@
-Apache Derby is an open-source Java \ac{rdbms}, that has a very small footprint (about 2.6MB of disk-space for the base engine and embedded \ac{jdbc} driver \cite{derbySite}). The on-disk database format used in Derby is portable and platform-independent, meaning that the database can be moved from machine to machine with no need to modify the data, and that the database will work with any derby configuration \cite{derby10}. 
+Apache Derby is an open-source Java \ac{rdbms}, that has a very small footprint (about 2.6MB of disk-space for the base engine and embedded \ac{jdbc} driver \cite{derbySite}). The on-disk database format used in Derby is portable and platform-independent, meaning that the database can be moved from machine to machine with no need of modification, and that the database will work with any derby configuration \cite{derby10}. 
 
 A Derby database exists within a system (Fig. \ref{fig:derbystruct}), composed by a single instance of the Derby database engine and the environment in which it runs. It consists of zero or more databases, a system-wide configuration and an error log, both contained in the system directory \cite{derbyDev10}.
 
@@ -12,35 +12,46 @@ A Derby database exists within a system (Fig. \ref{fig:derbystruct}), composed b
 \end{figure}
 
 \section{Data Model}
-Derby's data model is relational, implying that data can be accessed and modified using \ac{jdbc} and standard \ac{sql}. The system has, however, two very different basic deployment options (or frameworks), the simple embedded option and the Derby Network Server option \cite{derby10}. 
+Derby's data model is relational, which implies that data can be accessed and modified using \ac{jdbc} and standard \ac{sql}. The system has, however, two very different basic deployment options (or frameworks), the simple embedded option and the Derby Network Server option \cite{derby10}. 
 
 \begin{description}
 	\item[Embedded] In this mode Derby is started by a single-user Java application, and runs in the same Java virtual machine (JVM). This makes Derby almost invisible to the user, since it is started and stopped by the application, requiring very little or no administration. This has the particularity that only a single application can access the database at any one time, and no network access occurs. 
-	\item[Server (or Server-based)] In this mode Derby is started by an application that provides multi-user connectivity to Derby databases across a network. The system runs in the JVM that hosts the server, and other JVM's connect to it to access the database.
+	\item[Server (or Server-based)] In this mode Derby is started by an application that provides multi-user connectivity to Derby databases across a network. The system runs in the JVM that hosts the server, and other JVMs connect to it to access the database.
 \end{description}	
 
 \section{Querying}
 Querying in Derby is done, as previously mentioned, with the usage of \ac{sql}, more precisely features from \ac{sql}-92 \cite{derbySQL}.
 
-\ac{sql} scope includes data insert, query, update and delete, schema creation and modification, and data access control, and is the most widely used language for relational databases \cite{SQLintro}. \ac{sql} statements are executed by a database manager, who also has the function transforming the specification of a result table into a sequence of internal operations that optimize data retrieval. This transformation occurs in two phases: preparation and binding.
+\ac{sql} scope includes data insert, query, update and delete, schema creation and modification, and data access control, it is the most widely used language for relational databases \cite{SQLintro}. \ac{sql} statements are executed by a database manager, who also has the function of transforming the specification of a result table into a sequence of internal operations that optimize data retrieval. This  occurs in two phases: preparation and binding.
 
 All executable \ac{sql} statements must be prepared before they can be executed, with the result of this preparation being the executable or operational form of the statement. The method of preparing an \ac{sql} statement and the persistence of its operational form distinguish static \ac{sql} from dynamic \ac{sql} \cite{SQLibm}.
 
+The way this statements are executed is further explained in section \ref{sec:patch}. 
+
 \section{Consistency}
-Derby databases provide ACID guarantees, according to the ACID test \cite{derbydevIBM}. This means that operations with the database can be grouped together and treated as a single unit (atomicity), it makes sure that either all the operations in this single unit (\emph{transaction}) are performed, or none is (consistency), also, independent sets of database transactions are performed so that they don't conflict with each other (isolation) and it also guarantees that the database is safe against unexpected terminations (durability).
+Derby databases provide ACID guarantees, according to the ACID test \cite{derbydevIBM}. This means that operations with the database can be grouped together and treated as a single unit (atomicity), it makes sure that either all the operations in this single unit\footnote{transaction} are performed, or none is (consistency), also, independent sets of database transactions are performed so that they don't conflict with each other (isolation) and it also guarantees that the database is safe against unexpected terminations (durability).
 
 \section{Patching Derby}
+\label{sec:patch}
 
-The idea of patching Derby so that the data is stored in a different way is not entirely new and was firstly introduced by Knut Magne Solem\cite{derbyPatch}. In his approach all the tables whose name began with \emph{MEM} were stored in memory, following the same strategy, our approach stores in Cassandra all the tables whose name starts with \emph{TUPLE}.
+The idea of patching Derby so that the data is stored in a different way than normal is not entirely new and was firstly introduced by Knut Magne Solem\cite{derbyPatch}. In his approach all the tables whose name began with \emph{MEM} were stored in memory, following the same strategy, our approach stores in Cassandra all the tables whose name starts with \emph{TUPLE}.
 
-This implies re-writing all the classes and methods from the access part of the Derby engine, that uses a BTree by default and therefore are in the namesake package. As this implementation uses a Tuple Store, the name of the package was also tuplestore.
+This implies re-writing all the classes and methods from the access part of the Derby engine, which uses a BTree by default and therefore are in the package with the same name. As this implementation uses a Tuple Store, the name of the package was also tuplestore.
 
-When rewriting this classes some optimizations were made, such as the reutilization of connections since Derby creates one physical connection to the underlying database for each transaction, which could mean a reasonable overhead when a new one was created due to the cost of establishing the connection. To circumvent this, a pool of connections is created and if there is one free it is used, otherwise a new connection is opened, preventing some of the overhead. 
+In Derby there each type of action has a responsible class, such as the TupleStore creation and deletion of tables, the TupleStoreController for insertion, update or deletion of rows and the TupleStoreScanController for fetches. The same applies to index, but the with the suffix Index.
+
+When rewriting this classes some optimizations were made such as the reutilization of connections, since Derby creates one physical connection to the underlying database for each transaction this can mean a reasonable overhead when a new one is created, due to the cost of establishing the connection. To circumvent this, a pool of connections is created and if there is one free it is used, otherwise a new connection is opened, preventing some of the overhead. 
 
 \subsection{Records}
+A record, row or tuple all have the same meaning, they represent a value that contains other values, typically in fixed number and indexed by names. In this specific context, they represent a structured data item that is stored in a database table. They are the actual assets we intend to maintain durable and consistent.
+
+This means that when an insert or update action is performed one or more of these records must be created or updated, alongside with their corresponding indexes, as explained in section \ref{sec:derby_index}.
+
+Other than that the implementation of the record related methods was pretty straightforward, taking into account the integration of Cassandra operations as described in section \ref{sec:cassandraops}.
 
 \subsection{Indexing}
-Indexing is a way of sorting a number of records on multiple fields. Creating an index on a field in a table creates another data structure with the field value, and a pointer to the primary record. 
+\label{sec:derby_index}
+Indexing is a way of sorting records on multiple fields. Creating an index on a field in a table creates another data structure with the field value, and a pointer to the primary record. 
 
 The downside to indexing is that these indexes require additional space on the disk and processing time when inserting new data.
 
@@ -55,13 +66,13 @@ Parallel to the actual record handling classes, there are the ones responsible f
 
 The creation of an index in the patched version of Derby depends on its type. 
 
-In the case where it is a primary index, Derby is informed about it (through a flag), but no actual index is created, since the record already contains that information and is indexed for it.
+In the case where it is a primary index, Derby is informed about it (through a flag), but no actual index record is created, since the primary record already contains that information and is indexed for it (Fig. \ref{fig:derbyindexes}).
 
-On the rest of the cases, an index is created according to the model defined in chapter \todo{capitulo do modelo de dados do cassandra}.
+On the rest of the cases, an index is created according to the model defined in section \ref{sec:cass_data_model}.
 
 When fetching information that is indexed, Derby first estimates the cost of fetching using the index or not, based on the number and size of the rows, and acts accordingly.
 
-\begin{figure}[h]
+\begin{figure}[!h]
   \centering    
   \includegraphics[width=0.9\textwidth]{images/derbyindexes}
   \caption{Derby Indexes}
@@ -70,14 +81,35 @@ When fetching information that is indexed, Derby first estimates the cost of fet
 
 
 \subsection{Scans}
+\label{sec:derby_scans}
 
-\todo[inline]{Explicar como é feito uma range query no Derby}  
+A scan or range query, is the action triggered when the submitted query has inequality operators\footnote{$<$, $>$, $<=$ and $>=$} or uses the \emph{BETWEEN} or \emph{LIKE} operators.
 
-When performing a scan that involves fetching a row through an index, Derby gets the row for that index from which it extracts the location of the actual record and then does a second fetch, this time to the location pointed by the index.
+In Derby, the range to which the query applies is passed on to the scan controller through a start and a stop key and a flag that defines if the range is inclusive or exclusive in either end. With this parameters, the controller fetches the needed rows to memory, validates each one and returns those which are valid.
+
+\begin{figure}[!h]
+  \centering    
+  \includegraphics[width=0.7\textwidth]{images/likescan}
+  \caption{Querying with \emph{LIKE}}
+  \label{fig:likescan}
+\end{figure}
+
+As can be perceived from figure \ref{fig:likescan}, there are two assumptions that must be met in order for a scan that comes from a \emph{LIKE} query to function properly.
+
+\begin{enumerate}
+	\item The keys must be ordered by their byte value, so that strings as well as integers and any other type of data are logically ordered\footnote{If they were ordered by their UTF-8 value, for example, the number 10 would be between 1 and 2, which means that a query for all records which have a value between 8 and 10, would return 2 records instead of the expected 3}.
+	\item The encoding of the data types must be coherent throughout the application 
+\end{enumerate}
+
+The first assumption was met through an Ordered Partitioner that comes bundled with Cassandra, as is further explained in section \ref{sec:partitioners}. The second one meant having classes to encode each type of data that Derby accepts (Integer, Float, String, DateTime, \ldots), as well as altering the way padding is applied to the strings that are received through a \emph{LIKE} query so that it becomes compliant with the way Cassandra stores its data. This has to be done because Cassandra does not allow for range queries on string prefixes. Take the example in figure \ref{fig:likescan}, for instance, the range in step one has to be padded so that it has at least the same length as the value we are looking for, in this case UNION. 
+
+\subsubsection{Scanning with indexes}
+
+When performing a scan that involves fetching a row through an index, Derby gets the row for that index from which it extracts the location of the actual record and then does a second fetch, this time to the location pointed by the index. In figure \ref{fig:derbyindexes}, for example, Derby would fetch the row for index \emph{x} and get the location \emph{j}, from which it would get the \emph{info} from row \emph{j} in the records table.
 
 This is fine for unique and secondary indexes, but as explained in the previous section, in the case of primary indexes there is no need for the creation of a specific row for the index, thus making this two fetches mechanism redundant. Since this redundancy meant an unnecessary access to the database, which could incur in a large overhead, this matter had to be addressed. 
 
-The way this was solved was by storing in memory the whole row fetched in first place (through the index) and passing it on alongside with the actual record location. This allows for the controller of the fetch to use the information in memory, when it is available.   
+The way this was solved was by storing in memory the whole row fetched in first place (through the index) and passing it on alongside with the actual record location. This allows for the tuple controller that is doing the fetch to use the information in memory, when it is available.   
 
 
 

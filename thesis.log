@@ -1,4 +1,4 @@
-This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2009.9.1)  31 AUG 2011 19:02
+This is pdfTeXk, Version 3.1415926-1.40.9 (Web2C 7.5.7) (format=pdflatex 2009.9.1)  15 SEP 2011 18:27
 entering extended mode
  file:line:error style messages enabled.
  %&-line parsing enabled.
@@ -652,21 +652,21 @@ LaTeX Info: Redefining \addtolength on input line 76.
  (./thesis.aux)
 \openout1 = `thesis.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 135.
-LaTeX Font Info:    ... okay on input line 135.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 135.
-LaTeX Font Info:    ... okay on input line 135.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 135.
-LaTeX Font Info:    ... okay on input line 135.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 135.
-LaTeX Font Info:    ... okay on input line 135.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 135.
-LaTeX Font Info:    ... okay on input line 135.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 135.
-LaTeX Font Info:    ... okay on input line 135.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 135.
-LaTeX Font Info:    ... okay on input line 135.
-LaTeX Font Info:    Try loading font information for T1+ppl on input line 135.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 125.
+LaTeX Font Info:    ... okay on input line 125.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 125.
+LaTeX Font Info:    ... okay on input line 125.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 125.
+LaTeX Font Info:    ... okay on input line 125.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 125.
+LaTeX Font Info:    ... okay on input line 125.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 125.
+LaTeX Font Info:    ... okay on input line 125.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 125.
+LaTeX Font Info:    ... okay on input line 125.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 125.
+LaTeX Font Info:    ... okay on input line 125.
+LaTeX Font Info:    Try loading font information for T1+ppl on input line 125.
 
 (/usr/local/texlive/2008/texmf-dist/tex/latex/psnfss/t1ppl.fd
 File: t1ppl.fd 2001/06/04 font definitions for T1/ppl.
@@ -690,7 +690,7 @@ File: ucsencs.def 2003/11/29 Fixes to fontencodings LGR, T3
 \everyMPtoPDFconversion=\toks40
 )
 \c@lstlisting=\count149
-Package hyperref Info: Link coloring ON on input line 135.
+Package hyperref Info: Link coloring ON on input line 125.
  (/usr/local/texlive/2008/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2007/05/29 v2.31 Cross-referencing by name of section
 
@@ -699,8 +699,8 @@ Package: refcount 2008/08/11 v3.1 Data extraction from references (HO)
 )
 \c@section@level=\count150
 )
-LaTeX Info: Redefining \ref on input line 135.
-LaTeX Info: Redefining \pageref on input line 135.
+LaTeX Info: Redefining \ref on input line 125.
+LaTeX Info: Redefining \pageref on input line 125.
 
 (./thesis.out) (./thesis.out)
 \@outlinefile=\write6
@@ -708,7 +708,7 @@ LaTeX Info: Redefining \pageref on input line 135.
 
 \AtBeginShipoutBox=\box44
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <14.4> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 143.
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 133.
  (./thesis.tdo
 LaTeX Font Info:    Try loading font information for OT1+ppl on input line 1.
 
@@ -740,26 +740,33 @@ File: ot1zplm.fd 2002/09/08 Fontinst v1.914 font definitions for OT1/zplm.
 
  [1{/usr/local/texlive/2008/texmf-var/fonts/map/pdftex/updmap/pdftex.map}
 
-] (./cover.tex
-<images/UM.jpg, id=151, 201.6333pt x 101.178pt>
-File: images/UM.jpg Graphic file (type jpg)
- <use images/UM.jpg>
+] (./cover2.tex
+<images/EENG.png, id=201, 422.57875pt x 328.22626pt>
+File: images/EENG.png Graphic file (type png)
+ <use images/EENG.png>
 (/usr/local/texlive/2008/texmf-dist/tex/latex/ucs/data/uni-0.def
 File: uni-0.def 2004/10/17 UCS: Unicode data U+0000..U+00FF
 )
-LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <33> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 12.
-) [2 <./images/UM.jpg>] (./sections/permissao.tex
+Underfull \hbox (badness 10000) in paragraph at lines 13--15
+
+ []
+
+LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10.95> not available
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 17.
+) [2 <./images/EENG.png>] (./sections/permissao.tex
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <17.28> not available
 (Font)              Font shape `T1/ppl/b/n' tried instead on input line 2.
-LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <10.95> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 4.
-) [3] [4] (./sections/epigraph.tex) [5]
-[6
+
+Overfull \hbox (3.98819pt too wide) in paragraph at lines 20--23
+\T1/ppl/m/n/10.95 É AU-TOR-IZADA A RE-PRO-DUÇÃO IN-TE-GRAL DESTA DIS-SER-TAÇÃO 
+APE-NAS PARA
+ []
+
+) [3] [4] (./sections/epigraph.tex) [5] [6
 
 ]
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <24.88> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 169.
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 159.
  (./ack.tex
 Overfull \hbox (4.16833pt too wide) in paragraph at lines 23--24
 []\T1/ppl/m/n/10.95 Although not per-son-ally ac-quainted I would like to thank
@@ -774,7 +781,15 @@ al sup-port was vi-tal through
 
 ) [7
 
-] [8] (./resumo.tex) [9
+] [8] (./resumo.tex
+Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
+ine 4.
+
+Overfull \hbox (10.45pt too wide) in paragraph at lines 4--4
+ [] [] 
+ []
+
+) [9
 
 ] [10] (./abstract.tex
 Overfull \hbox (4.46236pt too wide) in paragraph at lines 4--5
@@ -784,10 +799,7 @@ Overfull \hbox (4.46236pt too wide) in paragraph at lines 4--5
 
 ) [11
 
-] [12] (./thesis.toc
-Package acronym Info: Label `acro:cql' newly defined as it shall be overridden
-although it is yet undefined on input line 12.
- [13
+] [12] (./thesis.toc [13
 
 ])
 \tf@toc=\write8
@@ -799,19 +811,25 @@ although it is yet undefined on input line 12.
 
  [15
 
-] [16
-
-] (./thesis.lot)
+] [16] (./thesis.lot)
 \tf@lot=\write10
 \openout10 = `thesis.lot'.
 
 
-[17] [18
+[17
 
-]
+] [18]
+LaTeX Font Info:    Try loading font information for T1+cmss on input line 205.
+
+ (/usr/local/texlive/2008/texmf-dist/tex/latex/base/t1cmss.fd
+File: t1cmss.fd 1999/05/25 v2.5h Standard LaTeX font definitions
+)
+[19
+
+] [20]
 Chapter 1.
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <20.74> not available
-(Font)              Font shape `T1/ppl/b/n' tried instead on input line 220.
+(Font)              Font shape `T1/ppl/b/n' tried instead on input line 228.
 (./sections/introduction.tex
 Package acronym Info: Label `acro:dbms' newly defined as it shall be overridden
 
@@ -833,49 +851,39 @@ n
 although it is yet undefined on input line 11.
  [1
 
+
 ]
 Package acronym Info: Label `acro:orm' newly defined as it shall be overridden
 although it is yet undefined on input line 32.
  [2]
-Overfull \hbox (1.03459pt too wide) in paragraph at lines 56--58
-\T1/ppl/m/n/10.95 repli-ca-tion and primary-backup repli-ca-tion by com-bin-ing
- the soft-ware tool MySQL Proxy
- []
-
 LaTeX Font Info:    Try loading font information for OMS+ppl on input line 62.
+
 (/usr/local/texlive/2008/texmf-dist/tex/latex/psnfss/omsppl.fd
 File: omsppl.fd 
 )
 LaTeX Font Info:    Font shape `OMS/ppl/m/n' in size <10.95> not available
 (Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 62.
 
-
-LaTeX Warning: Citation `Cou01' on page 3 undefined on input line 63.
-
-[3]
-Overfull \hbox (10.01431pt too wide) in paragraph at lines 78--79
-\T1/ppl/m/n/10.95 repli-ca-tion; Chap-ter 3 in-tro-duces and dis-cusses group-b
-ased repli-ca-tion; Chap-ter 4 presents
+Overfull \hbox (4.62694pt too wide) in paragraph at lines 62--64
+\T1/ppl/m/n/10.95 This con-tri-bu-tion ad-dresses the lack of a proof that this
+ in-te-gra-tion could be achieved
  []
 
-) [4]
-Chapter 2.
-(./sections/rel_work.tex
-Package hyperref Info: bookmark level for unknown todo defaults to 0 on input l
-ine 21.
-) [5
 
-] [6]
-Chapter 3.
+Underfull \vbox (badness 1728) has occurred while \output is active []
+
+ [3])
+[4]
+Chapter 2.
 (./sections/sql_nosql.tex
 LaTeX Font Info:    Font shape `T1/ppl/bx/n' in size <12> not available
 (Font)              Font shape `T1/ppl/b/n' tried instead on input line 13.
- [7
+ [5
 
-] [8]
+] [6]
 Package acronym Info: Label `acro:api' newly defined as it shall be overridden
 although it is yet undefined on input line 49.
- [9]
+ [7]
 Package acronym Info: Label `acro:ram' newly defined as it shall be overridden
 although it is yet undefined on input line 61.
 
@@ -888,13 +896,48 @@ Underfull \hbox (badness 10000) in paragraph at lines 63--64
 
  []
 
-) [10pdfTeX warning (ext4): destination with the same identifier (name{table.3.
-1}) has been already used, duplicate ignored
+) [8pdfTeX warning (ext4): destination with the same identifier (name{table.2.1
+}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.229     \chapter
-                  {Derby}]
+l.234 	\chapter
+               {Related Work}]
+Chapter 3.
+(./sections/rel_work.tex
+Package acronym Info: Label `acro:cql' newly defined as it shall be overridden
+although it is yet undefined on input line 1.
+
+(/usr/local/texlive/2008/texmf-dist/tex/latex/ucs/data/uni-32.def
+File: uni-32.def 2004/10/17 UCS: Unicode data U+2000..U+20FF
+) [9
+
+]
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+<images/2pc.pdf, id=476, 501.875pt x 187.70125pt>
+File: images/2pc.pdf Graphic file (type pdf)
+ <use images/2pc.pdf>
+LaTeX Font Info:    Font shape `T1/ppl/bx/it' in size <14.4> not available
+(Font)              Font shape `T1/ppl/b/it' tried instead on input line 68.
+ [10]
+LaTeX Font Info:    Font shape `T1/ppl/bx/it' in size <10.95> not available
+(Font)              Font shape `T1/ppl/b/it' tried instead on input line 74.
+
+[11pdfTeX warning (ext4): destination with the same identifier (name{table.3.1}
+) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.76 \end{description}
+                      pdfTeX warning (ext4): destination with the same identifi
+er (name{figure.3.1}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.76 \end{description}
+                       <./images/2pc.pdf>]) [12]
 Chapter 4.
 (./sections/derby.tex
 Package acronym Info: Label `acro:jdbc' newly defined as it shall be overridden
@@ -903,7 +946,7 @@ although it is yet undefined on input line 1.
 
 Overfull \hbox (4.57245pt too wide) in paragraph at lines 1--2
 \T1/ppl/m/n/10.95 2.6MB of disk-space for the base en-gine and em-bed-ded [][][
-]Java Database Connectivity[] (JDBC[])[]
+]Java Database Connectivity[] ([][]JDBC[][][])[]
  []
 
 
@@ -912,13 +955,13 @@ Overfull \hbox (19.10284pt too wide) in paragraph at lines 1--2
 rtable and platform-independent,
  []
 
-<images/derbystruct.pdf, id=343, 439.6425pt x 398.48875pt>
+<images/derbystruct.pdf, id=526, 439.6425pt x 398.48875pt>
 File: images/derbystruct.pdf Graphic file (type pdf)
 
 <use images/derbystruct.pdf>
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [11
+ [13
 
 pdfTeX warning (ext4): destination with the same identifier (name{figure.4.1}) 
 has been already used, duplicate ignored
@@ -926,75 +969,163 @@ has been already used, duplicate ignored
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
 l.16 
-      <./images/derbystruct.pdf>] [12] [13]
-<images/derbyindexes.pdf, id=457, 472.76625pt x 283.0575pt>
+      <./images/derbystruct.pdf>] [14] [15]
+<images/derbyindexes.pdf, id=652, 472.76625pt x 282.05376pt>
 File: images/derbyindexes.pdf Graphic file (type pdf)
 
-<use images/derbyindexes.pdf> [14pdfTeX warning (ext4): destination with the sa
-me identifier (name{figure.4.2}) has been already used, duplicate ignored
+<use images/derbyindexes.pdf>
 
-\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
-                                                  \fi \fi 
-l.79 
-      <./images/derbyindexes.pdf>]) [15] [16
+LaTeX Warning: `!h' float specifier changed to `!ht'.
 
-]
-Chapter 5.
-(./sections/cassandra.tex [17]
-<images/column.jpg, id=521, 183.68625pt x 100.375pt>
-File: images/column.jpg Graphic file (type jpg)
- <use images/column.jpg>
-<images/supercolumn.jpg, id=523, 295.1025pt x 463.7325pt>
-File: images/supercolumn.jpg Graphic file (type jpg)
 
-<use images/supercolumn.jpg>
-Overfull \hbox (3.17255pt too wide) in paragraph at lines 39--40
-[]\T1/ppl/m/n/10.95 The max-i-mum level of com-plex-ity is achieved with the Co
-l-umn Fam-i-lies, which ``glue''
- []
+Underfull \vbox (badness 2409) has occurred while \output is active []
 
-[18pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1
+ [16]
+<images/likescan.pdf, id=658, 436.63126pt x 313.17pt>
+File: images/likescan.pdf Graphic file (type pdf)
+
+<use images/likescan.pdf>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[17pdfTeX warning (ext4): destination with the same identifier (name{figure.4.2
 }) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.41 A
-      pplications can specify the sort order of columns within a column fami...
-pdfTeX warning (ext4): destination with the same identifier (name{figure.5.2}) 
-has been already used, duplicate ignored
+l.105 
+       <./images/derbyindexes.pdf>]) [18pdfTeX warning (ext4): destination with
+ the same identifier (name{figure.4.3}) has been already used, duplicate ignore
+d
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.41 A
-      pplications can specify the sort order of columns within a column fami...
- <./images/column.jpg> <./images/supercolumn.jpg>]
-<images/columnfamily.jpg, id=529, 680.5425pt x 518.93875pt>
-File: images/columnfamily.jpg Graphic file (type jpg)
+l.240 	\chapter
+               {Cassandra} <./images/likescan.pdf>] [19] [20
 
-<use images/columnfamily.jpg> [19pdfTeX warning (ext4): destination with the sa
-me identifier (name{figure.5.3}) has been already used, duplicate ignored
+]
+Chapter 5.
+(./sections/cassandra.tex
+Overfull \hbox (1.89105pt too wide) in paragraph at lines 7--8
+[]\T1/ppl/m/n/10.95 Scalability is the abil-ity to have lit-tle degra-da-tion i
+n per-for-mance when fac-ing a greater
+ []
+
+[21] <images/cap.pdf, id=780, 316.18124pt x 295.1025pt>
+File: images/cap.pdf Graphic file (type pdf)
+ <use images/cap.pdf>
+[22pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1
+}) has been already used, duplicate ignored
 
 \AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
                                                   \fi \fi 
-l.64 
-      <./images/columnfamily.jpg>]
-Underfull \hbox (badness 10000) in paragraph at lines 66--67
+l.39 
+      <./images/cap.pdf>]
+
+LaTeX Warning: Marginpar on page 23 moved.
+
+<images/column.jpg, id=803, 183.68625pt x 100.375pt>
+File: images/column.jpg Graphic file (type jpg)
+ <use images/column.jpg>
+<images/row.pdf, id=805, 504.88625pt x 139.52126pt>
+File: images/row.pdf Graphic file (type pdf)
+ <use images/row.pdf>
+[23pdfTeX warning (ext4): destination with the same identifier (name{figure.5.2
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.70 
+      <./images/column.jpg>]
+<images/columnfamily.pdf, id=812, 512.91624pt x 356.33125pt>
+File: images/columnfamily.pdf Graphic file (type pdf)
+
+<use images/columnfamily.pdf>
+<images/supercolumn.pdf, id=814, 295.1025pt x 463.7325pt>
+File: images/supercolumn.pdf Graphic file (type pdf)
+
+<use images/supercolumn.pdf>
+
+LaTeX Warning: `!h' float specifier changed to `!ht'.
+
+[24pdfTeX warning (ext4): destination with the same identifier (name{figure.5.3
+}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.108 
+      pdfTeX warning (ext4): destination with the same identifier (name{figure.
+5.4}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.108 
+       <./images/row.pdf> <./images/columnfamily.pdf>] [25pdfTeX warning (ext4)
+: destination with the same identifier (name{figure.5.5}) has been already used
+, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.115 
+      pdfTeX warning (ext4): destination with the same identifier (name{table.5
+.1}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.115 
+       <./images/supercolumn.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 130--131
 
  []
 
-) [20]
-Chapter 6.
-(./sections/fdtm.tex) [21
+[26]
+Underfull \hbox (badness 10000) in paragraph at lines 154--155
 
-] [22
+ []
+
+[27] <images/mymodel.pdf, id=963, 528.97626pt x 525.965pt>
+File: images/mymodel.pdf Graphic file (type pdf)
+
+<use images/mymodel.pdf> [28pdfTeX warning (ext4): destination with the same id
+entifier (name{figure.5.6}) has been already used, duplicate ignored
+
+\AtBegShi@Output ...ipout \box \AtBeginShipoutBox 
+                                                  \fi \fi 
+l.173 
+       <./images/mymodel.pdf>] [29] [30]) [31] [32
 
 ]
+Chapter 6.
+(./sections/fdtm.tex
+Overfull \hbox (2.4709pt too wide) in paragraph at lines 6--6
+[]\T1/ppl/m/n/10.95 algoritmo  
+ []
+
+
+Overfull \hbox (2.4709pt too wide) in paragraph at lines 6--6
+[]\T1/ppl/m/n/10.95 algoritmo  
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 8--9
+
+ []
+
+[33]
+Overfull \hbox (8.28642pt too wide) in paragraph at lines 13--14
+[]\T1/ppl/m/n/10.95 The ac-tual lock mech-a-nism works by first ask-ing for a l
+ock for the ta-ble called \T1/ppl/m/it/10.95 any_or_all\T1/ppl/m/n/10.95 ,
+ []
+
+) [34]
 Chapter 7.
-(./sections/results.tex) [23] [24
+(./sections/results.tex) [35
+
+] [36
 
 ]
 Chapter 8.
-[25] (./thesis.bbl [26]
+(./sections/conclusions.tex) [37] (./thesis.bbl [38]
 Underfull \hbox (badness 3849) in paragraph at lines 4--7
 []\T1/ppl/m/n/10.95 ASF.  Apache derby of-fi-cial web-site.  [][]$\T1/cmtt/m/n/
 10.95 http : / / db . apache . org / derby/$[][] \T1/ppl/m/n/10.95 (in
@@ -1006,51 +1137,61 @@ Underfull \hbox (badness 3199) in paragraph at lines 34--38
  http : / / databases . about . com / od / sql / a /
  []
 
-(/usr/local/texlive/2008/texmf-dist/tex/latex/ucs/data/uni-32.def
-File: uni-32.def 2004/10/17 UCS: Unicode data U+2000..U+20FF
-) [27
+[39
 
 ]
-Underfull \hbox (badness 2503) in paragraph at lines 76--81
+Underfull \hbox (badness 1424) in paragraph at lines 81--86
+[]\T1/ppl/m/n/10.95 E. Evans.  Cas-san-dra query lan-guage.  [][]$\T1/cmtt/m/n/
+10.95 http : / / berlinbuzzwords . de / sites /
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 81--86
+\T1/cmtt/m/n/10.95 berlinbuzzwords . de / files / cassandra % 20workshop % 20be
+rlin % 20buzzword %
+ []
+
+
+Underfull \hbox (badness 2503) in paragraph at lines 106--111
 []\T1/ppl/m/n/10.95 IBM.  Struc-tured query lan-guage (sql).  [][]$\T1/cmtt/m/n
 /10.95 http : / / publib . boulder . ibm . com /
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 76--81
+Underfull \hbox (badness 10000) in paragraph at lines 106--111
 \T1/cmtt/m/n/10.95 infocenter / db2luw / v9 / index . jsp ? topic = /com . ibm 
 . db2 . udb . admin . doc / doc /
  []
 
-) [28] (./thesis.aux)
-
-LaTeX Warning: There were undefined references.
-
- )
+[40]) [41] (./thesis.aux) )
 (\end occurred inside a group at level 1)
 
 ### semi simple group (level 1) entered at line 36 (\begingroup)
 ### bottom level 
 Here is how much of TeX's memory you used:
- 15536 strings out of 493876
- 250226 string characters out of 1150569
- 324695 words of memory out of 3000000
- 18237 multiletter control sequences out of 10000+50000
- 49727 words of font info for 96 fonts, out of 3000000 for 5000
+ 15728 strings out of 493876
+ 253311 string characters out of 1150569
+ 329515 words of memory out of 3000000
+ 18353 multiletter control sequences out of 10000+50000
+ 52510 words of font info for 103 fonts, out of 3000000 for 5000
  714 hyphenation exceptions out of 8191
- 54i,11n,78p,980b,10193s stack positions out of 5000i,500n,10000p,200000b,50000s
-{/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/cm-super/cm
--super-t1.enc}{/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/base/8r.enc}<
-/usr/local/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></usr/loca
-l/texlive/2008/texmf-dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/
-texlive/2008/texmf-dist/fonts/type1/public/cm-super/sftt1095.pfb></usr/local/te
-xlive/2008/texmf-dist/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2
-008/texmf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2008/tex
-mf-dist/fonts/type1/urw/palatino/uplr8a.pfb></usr/local/texlive/2008/texmf-dist
-/fonts/type1/urw/palatino/uplri8a.pfb>
-Output written on thesis.pdf (46 pages, 481060 bytes).
+ 54i,11n,78p,966b,10216s stack positions out of 5000i,500n,10000p,200000b,50000s
+{/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/base/8r.enc
+}{/usr/local/texlive/2008/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc}<
+/usr/local/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmmi10.pfb></usr/loca
+l/texlive/2008/texmf-dist/fonts/type1/bluesky/cm/cmr10.pfb></usr/local/texlive/
+2008/texmf-dist/fonts/type1/bluesky/cm/cmsy10.pfb></usr/local/texlive/2008/texm
+f-dist/fonts/type1/public/cm-super/sfsx1095.pfb></usr/local/texlive/2008/texmf-
+dist/fonts/type1/public/cm-super/sftt0900.pfb></usr/local/texlive/2008/texmf-di
+st/fonts/type1/public/cm-super/sftt1095.pfb></usr/local/texlive/2008/texmf-dist
+/fonts/type1/urw/palatino/uplb8a.pfb></usr/local/texlive/2008/texmf-dist/fonts/
+type1/urw/palatino/uplbi8a.pfb></usr/local/texlive/2008/texmf-dist/fonts/type1/
+urw/palatino/uplr8a.pfb></usr/local/texlive/2008/texmf-dist/fonts/type1/urw/pal
+atino/uplr8a.pfb></usr/local/texlive/2008/texmf-dist/fonts/type1/urw/palatino/u
+plri8a.pfb>
+Output written on thesis.pdf (61 pages, 699206 bytes).
 PDF statistics:
- 671 PDF objects out of 1000 (max. 8388607)
- 136 named destinations out of 1000 (max. 131072)
- 311 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1290 PDF objects out of 1440 (max. 8388607)
+ 195 named destinations out of 1000 (max. 131072)
+ 424 words of extra memory for PDF output out of 10000 (max. 10000000)
 

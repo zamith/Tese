@@ -1,10 +1,12 @@
 \select@language {english}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {2.1}{\ignorespaces Differences between NoSQL and RDBMS}}{8}{table.2.1}
 \addvspace {10\p@ }
-\contentsline {table}{\numberline {3.1}{\ignorespaces Differences between NoSQL and RDBMS}}{10}{table.3.1}
+\contentsline {table}{\numberline {3.1}{\ignorespaces Operations for two-phase commit protocol (based on \cite {coulouris2005distributed})}}{11}{table.3.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
+\contentsline {table}{\numberline {5.1}{\ignorespaces Path to get to value}}{25}{table.5.1}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
 \addvspace {10\p@ }

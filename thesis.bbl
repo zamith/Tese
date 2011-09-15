@@ -41,6 +41,11 @@ E.~Codd.
 \newblock {A relational model of data for large shared data banks}.
 \newblock {\em Communications of the ACM}, 13(6):377--387, 1970.
 
+\bibitem{coulouris2005distributed}
+G.~Coulouris, J.~Dollimore, and T.~Kindberg.
+\newblock {\em Distributed systems: concepts and design}.
+\newblock International computer science series. Addison-Wesley, 2001.
+
 \bibitem{derbyDev10}
 Derby.
 \newblock {\em Derby Developer's Guide - Version 10.7}, 2010.
@@ -54,6 +59,12 @@ DM.
 \newblock Datamapper.
 \newblock \url{http://datamapper.org/} (in 19/12/2010), 2010.
 
+\bibitem{secindex}
+D.~Documentation.
+\newblock Using column families as indexes.
+\newblock \url{http://www.datastax.com/docs/0.7/data_model/cfs_as_indexes} (in
+  07/09/2011), 2011.
+
 \bibitem{cql}
 E.~Evans.
 \newblock Cql 1.0.
@@ -66,11 +77,30 @@ E.~Evans.
 \newblock \url{https://issues.apache.org/jira/browse/CASSANDRA-1704} (in
   21/12/2010), 2010.
 
+\bibitem{cqlbbw}
+E.~Evans.
+\newblock Cassandra query language.
+\newblock
+  \url{http://berlinbuzzwords.de/sites/berlinbuzzwords.de/files/cassandra%20wo%
+rkshop%20berlin%20buzzword%202011-cql-drivers.pdf} (in 01/09/2011), 2011.
+
+\bibitem{secindexlimitations}
+P.~Ghosh.
+\newblock Cassandra secondary index patterns.
+\newblock
+  \url{http://pkghosh.wordpress.com/2011/03/02/cassandra-secondary-index-patte%
+rns/} (in 07/09/2011), 2011.
+
 \bibitem{Hastorun2007}
 D.~Hastorun, M.~Jampani, G.~Kakulapati, A.~Pilchin, S.~Sivasubramanian,
   P.~Vosshall, and W.~Vogels.
 \newblock {Dynamo : Amazon ’ s Highly Available Key-value Store}.
 \newblock In {\em In Proc. SOSP}, pages 205--220. Citeseer, 2007.
+
+\bibitem{hewitt2010cassandra}
+E.~Hewitt.
+\newblock {\em Cassandra: The Definitive Guide}.
+\newblock Definitive Guide Series. O'Reilly Media, 2010.
 
 \bibitem{SQLibm}
 IBM.
@@ -124,6 +154,15 @@ T.~Tanner.
 R.~Taylor and R.~Frank.
 \newblock {Codasyl data-base management systems}.
 \newblock {\em ACM Computing Surveys (CSUR)}, 8(1):67--103, 1976.
+
+\bibitem{tpcw}
+Transaction Processing Performance Council.
+\newblock {\em TPC BENCHMARK W (v1.8)}, 2002.
+
+\bibitem{University86thecase}
+M.~S. University and M.~Stonebraker.
+\newblock The case for shared nothing.
+\newblock {\em Database Engineering}, 9:4--9, 1986.
 
 \bibitem{Vogels2008}
 W.~Vogels.
