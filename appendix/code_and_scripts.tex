@@ -1,20 +1,158 @@
-\section{Lua Script to use on Proxy Spread Master Plugin}
+\section{Transactional System Initialization}
 
-\verb+ mysql-proxy --plugins=proxyspread_master --proxyspread-lua-script=spreadrepl.lua +\verb
+\lstset{
+  language=Java, 
+  caption=Client Side, 
+  label=lst:client_trans,
+}
+\definecolor{shadecolor}{gray}{0.95}
 
-\vspace{10mm}
 
-\Large \textbf{spreadrepl.lua}\\
-\small
-
+\begin{shaded}
 \begin{lstlisting}
-function read_query(packet)
-
-	query = string.sub(packet, 2)
+class TransactionInitializer
+{
+  public void createLocks(Connection conn, String tableName)
+  {
+    StringBuilder str = new StringBuilder();
 	
-	--print("Seen the query: " .. query)	
+	if(tableName.equals("getRelated"))
+	{
+	  str.append("TUPLEItem");
+	}
+	else if(tableName.equals("getCustomer") || tableName.equals("createNewCustomer"))
+	{
+	  str.append("TUPLECustomer,");
+	  str.append("TUPLEAddress,");
+	  str.append("TUPLECountry");
+	}
+	else if(tableName.equals("GetUserName") || tableName.equals("GetPassword") || tableName.equals("getName") || tableName.equals("refreshSession"))
+	{
+	  str.append("TUPLECustomer");
+	}
+	else if(tableName.equals("getCart")) // this should also lock SCL, but it would block the whole system and there are no concurrent accesses
+	{
+	  str.append("TUPLEItem");
+	}
+	else if(tableName.equals("doBuyConfirm1") || tableName.equals("doBuyConfirm2"))
+	{
+	  str.append("TUPLECustomer,");
+	  str.append("TUPLEAddress,");
+	  str.append("TUPLEItem,");
+	  str.append("TUPLEOrders,");
+	  str.append("TUPLEOrder_Line,");
+	  str.append("TUPLECC_Xacts");
+	}
+	else if(tableName.equals("doSubjectSearch") || tableName.equals("getBook") || tableName.equals("doAuthorSearch") || tableName.equals("doTitleSearch") || tableName.equals("getNewProducts"))
+	{
+	  str.append("TUPLEItem,");
+	  str.append("TUPLEAuthor");
+	}
+	else if(tableName.equals("getBestSellers"))
+	{
+	  str.append("TUPLEOrders,");
+	  str.append("TUPLEItem,");
+	  str.append("TUPLEAuthor,");
+	  str.append("TUPLEOrder_Line");
+	}
+	else if(tableName.equals("createEmptyCart") || tableName.equals("doCart"))
+	{
+	  str.append("TUPLEShopping_Cart");
+	}
+	else if(tableName.equals("adminUpdate"))
+	{
+	  str.append("TUPLEItem,");
+	  str.append("TUPLEOrders,");
+	  str.append("TUPLEOrder_Line");
+	}
+	else if(tableName.equals("GetMostRecentOrder"))
+	{
+	  str.append("TUPLECustomer,");
+	  str.append("TUPLEAddress,");
+	  str.append("TUPLECountry,");
+	  str.append("TUPLEOrders,");
+	  str.append("TUPLEOrder_Line,");
+	  str.append("TUPLECC_Xacts");
+	}	
+	this.addTableLocks(conn, str.toString());
+  }
+	
+  public static void addTableLocks(Connection conn, String listOfLocks) // the list of locks is a csv list
+  { 
+    CallableStatement csCommit = null;
+    Statement stmt =null;
+    try
+    {
+      csCommit= conn.prepareCall("{ call ADDTABLESTOLOCK(?)}");
+      csCommit.setString(1,listOfLocks);
+      csCommit.execute();
+    }
+    catch (SQLSyntaxErrorException e){
+      if(e.getSQLState().equalsIgnoreCase("42Y03")){  //If procedure is not installed
+        try{
+          stmt = conn.createStatement();
+          stmt.execute("CREATE PROCEDURE ADDTABLESTOLOCK(TABLES VARCHAR(255)) PARAMETER STYLE JAVA LANGUAGE JAVA NO SQL EXTERNAL NAME 'cassandraTrans.TransactionInitializer.setTablesToLock'");
+          conn.commit();
+          addTableLocks(conn,listOfLocks);  //Because procedure was not installed
+        }
+        catch (SQLException e1){
+          e1.printStackTrace();
+        }
+      }
+    }
+    catch(Exception e)
+    {
+      e.printStackTrace();
+    }
+    finally {
+      if(csCommit!=null){
+        try{
+          csCommit.close();
+        }
+        catch (SQLException ex){
+          ex.printStackTrace();
+        }
+        if (stmt!=null){
+          try{
+            stmt.close();
+          }
+          catch (SQLException ex){ex.printStackTrace();}
+        }
+      }
+    }
+  }
+}
+\end{lstlisting}  
+\end{shaded}
 
-	spread_send_msg(query)
 
-end
-\end{lstlisting}
+
+\lstset{
+  language=Java, 
+  caption=Server Side, 
+  label=lst:server_trans,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+
+\begin{shaded}
+\begin{lstlisting}
+public class TransactionInitializer {
+
+  public static void setTablesToLock(String locks){
+    try
+    {
+      Connection conn = DriverManager.getConnection("jdbc:default:connection");
+      System.out.println("setTablesToLock: "+locks);
+      ((GenericLanguageConnectionContext)((EmbedConnection) conn).getLanguageConnection()).setTransactionLocks(locks.split(","));
+      conn.close();
+    }
+    catch(Exception e)
+    {
+      e.printStackTrace();
+    }
+  }
+}	
+\end{lstlisting}  
+\end{shaded}
+	

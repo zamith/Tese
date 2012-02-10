@@ -1,8 +1,6 @@
-\documentclass[11pt,a4paper,twoside]{book} % article, report or essay
+\documentclass[12pt,a4paper,twoside]{book} % article, report or essay
 
 %\usepackage[margin=3cm]{geometry} %margins
-
-
 
 \usepackage[portuges,english]{babel}
 \usepackage[utf8x]{inputenc}
@@ -12,17 +10,40 @@
 %\usepackage{txfonts}% use Arial && Times New Roman
 \usepackage{mathpazo}
 \usepackage[pdftex]{color,graphicx}
+\usepackage{subfigure}
 \usepackage{fancyhdr}
 \usepackage{fancyvrb}
 %\usepackage{microtype}
 \usepackage[printonlyused,withpage]{acronym}
 \usepackage{multirow}
-\usepackage{cite}
 \usepackage{longtable}
 \usepackage{moreverb}
 \usepackage{verbatim}
 \usepackage{listings}
 \usepackage{color}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{framed}
+\usepackage{caption}
+\usepackage{float}
+\usepackage{xspace}
+\usepackage[pdfauthor={Lu\'{i}s Ferreira PG15533},pdftitle={Bridging the gap between SQL and NoSQL},a4paper,pdftex,bookmarks,colorlinks,linkcolor=black,urlcolor=black,citecolor=black]{hyperref}
+\usepackage[hyperpageref]{backref}
+\renewcommand*{\backref}[1]{}
+\renewcommand*{\backrefalt}[4]{%
+\ifcase #1 %
+(Not cited.)%
+\or
+ \textbf{Cited} on page~#2.%
+\else
+ \textbf{Cited} on pages~#2.%
+\fi}
+\renewcommand*{\backrefsep}{, }
+\renewcommand*{\backreftwosep}{ and~}
+\renewcommand*{\backreflastsep}{ and~}
+\usepackage{natbib}
+\usepackage[algoruled,linesnumbered,shortend]{algorithm2e}
+%\usepackage{algorithmic}
 
 \usepackage{tabularx}
 
@@ -31,7 +52,9 @@
 \usepackage{epstopdf}
 
 \usepackage{setspace}
-
+\usepackage{mathtools}
+\usepackage{amsmath}
+\usepackage{booktabs}
 %\linespread{1.3}
 \onehalfspace
 
@@ -39,21 +62,9 @@
 
 
 
-\usepackage[pdfauthor={Miguel Goncalves de Araujo PG13367},
-			%pdftitle={Asynchronous Replication of Databases in Large Scale},
-			pdftitle={Database Replication in Large Scale Systems}
-			a4paper,
-			pdftex,
-			bookmarks,
-			colorlinks,
-			linkcolor=black,
-			urlcolor=black,
-			citecolor=black]{hyperref} 
+
 \newcommand{\tab}{\hspace*{2em}}
 
-\usepackage{xspace}
-
-\usepackage{float}
 \usepackage{epigraph}
 
 \usepackage{todonotes}
@@ -62,6 +73,9 @@
 \newfloat{program}{hbt}{lop}
 \floatname{program}{Program}
 
+\DeclareCaptionFont{white}{\color{white}}
+\DeclareCaptionFormat{listing}{\colorbox{gray}{\parbox{\textwidth-7pt}{#1#2#3}}}
+\captionsetup[lstlisting]{format=listing,labelfont=white,textfont=white}
 
 %\lstset{ %
 %language=C,                % choose the language of the code
@@ -85,22 +99,40 @@
 %morekeywords={refines, refine, @Refines, @Refine, pointcut, call, before, after, around, within, args, target,aspect}            % if you want to add more %keywords to the set
 %}
 
-\lstset{%language=Java,
-  basicstyle=\small,
-  keywordstyle=\color{black}\bfseries\underbar,
-  stringstyle=\ttfamily, % typewriter type for strings
-  showstringspaces=false,
-  columns=fullflexible,
-  captionpos=b,
-  frame=tb,
-  rulesepcolor=\color{black},
+%\lstset{%language=Java,
+%  basicstyle=\small,
+%  keywordstyle=\color{black}\bfseries\underbar,
+%  stringstyle=\ttfamily, % typewriter type for strings
+%  showstringspaces=false,
+%  columns=fullflexible,
+%  captionpos=b,
+%  frame=tb,
+%  rulesepcolor=\color{black},
+%  tabsize=2,
+%  numbers=left,
+%  firstnumber=1,
+%  numberfirstline=true,
+%  numberstyle=\scriptsize,
+%  mathescape=true
+%}
+
+\lstset{
+  basicstyle=\ttfamily,
+  keywordstyle=\color[rgb]{0,0,1},
+  commentstyle=\color[rgb]{0.133,0.545,0.133},
+  stringstyle=\color[rgb]{0.627,0.126,0.941},
+  xrightmargin=10pt,
+  framextopmargin=0pt,
+  framexleftmargin=17pt,
+  framexrightmargin=17pt,
+  framexbottommargin=4pt,
+  breaklines=true,
+  showspaces=false,
+  showstringspaces=false, 
+  showtabs=false,
   tabsize=2,
-  numbers=left,
-  firstnumber=1,
-  numberfirstline=true,
-  numberstyle=\scriptsize,
-  mathescape=true
 }
+
 
 \newcommand{\upp}{Uppaal\xspace}
 \parindent=16pt
@@ -122,15 +154,14 @@
 %\linespread{1.3}
 \pagestyle{headings}
 
+\renewcommand{\arraystretch}{1.2}
+
 \begin{document}
 
 
 
 %%%%%% Formal begining of the thesis
 \pagenumbering{roman}
-	
-	\listoftodos
-	\newpage
 	
 	%% cover
 	\thispagestyle{empty}
@@ -201,17 +232,40 @@
 	\thispagestyle{plain}
 	\mbox{}
     
+    \renewcommand\lstlistingname{Code Sample}
+    %\renewcommand\lstlistlistingname{List of Code Samples}
+    %\lstlistoflistings
+    %\newpage
+	%\thispagestyle{plain}
+	%\mbox{}
+
+    %\listofalgorithms
+    %\newpage
+	%\thispagestyle{plain}
+	%\mbox{}
+
    \chapter*{List of Acronyms}
     \begin{acronym}[TDMA]
 	  \acro{api}[API]{Application Programming Interface}
+	  \acro{ansi}[ANSI]{American National Standards Institute}
 	  \acro{cql}[CQL]{Cassandra Querying Language}
 	  \acro{dbms}[DBMS]{Database Management System}
+  	  \acro{eb}[EB]{Emulated Browser}
+	  \acro{http}[HTTP]{Hypertext Transfer Protocol}
+	  \acro{iso}[ISO]{International Organization for Standardization}
 	  \acro{jdbc}[JDBC]{Java Database Connectivity}
 	  \acro{jvm}[JVM]{Java Virtual Machine}
+	  \acro{ltm}[LTM]{Local Transaction Manager}
+	  \acro{mvcc}[MVCC]{Multiversion concurrency control}
 	  \acro{orm}[ORM]{Object Relational Mapper}
 	  \acro{ram}[RAM]{Random Access Memory}
 	  \acro{rdbms}[RDBMS]{Relational Database Management System}
-	  \acro{sql}[SQL]{Structured Query Language}	 
+	  \acro{rest}[REST]{Representational state transfer}
+	  \acro{sql}[SQL]{Structured Query Language}
+	  \acro{url}[URL]{Uniform Resource Locator}
+	  \acro{vlsd}[VLSD]{Very Large Scale Distributed Database}
+	  \acro{wal}[WAL]{Write-ahead Log}	 
+	  \acro{ycsb}[YCSB]{Yahoo! Cloud Serving Benchmark}	 
 	\end{acronym}
 %	\chapter*{}
 %	\newpage
@@ -223,50 +277,56 @@
 %%%%%% Content
 
 \pagenumbering{arabic}
+	\acresetall
 	
     %% chapters
 	\chapter{Introduction}
+	\label{chap:intro}
         \input{sections/introduction.tex}
 		\mbox{}
-    \chapter{SQL DBMS and NoSQL}
-        \input{sections/sql_nosql.tex}
-   	    \mbox{}	
-	\chapter{Related Work}
-	    \input{sections/rel_work.tex}
-		\mbox{}	
-    \chapter{Derby}
-       \input{sections/derby.tex}
+    \chapter{VLSDs}
+        \input{sections/tuplestores.tex}
+   	    \mbox{}		
+    \chapter{SQL}
+       \input{sections/sql.tex}
    	   \mbox{}
-	\chapter{Cassandra}
+	\chapter{SQL over a VLSD}
 	\label{chap:cass}
-       \input{sections/cassandra.tex}
+       \input{sections/mywork.tex}
        \mbox{}
 	\chapter{Fully Distributed Transactional Model}
 	\label{chap:fdtm}
        \input{sections/fdtm.tex}
    	   \mbox{}
+    
     \chapter{Results and Performance Analysis}
        \input{sections/results.tex}
    	   \mbox{}	
 	%	\newpage
 		\thispagestyle{plain}
 		\mbox{}
+    \chapter{Related Work}
+       \input{sections/rel_work.tex}
+   	\mbox{}	
    \chapter{Conclusions}
    	\input{sections/conclusions.tex}
    	\newpage
    	\thispagestyle{plain}
    	\mbox{}
 
-%	\bibliographystyle{plain}
-	\bibliographystyle{abbrv}
-	\addcontentsline{toc}{chapter}{Bibliography}
+	\bibliographystyle{alpha}
+%	\bibliographystyle{abbrv}
+	\cleardoublepage
+	\renewcommand\bibname{References}
+	%\addcontentsline{toc}{chapter}{References}
 	\bibliography{references}
 	
 	\appendix
 		%\chapter{Additional Results}
 		%	\input{appendix/results_appendix.tex}
 		%	
-		%\chapter{Code and Scripts}
-		%	\input{appendix/code_and_scripts.tex}
+		\chapter{Code}
+		    \label{app:code}
+			\input{appendix/code_and_scripts.tex}
 
 \end{document}

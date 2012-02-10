@@ -1,0 +1,291 @@
+\ac{sql} is the most widely accepted and implemented interface language for relational database systems, and it was one of the first commercial languages for Edgar F. Codd's relational model~\cite{codd1970relational}. Originally based upon relational algebra and tuple relational calculus, its scope includes data insert, query, update and delete, schema creation and modification, and data access control.
+
+The database world being so integrated boosts the importance of a standard language that can be used to operate in many different kinds of computer environments and on many different \acp{dbms}~\cite{Gruber:2000:MS:518858}. A standard language allows you to learn one set of commands and use it to create, retrieve, alter, and transfer information regardless of whether you are working on a personal computer or a workstation. It also enables you to write applications that access multiple databases, as applications that use the ODBC \ac{api}.
+
+The \ac{sql} standard is defined jointly by \ac{ansi} and \ac{iso} that have published a series of \ac{sql} standards since 1986, each being a superset of its predecessor. These standards tend to be ahead of the industry by several years, in the sense that many products today still conform to SQL99.
+
+In a sense, there are three forms of \ac{sql}, Interactive, Static and Dynamic. For the most part they operate the same way, but are used differently.
+
+\begin{description}
+	\item[Interactive \ac{sql}] Used to operate directly on a database to produce immediate output for human utilization
+	\item[Static \ac{sql}] Consists of \ac{sql} statements hard-coded as part of an application. The most common form of this is \emph{Embedded \ac{sql}}, where the code is infixed into the source code of a program written in another language. This requires some extensions to Interactive \ac{sql} as the output of the statements must be ``passed of'' to variables or parameters usable by the program in which it is embedded.
+	\item[Dynamic \ac{sql}] Also part of an application, but the \ac{sql} code is generated at runtime. 
+\end{description}
+
+This chapter will further explain the \ac{sql} concepts that are necessary in order to fully understand our work.
+
+\section{SQL Statements}
+
+\emph{Statements}, or commands, are instructions you give to an \ac{sql} database and consist of one or more logically distinct parts called \emph{clauses}. Clauses generally begin with a keyword for which they are named and consist of other keywords and arguments. Examples of a clauses could be \emph{FROM TUPLEitem} and \emph{WHERE i\_id = 1589}. Arguments complete or modify the meaning of a clause. In the previous examples, \emph{TUPLEitem} is the argument and \emph{FROM} is the keyword of the \emph{FROM} clause. Likewise \emph{i\_id = 1589} is the argument of the \emph{WHERE} clause.
+
+\subsection{Create}
+
+In order to create the above mentioned \emph{TUPLEitem} table you would use the \emph{CREATE TABLE} statement, code sample \ref{lst:create_item}.
+
+\lstset{
+  language=SQL, 
+  caption=SQL create table statement, 
+  label=lst:create_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+
+\begin{shaded}
+\begin{lstlisting}
+CREATE TABLE TUPLEitem 
+   ( i_id      int            not null, 
+     i_title   varchar(60),
+     i_stock   int, 
+     i_isbn    char(13),
+     PRIMARY KEY(i_id));
+\end{lstlisting}  
+\end{shaded}  
+
+This statement has the following components:
+\begin{itemize}
+	\item \emph{CREATE TABLE} are the keywords indicating what this statement does
+	\item \emph{TUPLEItem} is the name given to the table
+	\item The items in parenthesis are a list of the columns in the table. Each column must have a name and a datatype. It may also have one or more constraints as \emph{not null} or \emph{primary key}
+\end{itemize}
+
+Note that this statement makes some assumptions such as the fact that the primary key for each row is not defined by default, it must be explicitly declared. It is, however, highly advised to define one and therefore we shall assume from this point on that each table has a primary key composed of one or more of its columns. When it is defined, an index is created for the values used as primary key which is used when retrieving it. The statement also assumes that a value can be null.
+
+\subsection{Insert}
+\label{sec:sql_insert}
+
+The created table does not yet contain data, to insert a row into the table you would use the statement with the self-explaining name \emph{INSERT} (code sample \ref{lst:insert_item}). If there is already a row with the same primary key as the one being inserted, an error should be raised and no changes made to the database. 
+
+\lstset{
+  language=SQL, 
+  caption=SQL insert statement, 
+  label=lst:insert_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+
+\begin{shaded}
+\begin{lstlisting}
+INSERT INTO TUPLEItem VALUES 
+         (100,'Nice title',10,'0782125387');
+\end{lstlisting}  
+\end{shaded}
+
+This inserts the list of values in parentheses into the \emph{TUPLEItem} table, with the particularity that the values are inserted in the same order as the columns into which they are being inserted and that the text data values are enclosed in single quotes. 
+
+Also note that the table name must have been previously defined in a \emph{CREATE TABLE} statement and that each value enumerated in the \emph{VALUES} clause must match the datatype of the column into which it is being inserted, with the exception of \emph{NULL} values, which are special markers to represent values that you do not possess information for, and can be inserted into any datatype as long as the column allows them.
+
+\subsection{Update}
+In order to change some or all of the values in an existing row there is the \emph{UPDATE} statement which is composed by two parts, the \emph{UPDATE} clause that names the table affected and a \emph{SET} clause that indicates the change(s) to be made to certain column(s). For instance, if you want to increment the stock for the item inserted in section \ref{sec:sql_insert} you would do the following:
+
+\lstset{
+  language=SQL, 
+  caption=SQL update statement, 
+  label=lst:update_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+
+\begin{shaded}
+\begin{lstlisting}
+UPDATE TUPLEItem
+     SET i_stock = i_stock + 1 
+     WHERE i_id = 100
+\end{lstlisting}  
+\end{shaded}
+
+It is possible to use value expressions in the \emph{SET} clause including expressions that employ the column being modified, as the increment of the stock by one in the example above. Whenever you refer to an existing column value in this clause, the value produced will be that of the current row before the \emph{UPDATE} makes any changes.
+
+Also, in order to update only one of the rows instead of all the rows in the table the \emph{WHERE} clause is used.
+
+\subsubsection{Where}
+\label{sec:sql_where}
+
+Tables tend to get very large and most of the times you do not wish for your statements to affect all of the rows in a certain table. This is the reason why \ac{sql} enables you to define criteria to determine which rows to select and this is achieved using \emph{WHERE}, which allows you to define a condition that may evaluate to \emph{TRUE}, \emph{FALSE} or \emph{UNKNOWN}. All the rows that are being evaluated are called \textbf{candidate rows} and of those, the ones that make the predicate \emph{TRUE} are called \textbf{selected rows}, and obviously are the ones retrieved to the client. In order to do this, the database manager must go through the entire table one row at a time and examine it to evaluate if the predicate is true.  
+
+There are many operators that can be used in predicates, in the previous example we used the $=$ operator but other inequalities as $<$ (less than), $>$ (greater than) or $<>$ (not equal to) also apply. The standard boolean operators \emph{NOT}, \emph{AND} and \emph{OR} also apply and can be used to concatenate various predicates or to deny the result of one in the case of \emph{NOT}.
+
+This operators differ from most programming languages in the special case of finding a \emph{NULL} value in the column being evaluated. As aforementioned \ac{sql} boolean expressions can evaluate to three values instead of the usual two, the extra value is \emph{UNKNOWN}, which is used for that special case. If you do not take this differences into account, it might change the way the statement behaves. The main differences between two and three-valued logic are illustrated in Table \ref{tab:logic_diff}.
+
+\renewcommand\arraystretch{2.0}
+\begin{table}[h!]
+\centering
+  \begin{tabular}{  m{6cm}  m{4cm} }
+	\toprule
+	\textbf{Predicate} & \textbf{Truth Value}\\
+    \midrule
+    \emph{NOT UNKNOWN} & \emph{UNKNOWN}\\
+    %\hline
+    \emph{TRUE OR UNKNOWN} & \emph{TRUE}\\
+    %\hline
+    \emph{FALSE OR UNKNOWN} & \emph{UNKNOWN}\\
+    %\hline
+    \emph{TRUE AND UNKNOWN} & \emph{UNKNOWN}\\
+    %\hline
+    \emph{FALSE AND UNKNOWN} & \emph{FALSE}\\
+    \bottomrule
+  \end{tabular}
+
+\caption{Three-valued logic main differences}
+\label{tab:logic_diff}
+\end{table}
+
+Regarding \ac{sql} predicates there are some things of note. Firstly, as just mentioned, it allows for \emph{NULL} values to be stored as a value of any type and therefore to be evaluated as such, using the three-valued logic. Secondly, with the composition of inequalities, it allows to do range queries, i.e. queries that encompass all the rows with id from 1 to 10, for example.
+
+\subsection{Select}
+A query is a statement you give to the \ac{dbms} that tells it to produce certain specified information~\cite{Gruber:2000:MS:518858}. In \ac{sql} all queries are constructed from a single statement that can be extended to allow some highly sophisticated evaluating of data. This statement is \emph{SELECT}.
+
+In its simplest form, it instructs the database to retrieve the contents of a table. For instance, you could retrieve all the rows in the \emph{TUPLEItem} table with the following statement:
+
+\lstset{
+  language=SQL, 
+  caption=SQL select statement, 
+  label=lst:select_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+
+\begin{shaded}
+\begin{lstlisting}
+SELECT * FROM TUPLEItem;
+\end{lstlisting}  
+\end{shaded}  
+
+The statement is pretty much self explaining, with the exception of \emph{*} which is a wildcard that expands to all of the columns in the row\footnote{As globbing in \emph{BASH}}. Therefore the statement \textbf{selects} all the columns in the row \textbf{from} each row of the table \textbf{TUPLEItem}.
+
+If you want to select certain columns instead of all, just switch \emph{*} for a comma separated list of column names.
+
+This will, however, return what is know in mathematical terms as a multiset (or bag), i.e. a collection in which member are allowed to appear more than once. In order to retrieve an actual mathematical set, i.e. a collection of distinct values, you can use the argument called \emph{DISTINCT} in conjunction with the \emph{SELECT} statement as shown in code sample \ref{lst:select_distinct_item}.
+
+\lstset{
+  language=SQL, 
+  caption=SQL select distinct statement, 
+  label=lst:select_distinct_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+
+\begin{shaded}
+\begin{lstlisting}
+SELECT DISTINCT i_title FROM TUPLEItem;
+\end{lstlisting}  
+\end{shaded}  
+
+Querying gains much more expressiveness and power when used together with the where clause in the exact same way as the \emph{UPDATE}, as explained in Section \ref{sec:sql_where}. It also takes implicit advantage of indexes, since the \ac{dbms} will optimize the retrieval of the data and use indexes in those cases where it believes it is better (faster) to do so.
+
+\subsection{Delete}
+
+Rows can be deleted from a table with the \emph{DELETE} statement and since only entire rows can be deleted, no column argument is accepted. Code sample \ref{lst:delete_item} will remove all the contents in \emph{TUPLEItem}.
+
+\lstset{
+  language=SQL, 
+  caption=SQL delete statement, 
+  label=lst:delete_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+\begin{shaded}
+\begin{lstlisting}
+DELETE FROM TUPLEItem;
+\end{lstlisting}  
+\end{shaded}
+
+As most \ac{sql} statements that affect rows, \emph{DELETE} can be used with \emph{WHERE}, in order to delete specific rows instead of all of them.
+
+This statement can only be used to delete rows, if you want to delete a table you must execute a two step process. First you must empty the table of any data with the \emph{DELETE} statement and then destroy the definition of the table with the \emph{DROP} statement. 
+
+\lstset{
+  language=SQL, 
+  caption=SQL drop statement, 
+  label=lst:drop_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+\begin{shaded}
+\begin{lstlisting}
+DROP TABLE TUPLEItem;
+\end{lstlisting}  
+\end{shaded}
+
+\section{Special Operators}
+
+Other than the relational and boolean operators \ac{sql} also provides a set of special operators that can be used to produce more sophisticated and powerful predicates. 
+
+\subsection{In}
+The \emph{IN} operator explicitly defines a set in which a given value may or may not be included. It defines the set by naming the members in parentheses separated by commas, and then tries to match the column value of the row being tested with any of the values in the set. If it finds one, the predicate is \emph{TRUE}.
+
+\subsection{Between}
+
+The \emph{BETWEEN} operator is similar to \emph{IN}, but rather than enumerating a set it defines a range that values must fall into in order to make the predicate \emph{TRUE}. The keyword \emph{BETWEEN} is followed by the start value, the keyword \emph{AND} and the end value, with the particularity that the first value must appear first in alphabetic or numeric order than the last (unlike \emph{IN}, where order does not matter).
+
+Also, the range is inclusive by default and \ac{sql} does not directly support a noninclusive \emph{BETWEEN}.  
+
+\subsection{Like}
+
+The \emph{LIKE} operator is used with text string datatypes only and is used to find substrings in them, i.e. it searches a text column to see if part of it matches a given string. In order to do this, it uses two types of wildcards:
+
+\begin{itemize}
+	\item $\textunderscore$ stands for any single character, it corresponds to \emph{.} in \emph{Regex}.
+	\item $\%$ stands for a sequence of any number of characters, including zero, the corresponding to \emph{.*} in \emph{Regex}
+\end{itemize} 
+
+\lstset{
+  language=SQL, 
+  caption=SQL like operator, 
+  label=lst:like_item,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+\begin{shaded}
+\begin{lstlisting}
+SELECT * FROM TUPLEItem
+     WHERE i_title LIKE 'N__e t%' 
+\end{lstlisting}  
+\end{shaded}
+
+In code sample \ref{lst:like_item}, the predicate will match any item in the table \emph{TUPLEItem} that has a title that starts with the letter \emph{N}, has two characters and the an \emph{e} (such as ``Nice'' from our example) and has a second word that starts with a \emph{t} (such as ``title''). Note that it can have other words after the second one, since the $\%$ wildcard will stand for any number of characters until the end of the string.
+
+\subsection{Is Null}
+As previously discussed, when a \emph{NULL} is compared to any value (even another \emph{NULL}) the result is \emph{UNKNOWN}. Therefore, if you need to distinguish between a \emph{FALSE} and an \emph{UNKNOWN}, i.e. rows containing values that fail a predicate condition and those containing \emph{NULL}s, \ac{sql} provides the special operator \emph{IS} which is used with the keyword \emph{NULL} to locate and treat \emph{NULL} values.
+
+This can be further enhanced by adding the keyword \emph{NOT}, providing the \emph{IS NOT NULL} operator which is the exact opposite of \emph{IS NULL}. 
+
+\section{Stored Procedures}
+\label{sec:stored_procedures}
+One of the important extensions provided by \ac{sql} is the ability to invoke routines written in other languages such as C or Java, from \ac{sql}. The way it is done is by specifying routines as \ac{sql} objects that are essentially wrappers for routines written in other languages, and thus providing an \ac{sql} interface to that routine. 
+
+These routines can be either functions, procedures or methods and the difference between them is that functions return a value whereas procedures simply do something (such as a \emph{void} method in Java) and methods return a value that is an actual \ac{sql} object\footnote{SQL objects are schemas, data dictionaries, journals, catalogs, tables, aliases, views, indexes, constraints, triggers, sequences, stored procedures, user-defined functions, user-defined types, and SQL packages~\cite{ibmSql}.}.
+
+In a \ac{dbms}, a stored procedure is a set of \ac{sql} statements with an assigned name that's stored in the database in compiled form so that it can be shared by a number of programs. It has a great number of optional values at the moment of creation, the following example (Code sample \ref{lst:sql_procedure}) shows how to create a stored procedure for an external Java method.
+
+\lstset{
+  language=SQL, 
+  caption=SQL procedure creation, 
+  label=lst:sql_procedure,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+\begin{shaded}
+\begin{lstlisting}
+CREATE PROCEDURE ADDTABLESTOLOCK(TABLES VARCHAR(32672)) 
+     PARAMETER STYLE JAVA 
+     LANGUAGE JAVA NO SQL 
+     EXTERNAL NAME 'cassandraTrans.TransactionInitializer.setTablesToLock'";
+\end{lstlisting}  
+\end{shaded}
+
+The procedure is executed in response to an explicit statement in the program on behalf of which it is used, that statement is typically know as \emph{call statement}~\cite{Melton:2002:ASU:863098}. A \emph{CALL} statement (Code sample \ref{lst:sql_procedure_invoke}) causes an \ac{sql}-invoked procedure to be invoked and all the information that is transferred to it is passed through its parameters.
+
+\lstset{
+  language=SQL, 
+  caption=SQL invoking a procedure, 
+  label=lst:sql_procedure_invoke,
+}
+\definecolor{shadecolor}{gray}{0.95}
+
+\begin{shaded}
+\begin{lstlisting}
+call ADDTABLESTOLOCK('Lock1,Lock2');
+\end{lstlisting}  
+\end{shaded}
+
+ 

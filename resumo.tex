@@ -1,13 +1,10 @@
 
 \paragraph{}
 
-\todo[inline]{Melhorar tradução}
+Nos últimos anos houve um enorme crescimento na área das bases de dados distribuídas de grande escala (VLSD), especialmente com o movimento NoSQL. Estas bases de dados têm  como propósito não ter esquema de dados nem ser tão rígidas como as suas homólogas relacionais no que toca ao modelo de dados, por forma a atingir uma maior escalabilidade.
 
-Nos últimos anos houve um enorme crescimento na área das bases de dados distribuídas, especialmente com o movimento NoSQL. Estas bases de dados têm  como propósito não ter \emph{schema} nem ser tão rígidas, como as suas \emph{counterparts} relacionais, no que toca ao modelo de dados, por forma a atingir uma maior escalabilidade.
+A sua \emph{API} de consultas tem tendêcia a ser bastante reduzida e simples (normalmente uma operação para inserir, uma para ler e outra para remover dados) e a ter leituras e escritas muito rápidas, tendo no entanto como aspecto negativo o facto de não ter uma linguagem de consulta stardardizada como o SQL. Assim, estas propriedades podem ser vistas como uma perda de capacidade tanto em termos de coerência como de poder de consulta.
 
-A sua \emph{API de queries} tem tendêcia a ser bastante reduzida e simples (normalmente uma operação para inserir, uma para ler e outra para remover dados), o que lhes permite ter leituras e escritas muito rápidas. Todas estas propriedades podem também ser vistas como uma perda de capacidade tanto a nível de coerência como de poder de \emph{query}. Assim, houve a necessidade de expor os vários argumentos contra e a favor destas propriedades, bem como as tentativas que já foram e estão a ser feitas para aproximar estas duas tecnologias e o porquê de não serem satisfatórias.
+Há uma grande quantidade de código bem como um numero elevado de projectos já em produção que utilização SQL e algumas delas poderiam beneficiar do uso de uma VLSD como a sua base de dados. No entanto, seria extremamente complicado de migrar de uma arquitectura para a outra de uma forma transparente. 
 
-Neste contexto, o trabalho apresentado nesta dissertação de mestrado é o resultado da avaliação de como integrar propriedades de bases de dados relacionais e não relacionais. A solução proposta usa o Apache Derby DB, o Apache Cassandra e o Apache Zookeeper, tendo benefícios e \emph{drawbacks} que foram identificados e analisados.
-
-Finalmente, para avaliar a solução proposta e implementada, usámos um \emph{workload} baseado naquele definido pela \emph{benchmark} TPC-W, largamente utilizada em servidores web transaccionais orientados para o negócio.Segundo esta especificação avaliámos a nossa proposta em diferentes cenários e configurações.
-
+Neste contexto, o trabalho apresentado nesta dissertação de mestrado é o resultado da avaliação de como oferecer uma interface SQL para um VLSD que permita fazer tal migração sem perder as garantias transacionais dadas por sistemas relacionais tradicionais. A solução proposta usa o Apache Derby DB, o Apache Cassandra e o Apache Zookeeper, tendo benefícios e inconvenientes que foram identificados e analisados.

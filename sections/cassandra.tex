@@ -15,32 +15,14 @@ Elastic scalability refers to the capability of a cluster to seamlessly accept n
 
 Cassandra is highly available in the sense that if a node fails it can be replaced with no downtime and the data can be replicated through data centers to prevent that same downtime in the case of one of them experiencing a catastrophe, such as an earthquake or flood. 
 
-Eric Brewer's CAP theorem \cite{Brewer2000} states that it is impossible for a distributed computer system to simultaneously provide all three of the following guarantees:
-\begin{description}
-	\item[Consistency] All clients see current data regardless of updates or deletes
-	\item[Availability] All clients will always be able to read and write data, even with node failures
-	\item[Partition Tolerance] The system continues to work as expected despite network or message failures
-\end{description}
+Consistency essentially means that a read always return the most recently written value, which is guaranteed to happen when the state of a write is consistent among all nodes that have that data (the updates have a global order). Most \acp{vlsd}, including Cassandra, focus on availability and partition tolerance, relaxing the consistency guarantee, providing eventual consistency.  
 
-Figure \ref{fig:cap} provides a visual explanation of the theorem, with a focus on the two guarantees given by Cassandra.
-
-\begin{figure}[htb]
-  \begin{center}
-    \leavevmode
-    \includegraphics[width=0.5\textwidth]{images/cap}
-  \end{center}
-  \caption{CAP Theorem}
-  \label{fig:cap}
-\end{figure}
-
-Consistency essentially means that a read always return the most recently written value, which is guaranteed to happen when the state of a write is consistent among all nodes that have that data (the updates have a global order). Most NoSQL implementations, including Cassandra, focus on availability and partition tolerance, relaxing the consistency guarantee, providing eventual consistency.  
-
-Eventual consistency is seen by many as impracticable for sensitive data, data that cannot be lost. The reality is not so black and white, and the binary opposition between consistent and not-consistent is not truly reflected in practice, there are instead degrees of consistency such as serializability and causal consistency\todo{get reference}. In the particular case of Cassandra the consistency can be considered tuneable in the sense that the number of replicas that will block on an update can be configured on an operation basis by setting the consistency level combined with the replication factor (Section \ref{sec:consistency}).
+In the particular case of Cassandra consistency can be considered tuneable in the sense that the number of replicas that will block on an update can be configured on an operation basis by setting the consistency level combined with the replication factor (Section \ref{sec:consistency}).
 
 
 \section{Data Model}
 \label{sec:cass_data_model}
-Usually, NoSQL implementations are key-value stores that have nearly no structure in their data model apart from what can be perceived as an associative array. On the other hand, Cassandra is a row oriented\footnote{It is frequently referred to as column oriented, and this is not wrong in the sense that it is not relational. But data in Cassandra is actually stored in rows indexed by a unique key, but each row does not need to have the same columns (number or type) as the ones in the same column family.} database system, with a rather complex data model\cite{sarkissian09}, that is described below.
+Usually, NoSQL implementations are key-value stores that have nearly no structure in their data model apart from what can be perceived as an associative array. On the other hand, Cassandra is a row oriented\footnote{It is frequently referred to as column oriented, but data in Cassandra is actually stored in rows indexed by a unique key, but each row does not need to have the same columns (number or type) as the ones in the same column family.} database system, with a rather complex data model\cite{sarkissian09}, that is described below.
 
 The basic building block of Cassandra are columns (Fig. \ref{fig:column}) that consist of a tuple with three elements, a name, a value and a timestamp. The name of column can be a string but, unlike its relational counterpart, can also be long integers, UUIDs or any kind of byte array.
 

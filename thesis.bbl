@@ -1,177 +1,248 @@
-\begin{thebibliography}{10}
+\newcommand{\etalchar}[1]{$^{#1}$}
+\begin{thebibliography}{CDG{\etalchar{+}}08}
 
-\bibitem{derbySite}
+\bibitem[ASF08]{zooLocks}
+ASF.
+\newblock Zookeeper recipes and solutions.
+\newblock
+  \url{http://zookeeper.apache.org/doc/r3.3.3/recipes.html#sc_recipes_Locks}
+  (in 19/09/2011), 2008.
+
+\bibitem[ASF10a]{derbySite}
 ASF.
 \newblock Apache derby official website.
 \newblock \url{http://db.apache.org/derby/} (in 14/12/2010), 2010.
 
-\bibitem{derbySQL}
+\bibitem[ASF10b]{zooDef}
 ASF.
-\newblock Derby support for sql-92 features.
-\newblock \url{http://db.apache.org/derby/docs/10.3/ref/rrefsql9241891.html}
-  (in 14/12/2010), 2010.
+\newblock What is zookeeper?
+\newblock \url{http://zookeeper.apache.org/} (in 11/10/2011), 2010.
 
-\bibitem{Brewer2000}
-E.~Brewer.
+\bibitem[ASF10c]{zooDoc}
+ASF.
+\newblock Zookeeper: A distributed coordination service for distributed
+  applications.
+\newblock \url{http://zookeeper.apache.org/doc/r3.3.0/zookeeperOver.html} (in
+  19/09/2011), 2010.
+
+\bibitem[ASF10d]{zooPerf}
+ASF.
+\newblock Zookeeper: A distributed coordination service for distributed
+  applications.
+\newblock
+  \url{http://zookeeper.apache.org/doc/r3.3.0/zookeeperOver.html#fg_zkPerfRW}
+  (in 19/09/2011), 2010.
+
+\bibitem[Bre00]{Brewer2000}
+E.A. Brewer.
 \newblock {Towards robust distributed systems}.
 \newblock In {\em Proceedings of the Annual ACM Symposium on Principles of
   Distributed Computing}, volume~19, pages 7--10, 2000.
 
-\bibitem{derbydevIBM}
-R.~Brunner.
-\newblock Developing with apache derby.
-\newblock
-  \url{http://www.ibm.com/developerworks/opensource/library/os-ad-trifecta2/in%
-dex.html} (in 14/12/2010), 2006.
+\bibitem[CB74]{Chamberlin:1974:SSE:800296.811515}
+Donald~D. Chamberlin and Raymond~F. Boyce.
+\newblock Sequel: A structured english query language.
+\newblock In {\em Proceedings of the 1974 ACM SIGFIDET (now SIGMOD) workshop on
+  Data description, access and control}, SIGFIDET '74, pages 249--264, New
+  York, NY, USA, 1974. ACM.
 
-\bibitem{Chang2008}
-F.~Chang, J.~Dean, S.~Ghemawat, W.~Hsieh, D.~Wallach, M.~Burrows, T.~Chandra,
-  A.~Fikes, and R.~Gruber.
+\bibitem[CDG{\etalchar{+}}08]{Chang2008}
+Fay Chang, Jeffrey Dean, Sanjay Ghemawat, W.C. Hsieh, D.A. Wallach, Mike
+  Burrows, Tushar Chandra, Andrew Fikes, and R.E. Gruber.
 \newblock {Bigtable: A distributed storage system for structured data}.
 \newblock {\em ACM Transactions on Computer Systems (TOCS)}, 26(2):1--26, 2008.
 
-\bibitem{SQLintro}
-M.~Chapple.
-\newblock Sql fundamentals.
-\newblock \url{http://databases.about.com/od/sql/a/sqlfundamentals.htm} (in
-  14/12/2010), 2010.
-
-\bibitem{codd1970relational}
-E.~Codd.
-\newblock {A relational model of data for large shared data banks}.
-\newblock {\em Communications of the ACM}, 13(6):377--387, 1970.
-
-\bibitem{coulouris2005distributed}
-G.~Coulouris, J.~Dollimore, and T.~Kindberg.
+\bibitem[CDK01]{coulouris2005distributed}
+G.F. Coulouris, J.~Dollimore, and T.~Kindberg.
 \newblock {\em Distributed systems: concepts and design}.
 \newblock International computer science series. Addison-Wesley, 2001.
 
-\bibitem{derbyDev10}
-Derby.
-\newblock {\em Derby Developer's Guide - Version 10.7}, 2010.
+\bibitem[Cod70]{codd1970relational}
+E.F. Codd.
+\newblock {A relational model of data for large shared data banks}.
+\newblock {\em Communications of the ACM}, 13(6):377--387, 1970.
 
-\bibitem{derby10}
-Derby.
-\newblock {\em Getting Started with Derby - Version 10.7}, 2010.
+\bibitem[CST{\etalchar{+}}10]{Cooper:2010:BCS:1807128.1807152}
+Brian~F. Cooper, Adam Silberstein, Erwin Tam, Raghu Ramakrishnan, and Russell
+  Sears.
+\newblock Benchmarking cloud serving systems with ycsb.
+\newblock In {\em Proceedings of the 1st ACM symposium on Cloud computing},
+  SoCC '10, pages 143--154, New York, NY, USA, 2010. ACM.
 
-\bibitem{DM}
+\bibitem[DM10]{DM}
 DM.
 \newblock Datamapper.
 \newblock \url{http://datamapper.org/} (in 19/12/2010), 2010.
 
-\bibitem{secindex}
-D.~Documentation.
+\bibitem[Doc11]{secindex}
+DataStax Documentation.
 \newblock Using column families as indexes.
 \newblock \url{http://www.datastax.com/docs/0.7/data_model/cfs_as_indexes} (in
   07/09/2011), 2011.
 
-\bibitem{cql}
-E.~Evans.
+\bibitem[Edl11]{nosqlOrg}
+Stefan Edlich.
+\newblock Your ultimate guide to the non - relational universe!
+\newblock \url{http://nosql-database.org/} (in 23/10/2011), 2011.
+
+\bibitem[Eva10a]{cql}
+Eric Evans.
 \newblock Cql 1.0.
 \newblock \url{https://issues.apache.org/jira/browse/CASSANDRA-1703} (in
   21/12/2010), 2010.
 
-\bibitem{cqlSelect}
-E.~Evans.
+\bibitem[Eva10b]{cqlSelect}
+Eric Evans.
 \newblock Cql reads (aka select).
 \newblock \url{https://issues.apache.org/jira/browse/CASSANDRA-1704} (in
   21/12/2010), 2010.
 
-\bibitem{cqlbbw}
-E.~Evans.
+\bibitem[Eva11]{cqlbbw}
+Eric Evans.
 \newblock Cassandra query language.
 \newblock
-  \url{http://berlinbuzzwords.de/sites/berlinbuzzwords.de/files/cassandra%20wo%
-rkshop%20berlin%20buzzword%202011-cql-drivers.pdf} (in 01/09/2011), 2011.
+  \url{http://berlinbuzzwords.de/sites/berlinbuzzwords.de/files/cassandra\%20w%
+orkshop\%20berlin\%20buzzword\%202011-cql-drivers.pdf} (in 01/09/2011), 2011.
 
-\bibitem{secindexlimitations}
-P.~Ghosh.
+\bibitem[Fid88]{fidge_vector_clocks_1988}
+Colin~J. Fidge.
+\newblock Timestamps in {M}essage-{P}assing {S}ystems that {P}reserve the
+  {P}artial {O}rdering.
+\newblock In {\em 11th Australian Computer Science Conference}, pages 55--66,
+  University of Queensland, Australia, 1988.
+
+\bibitem[Gho11]{secindexlimitations}
+Pranab Ghosh.
 \newblock Cassandra secondary index patterns.
 \newblock
   \url{http://pkghosh.wordpress.com/2011/03/02/cassandra-secondary-index-patte%
 rns/} (in 07/09/2011), 2011.
 
-\bibitem{Hastorun2007}
-D.~Hastorun, M.~Jampani, G.~Kakulapati, A.~Pilchin, S.~Sivasubramanian,
-  P.~Vosshall, and W.~Vogels.
-\newblock {Dynamo : Amazon ’ s Highly Available Key-value Store}.
-\newblock In {\em In Proc. SOSP}, pages 205--220. Citeseer, 2007.
+\bibitem[GPO11]{Pi}
+Pedro Gomes, José Pereira, and Rui Oliveira.
+\newblock {An Object Mapping for the Cassandra Distributed Database}.
+\newblock In {\em In Proc. Inforum}, 2011.
 
-\bibitem{hewitt2010cassandra}
+\bibitem[Gru00]{Gruber:2000:MS:518858}
+Martin Gruber.
+\newblock {\em Mastering SQL}.
+\newblock SYBEX Inc., Alameda, CA, USA, 1st edition, 2000.
+
+\bibitem[Hew10]{hewitt2010cassandra}
 E.~Hewitt.
 \newblock {\em Cassandra: The Definitive Guide}.
 \newblock Definitive Guide Series. O'Reilly Media, 2010.
 
-\bibitem{SQLibm}
-IBM.
-\newblock Structured query language (sql).
-\newblock
-  \url{http://publib.boulder.ibm.com/infocenter/db2luw/v9/index.jsp?topic=/com%
-.ibm.db2.udb.admin.doc/doc/c0004100.htm} (in 14/12/2010), 2006.
+\bibitem[HJK{\etalchar{+}}07]{Hastorun2007}
+Deniz Hastorun, Madan Jampani, Gunavardhan Kakulapati, Alex Pilchin,
+  Swaminathan Sivasubramanian, Peter Vosshall, and Werner Vogels.
+\newblock {Dynamo : Amazon ’ s Highly Available Key-value Store}.
+\newblock In {\em In Proc. SOSP}, pages 205--220. Citeseer, 2007.
 
-\bibitem{Junqueira2007}
-F.~Junqueira, M.~Konar, A.~Kornev, and B.~Reed.
+\bibitem[IBM]{ibmSql}
+IBM.
+\newblock Sql objects.
+\newblock
+  \url{http://publib.boulder.ibm.com/infocenter/iseries/v5r3/index.jsp?topic=%
+\%2Fsqlp\%2Frbafysqlobjects.htm} (in 25/10/2011).
+
+\bibitem[JKKR07]{Junqueira2007}
+Flavio Junqueira, Mahadev Konar, Andrew Kornev, and Benjamin Reed.
 \newblock {Zookeeper}.
 \newblock {\em Update}, 2007.
 
-\bibitem{lakshmanMalik}
-A.~Lakshman and P.~Malik.
+\bibitem[LM09]{lakshmanMalik}
+Avinash Lakshman and Prashant Malik.
 \newblock Cassandra - a decentralized structured storage system.
 \newblock 2009.
 
-\bibitem{ozsu91distributeddatabase}
-M.~T. Ozsu and P.~Valduriez.
-\newblock Distributed database systems: Where are we now.
-\newblock {\em IEEE Computer}, 24:68--78, 1991.
+\bibitem[LT98]{internetGrowth}
+Ryan Lim and Gerald Tan.
+\newblock A reminiscence of the nineties.
+\newblock \url{http://library.thinkquest.org/18220/internet/} (in 27/09/2011),
+  1998.
 
-\bibitem{sarkissian09}
-A.~Sarkissian.
+\bibitem[Mel02]{Melton:2002:ASU:863098}
+Jim Melton.
+\newblock {\em Advanced SQL 1999: Understanding Object-Relational, and Other
+  Advanced Features}.
+\newblock Elsevier Science Inc., New York, NY, USA, 2002.
+
+\bibitem[Sar09]{sarkissian09}
+Arin Sarkissian.
 \newblock Wtf is a supercolunm? - an intro to the cassandra data model.
 \newblock 2009.
 
-\bibitem{seeger09}
-M.~Seeger.
-\newblock Key-value stores: a practical overview.
-\newblock 2009.
-
-\bibitem{derbyPatch}
-K.~M. Solem.
+\bibitem[Sol07]{derbyPatch}
+Knut~Magne Solem.
 \newblock A new approach for main-memory database.
 \newblock \url{https://issues.apache.org/jira/browse/DERBY-2798} (in
   19/12/2010), 2007.
 
-\bibitem{stonebraker2010sql}
+\bibitem[Sto10a]{stonebraker2010sql}
 M.~Stonebraker.
 \newblock {SQL databases v. NoSQL databases}.
 \newblock {\em Communications of the ACM}, 53(4):10--11, 2010.
 
-\bibitem{Tanner}
-T.~Tanner.
-\newblock {Distributed Hash Tables in P2P Systems - A literary survey}.
-\newblock {\em Technology}, pages 2--7, 2005.
+\bibitem[Sto10b]{stoneEnter}
+Michael Stonebraker.
+\newblock Why enterprises are uninterested in nosql.
+\newblock
+  \url{http://cacm.acm.org/blogs/blog-cacm/99512-why-enterprises-are-uninteres%
+ted-in-nosql/fulltext} (in 27/09/2011), 2010.
 
-\bibitem{taylor1976codasyl}
-R.~Taylor and R.~Frank.
-\newblock {Codasyl data-base management systems}.
-\newblock {\em ACM Computing Surveys (CSUR)}, 8(1):67--103, 1976.
+\bibitem[TA10]{Thomson:2010:CDD:1920841.1920855}
+Alexander Thomson and Daniel~J. Abadi.
+\newblock The case for determinism in database systems.
+\newblock {\em Proc. VLDB Endow.}, 3:70--80, September 2010.
 
-\bibitem{tpcw}
+\bibitem[Tec11]{riakWeb}
+Basho Technologies.
+\newblock Concepts.
+\newblock \url{http://wiki.basho.com/Concepts.html} (in 23/10/2011), 2011.
+
+\bibitem[Tra02]{tpcw}
 Transaction Processing Performance Council.
 \newblock {\em TPC BENCHMARK W (v1.8)}, 2002.
 
-\bibitem{University86thecase}
-M.~S. University and M.~Stonebraker.
-\newblock The case for shared nothing.
-\newblock {\em Database Engineering}, 9:4--9, 1986.
+\bibitem[TSJ{\etalchar{+}}09]{Thusoo:2009:HWS:1687553.1687609}
+Ashish Thusoo, Joydeep~Sen Sarma, Namit Jain, Zheng Shao, Prasad Chakka, Suresh
+  Anthony, Hao Liu, Pete Wyckoff, and Raghotham Murthy.
+\newblock Hive: a warehousing solution over a map-reduce framework.
+\newblock {\em Proc. VLDB Endow.}, 2:1626--1629, August 2009.
 
-\bibitem{Vogels2008}
-W.~Vogels.
+\bibitem[VCO10]{Vilaca:2010:ETL:1926129.1926137}
+Ricardo Vila\c{c}a, Francisco Cruz, and Rui Oliveira.
+\newblock On the expressiveness and trade-offs of large scale tuple stores.
+\newblock In {\em Proceedings of the 2010 international conference on On the
+  move to meaningful internet systems: Part II}, OTM'10, pages 727--744,
+  Berlin, Heidelberg, 2010. Springer-Verlag.
+
+\bibitem[Vog08]{Vogels2008}
+Werner Vogels.
 \newblock {EVENTUALLY CONSISTENT}.
-\newblock {\em Queue}, 6(6):14, Oct. 2008.
+\newblock {\em Queue}, 6(6):14, October 2008.
 
-\bibitem{will10}
-M.~Will.
+\bibitem[vol]{voldemort}
+Project voldemort: A distributed database.
+\newblock \url{http://project-voldemort.com/} (in 24/10/2011).
+
+\bibitem[Wil10a]{will10}
+Michael Will.
 \newblock Cassandra for life science.
 \newblock 2010.
+
+\bibitem[Wil10b]{cages}
+Dominic Williams.
+\newblock Locking and transactions over cassandra using cages.
+\newblock
+  \url{http://ria101.wordpress.com/2010/05/12/locking-and-transactions-over-ca%
+ssandra-using-cages/} (in 19/09/2011), 2010.
+
+\bibitem[ZPC11]{cloudTPS}
+W.~Zhou, G.~Pierre, and C.~Chi.
+\newblock {CloudTPS: Scalable Transactions for Web Applications in the Cloud}.
+\newblock {\em IEEE Transactions on Services Computing}, 99 (PrePrints):1--1,
+  2011.
 
 \end{thebibliography}

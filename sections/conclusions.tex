@@ -1,10 +1,25 @@
 \label{sec:conclusion}
-The differences between a generic distributed database and RDBMS, have been shown, as well as how they are translated into actual implementations of such models, in the examples of Apache Cassandra and Apache DerbyDB.
+The lack of a standard querying \ac{api} and the relaxation in consistency alongside with the provided high availability, scalability and increased performance in certain use cases, makes \acp{vlsd} a thriving field of study and interest amongst the distributed systems community. However, all this properties also make it hard to migrate code from existing relational databases both because of the different interfaces and the lack of transactional guarantees so important in many scenarios.
 
-Also, through a proof of concept, it has been demonstrated that joining these two different worlds is, indeed, possible, using the \ac{rdbms} as an \ac{sql}  interpreter, responsible for asking for the necessary keys, and the NoSQL system as the actual place where data is stored.
+With this work, we showed that it is possible to integrate a \ac{vlsd} with a \ac{rdbms} to the extent of providing an \ac{sql} interface for the former. In this context, the problems of such integration are described and a mapping of operations are proposed between DerbyDB and Cassandra.
 
-The actual code connecting the two will have to be studied with greater depth and the best approach to be taken will also have to be very well thought. This, as well as the rewriting of the code, are the future work, regarding this problem.
+In order to provide the transactional (ACID) guarantees, we propose a distributed transactions library based on a \ac{wal} mechanism and taking advantage of some of the guarantees of the actual \ac{vlsd}, in this case Cassandra. This library and how it can be integrated with the rest of the system is fully explained.
 
-Other relevant work in the area has also been referred to, as is the case of \ac{cql}, which development will be attentively followed.
+The tests performed show that ...  
 
-Being that NoSQL is a rapidly changing area, so is it's state of the art, meaning that the statements and assumptions made, refer to the knowledge and expertise available at the time of writing.
+Our system is modular and can be divided into four main parts:
+\begin{description}
+	\item[Applications (clients)] There can be multiple clients connect to the system
+	\item[Core] Composed by the query engine and our abstraction layer, which contains the transactional system
+	\item[Storage] This can be a cluster of multiple machines
+	\item[Transactional Metadata] The metadata of the locking mechanism is stored in a Zookeeper cluster that can also be composed multiple machines
+\end{description}
+
+This modular approach combined with the provided functionality and new ideas makes this work a viable way to integrate legacy \ac{sql} code with a \ac{vlsd}. 
+
+\section{Future Work}
+The presented system solves the problems of providing an \ac{sql} interface and transactional functionality over a \ac{vlsd}. It has, however, certain limitations and some areas that can be further explored.
+
+The main limitation of the system is that it does not provide snapshot isolation, this property comes directly from the fact that Cassandra does not allow multiple versions of a column.
+
+This system is built specifically for the case of Derby and Cassandra and the transactional system is specially linked with Cassandra. An area to be explored would be building such a system for other \acp{vlsd} and if possible build a generic transactional system for most, if not all, \acp{vlsd}. 

@@ -1,50 +1,50 @@
 This is BibTeX, Version 0.99c (Web2C 7.5.7)
 The top-level auxiliary file: thesis.aux
-The style file: abbrv.bst
+The style file: alpha.bst
 Database file #1: references.bib
+Warning--to sort, need author or key in voldemort
 Warning--empty note in lakshmanMalik
 Warning--empty note in sarkissian09
-Warning--empty note in seeger09
 Warning--empty note in will10
-You've used 32 entries,
-            2118 wiz_defined-function locations,
-            665 strings with 7656 characters,
-and the built_in function-call counts, 8162 in all, are:
-= -- 804
-> -- 341
-< -- 4
-+ -- 142
-- -- 108
-* -- 439
-:= -- 1404
-add.period$ -- 96
-call.type$ -- 32
-change.case$ -- 146
-chr.to.int$ -- 0
-cite$ -- 36
-duplicate$ -- 303
-empty$ -- 696
-format.name$ -- 108
-if$ -- 1709
-int.to.chr$ -- 0
-int.to.str$ -- 32
-missing$ -- 15
-newline$ -- 160
-num.names$ -- 62
-pop$ -- 186
+You've used 42 entries,
+            2543 wiz_defined-function locations,
+            784 strings with 10744 characters,
+and the built_in function-call counts, 14498 in all, are:
+= -- 1443
+> -- 615
+< -- 34
++ -- 207
+- -- 198
+* -- 888
+:= -- 2347
+add.period$ -- 130
+call.type$ -- 42
+change.case$ -- 246
+chr.to.int$ -- 36
+cite$ -- 47
+duplicate$ -- 593
+empty$ -- 1134
+format.name$ -- 261
+if$ -- 3014
+int.to.chr$ -- 7
+int.to.str$ -- 0
+missing$ -- 23
+newline$ -- 212
+num.names$ -- 120
+pop$ -- 315
 preamble$ -- 1
-purify$ -- 119
+purify$ -- 292
 quote$ -- 0
-skip$ -- 241
+skip$ -- 515
 stack$ -- 0
-substring$ -- 350
-swap$ -- 52
-text.length$ -- 4
-text.prefix$ -- 0
+substring$ -- 600
+swap$ -- 91
+text.length$ -- 34
+text.prefix$ -- 28
 top$ -- 0
-type$ -- 124
+type$ -- 320
 warning$ -- 4
-while$ -- 84
-width$ -- 34
-write$ -- 326
+while$ -- 124
+width$ -- 49
+write$ -- 528
 (There were 4 warnings)

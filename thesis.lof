@@ -1,19 +1,28 @@
 \select@language {english}
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {1.1}{\ignorespaces CAP Theorem\relax }}{3}{figure.caption.15}
+\addvspace {10\p@ }
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Cassandra Column\relax }}{13}{figure.caption.29}
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Cassandra Row\relax }}{14}{figure.caption.30}
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Cassandra ColumnFamily\relax }}{15}{figure.caption.31}
+\contentsline {figure}{\numberline {2.4}{\ignorespaces Cassandra SuperColumn\relax }}{16}{figure.caption.32}
 \addvspace {10\p@ }
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1}{\ignorespaces Two-phase commit successful run\cite {coulouris2005distributed}}}{11}{figure.3.1}
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Derby over Cassandra system architecture\relax }}{31}{figure.caption.40}
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Cassandra design to integrate with Derby\relax }}{33}{figure.caption.41}
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Derby Indexes\relax }}{36}{figure.caption.44}
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Querying with \emph {LIKE}\relax }}{38}{figure.caption.47}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {4.1}{\ignorespaces Derby System Structure}}{13}{figure.4.1}
-\contentsline {figure}{\numberline {4.2}{\ignorespaces Derby Indexes}}{17}{figure.4.2}
-\contentsline {figure}{\numberline {4.3}{\ignorespaces Querying with \emph {LIKE}}}{18}{figure.4.3}
+\contentsline {figure}{\numberline {5.1}{\ignorespaces ZooKeeper's Hierarchical Namespace\relax }}{46}{figure.caption.52}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {5.1}{\ignorespaces CAP Theorem}}{22}{figure.5.1}
-\contentsline {figure}{\numberline {5.2}{\ignorespaces Cassandra Column}}{23}{figure.5.2}
-\contentsline {figure}{\numberline {5.3}{\ignorespaces Cassandra Row}}{24}{figure.5.3}
-\contentsline {figure}{\numberline {5.4}{\ignorespaces Cassandra ColumnFamily}}{24}{figure.5.4}
-\contentsline {figure}{\numberline {5.5}{\ignorespaces Cassandra SuperColumn}}{25}{figure.5.5}
-\contentsline {figure}{\numberline {5.6}{\ignorespaces Cassandra design to integrate with Derby}}{28}{figure.5.6}
+\contentsline {figure}{\numberline {6.1}{\ignorespaces Results of running TPC-W with different number of clients\relax }}{59}{figure.caption.57}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Throughput}}}{59}{figure.caption.57}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Latency}}}{59}{figure.caption.57}
+\contentsline {figure}{\numberline {6.2}{\ignorespaces Results of running YCSB with different expected throughput\relax }}{60}{figure.caption.58}
+\contentsline {subfigure}{\numberline {(a)}{\ignorespaces {Scan}}}{60}{figure.caption.58}
+\contentsline {subfigure}{\numberline {(b)}{\ignorespaces {Read}}}{60}{figure.caption.58}
+\contentsline {subfigure}{\numberline {(c)}{\ignorespaces {Multiupdate}}}{60}{figure.caption.58}
 \addvspace {10\p@ }
+\contentsline {figure}{\numberline {7.1}{\ignorespaces Two-phase commit successful run\cite {coulouris2005distributed}\relax }}{62}{figure.caption.61}
 \addvspace {10\p@ }
 \addvspace {10\p@ }

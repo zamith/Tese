@@ -1,5 +1,3 @@
-
-
 \section{SQL Database Management System}
 \label{sec:rdbms}
 
@@ -34,25 +32,10 @@ Every database has its own data structures (fields, records, files and objects) 
 A database query language allows users to interrogate the database, analyze and update data, and control its security. Users can be granted different types of privileges, and the identity of said users is guaranteed using a password. The most widely used language nowadays is \ac{sql} , which provides the user with four main operations, know as CRUD (Create, Read, Update, Delete).  
 
 \subsubsection{Transactions}
-A \ac{rdbms} should have a transactional mechanism that assures the ACID properties:
-\begin{description}
-	\item[Atomicity] A jump from the initial state to the result state without any \textbf{observable} intermediate state. All or nothing (Commit/Abort) semantics that is, when a statement is executed, every update within the transaction must succeed in order to be called successful.
-	\item[Consistency] The transaction is a correct transformation of the state, i.e only consistent data will be written to the database.
-	\item[Isolation] No transaction should be able to interfere with another transaction. The outside observer sees the transactions as if they execute in some serial order. That is, if two different transactions attempt to modify the same data at the same time, then one of them will have to wait for the other to complete.
-	\item[Durability] Once a transaction commits (completes successfully), it will remain so. The only way to get rid of what a committed transaction has done is to execute an inverse transaction (which is sometimes impossible). A committed transaction will be preserved through power losses, crashes and errors. 
-\end{description}
-
-Which guarantees that the integrity and consistency of the data is maintained despite concurrent accesses and faults.  
+A \ac{rdbms} must provide a transactional system with ACID properties.
 
 \section{NoSQL}
 \label{sec:nosql}
-NoSQL \cite{seeger09} is a term used to refer to database management systems that, in some way, are different from the classic relational model. These systems, usually, do not use schemas and avoid complex queries, as joins. They also attempt to be distributed, open-source, horizontal scalable (see chapter \ref{chap:cass}), eventually consistent \cite{Vogels2008}, have easy replication\footnote{``Replication is the process of sharing information between databases (or any other type of server) to ensure that the content is consistent between systems.'' - \url{http://databases.about.com/cs/administration/g/replication.htm} (10/1/2011)} support and a simple \ac{api}.
-
-The term was first used in 1998 as the name of a relational database that did not provide a \ac{sql} interface. It resurfaced in 2009, as an attempt to label a set of distributed, non-relational data stores that did not, necessarily, provide ACID guarantees.
-
-The ``no:sql(east)'' conference in 2009, was really what jump started the current buzz on NoSQL. A wrong way to look at this movement is as an opponent to the relational systems, as the its main goals are to emphasize the advantages of Key-Value Stores, Document Databases, and Graph Databases.
-
-\subsection{Architecture}
 Relational databases are not tuned for certain data intensive applications, as serving pages on high traffic websites or streaming media, therefore show poor performance in these cases. Usually they are tuned either for small but frequent read/write transactions or for large batch transactions, used mostly for reading purposes. On the other hand, NoSQL addresses services that have heavy read/write workloads, as the Facebook's inbox search \cite{lakshmanMalik}.
 
 As stated earlier, NoSQL often provides weak consistency guarantees, as eventual consistency \cite{Vogels2008}, and many of these systems employ a distributed architecture, storing the data in a replicated manner, often using a distributed hash table \cite{Tanner}. This allows for the system to scale out with the addition of new nodes and to tolerate failure of a server.
@@ -60,26 +43,30 @@ As stated earlier, NoSQL often provides weak consistency guarantees, as eventual
 \subsection{Taxonomy}
 NoSQL implementations can be categorized according to the way they are implemented, being that they are a document store, a key/value store on disk or a cache in \ac{ram}, a tuple store, an object database, or as the one used in this work, an eventually-consistent key/value store.\\
 
-The differences between NoSQL and \ac{rdbms} will be summarized in Table \ref{tab:diff}:\\
+\section{SQL vs NoSQL}
+Databases that use SQL as their query language and the ones that use a low level, one record at a time interface (most NoSQL implementations) can coexist, and they have, since they both have good reasons and scenarios for being used. This is a topic that has been introduced in chapter \ref{chap:intro} and will be further discussed in this section.
 
-\begin{table}[h!b!p!]
-\scalebox{0.92}{
-\begin{tabular}{|*{7}{c|}}
-	\hline
-	 &Schema&Consistency&Queries&Usage&Storage\\
-	\hline
-	\multirow{2}{*}{NoSQL}&Usually&\multirow{2}{*}{Eventual}&\multirow{2}{*}{Simple}&Read/Write&\multirow{2}{*}{Replicated}\\
-	     &none   &        &      &Intensive&\\
-	\hline
-	\multirow{3}{*}{RDBMS}&\multirow{3}{*}{Yes}&\multirow{3}{*}{ACID}&\multirow{3}{*}{Complex}&Small frequent&\multirow{3}{*}{Local}\\
-	                      &   &    &       &read/write or&\\
-		                  &   &    &       &long batch transactions&\\
-	\hline	
-\end{tabular}
-}
-\caption{Differences between NoSQL and RDBMS}
-\label{tab:diff}
-\end{table}	  
+There are two main reasons for moving from \acp{rdbms} to this alternate \ac{dbms} technology, that are performance and flexibility. 
+
+Performance issues in a \ac{rdbms} like MySQL come when you have too much data and/or requests per second for its capabilities, leaving you with three options, to shard the data and partition it, to pay big license fees for an enterprise \ac{rdbms}\footnote{in some cases even this is not feasible}, or move to something other that a \ac{rdbms}.
+
+Flexibility issues arise when your data does not conform to the rigidness of the relational schema, which means you a have the need for something more flexible.
+
+According to Michael Stonebraker's blog post~\cite{stoneDisc}, improving performance on a \ac{dbms} depends on removing overhead.\emph{``Such overhead has nothing to do with \ac{sql}, but instead revolves around traditional implementations of ACID transactions, multi-threading, and disk management. To go wildly faster, one must remove all four sources of overhead, discussed above. This is possible in either a SQL context or some other context.''}
+
+The four sources of overhead mentioned are:
+\begin{description}
+	\item[Logging] Every update must be written to log an pushed to disk 
+	\item[Locking] Before accessing a record, a transaction must set a lock on it
+	\item[Latching] Updates to shared data structures must be done in a multi-threaded environment
+	\item[Buffer Management] A buffer pool manages which set of disk pages is cached in memory at any given time
+\end{description}
+
+However, he also states that \emph{``the single-node performance of a NoSQL, disk-based, non-ACID, multithreaded system is limited to be a modest factor faster than a well-designed stored-procedure SQL OLTP engine''}. Meaning that a NoSQL solution performance can in some cases be reached but only with systems designed by experts and with a high degree of complexity, unlike the NoSQL solution which is fairly simple to set up. This is particularly true in extremely large \acp{rdbms} implementations, such as Facebook's, that uses MySQL with memcached and non-transparent sharding\footnote{``transparent sharding (is) a data management strategy in which data is assigned to multiple servers (or CPUs, cores, etc.), yet looks to programmers and applications as if it were managed by just one.'' - \url{http://www.dbms2.com/2011/02/24/transparent-sharding/} (27/09/2011)}. \\
+
+According to yet another blog post by Stonebraker~\cite{stoneEnter}, 61\% of enterprise users are either ignorant about or uninterested in NoSQL. This happens mainly due to three reasons, because it \textbf{does not provide ACID}, it has a \textbf{low level interface} instead of a high-level language as \ac{sql} and because there is \textbf{no standard} for NoSQL interfaces. 
+
+Our proposed solution covers all of these three problems, at the cost of having more two more of the overhead sources than a typical NoSQL implementation, which has only the overhead of latching and buffer management.
 
 \section{Case Study}
 To accomplish the goals proposed in the introduction, there was a need to choose one \ac{rdbms} and one NoSQL implementation in order to develop a solution as both a proof of concept and a way to get real results. The chosen systems were the Apache Derby as the database manager and the Apache Cassandra as the NoSQL implementation for the following reasons:
@@ -89,5 +76,3 @@ To accomplish the goals proposed in the introduction, there was a need to choose
 	\item Open-source
 	\item Previous experience with both
 \end{itemize}
-
-		

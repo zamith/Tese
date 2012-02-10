@@ -1,10 +1,10 @@
 
 \paragraph{}
 
-There has been a enormous growth in the distributed databases area in the last few years, especially with the NoSQL movement. These databases intend to be almost schema-less and not as strict as their relational counterparts on what concerns the data model, in order to achieve higher scalability. 
+There has been a enormous growth in the very large scale distributed databases (VLSD) area in the last few years, especially with the NoSQL movement. These databases intend to be almost schema-less and not as strict as their relational counterparts on what concerns the data model, in order to achieve higher scalability. 
 
-Their query API tends to be very reduced and simple (mainly a put, a get and a delete), which grants them very fast writes and reads. All this properties can also be seen as a capability loss in both consistency and query power. There was, therefore, a need to expose the various arguments in favor of and against these properties as well as the attempts that have been and are being made to bring these two technologies closer, and why they are not satisfying enough.
+Their query API tends to be very reduced and simple (mainly a put, a get and a delete) and has very fast writes and reads, with the downside of not having a standard querying language as is SQL. Therefore, this properties can be seen as a capability loss in both consistency and query power. 
 
-In this context, the work presented in this Master's thesis is the result of evaluating how to take properties from relational and non-relational databases and merge them together. The proposed solution uses Apache Derby DB, Apache Cassandra and Apache Zookeeper having benefits and drawbacks that were pointed out and analyzed.
+There is a large code base and number of projects already in production that where coded in SQL and some of them could benefit from using a VLSD as their underlying data store. However, it would be extremely hard to seamlessly migrate from one architecture to the other.  
 
-Finally, to evaluate the proposed and implemented solution we used a workload based on the one defined by the TPC-W benchmark, widely used to benchmark business oriented transactional web servers. Under this specification, we have evaluated our proposal on different scenarios and configurations.
+In this context, the work presented in this Master's thesis is the result of evaluating how to offer an SQL interface for a VLSD that would allow to do such a migration without loosing the transactional guarantees given by a traditional relational system. The proposed solution uses Apache Derby DB, Apache Cassandra and Apache Zookeeper having benefits and drawbacks that were pointed out and analyzed.

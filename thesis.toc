@@ -1,57 +1,83 @@
 \select@language {english}
-\contentsline {paragraph}{}{vii}{section*.3}
+\contentsline {paragraph}{}{v}{section*.2}
+\contentsline {paragraph}{}{vii}{section*.4}
 \contentsline {paragraph}{}{ix}{section*.6}
-\contentsline {paragraph}{}{xi}{section*.8}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
-\contentsline {section}{\numberline {1.1}Problem Statement}{2}{section.1.1}
-\contentsline {section}{\numberline {1.2}Objectives}{2}{section.1.2}
-\contentsline {section}{\numberline {1.3}Contributions}{3}{section.1.3}
-\contentsline {section}{\numberline {1.4}Dissertation Outline}{4}{section.1.4}
-\contentsline {chapter}{\numberline {2}SQL DBMS and NoSQL}{5}{chapter.2}
-\contentsline {section}{\numberline {2.1}SQL Database Management System}{5}{section.2.1}
-\contentsline {subsection}{\numberline {2.1.1}Concept}{5}{subsection.2.1.1}
-\contentsline {subsection}{\numberline {2.1.2}Components}{6}{subsection.2.1.2}
-\contentsline {subsubsection}{Modeling language}{6}{section*.17}
-\contentsline {subsubsection}{Data Structure}{6}{section*.18}
-\contentsline {subsubsection}{Database Query Language}{6}{section*.19}
-\contentsline {subsubsection}{Transactions}{6}{section*.20}
-\contentsline {section}{\numberline {2.2}NoSQL}{7}{section.2.2}
-\contentsline {subsection}{\numberline {2.2.1}Architecture}{7}{subsection.2.2.1}
-\contentsline {subsection}{\numberline {2.2.2}Taxonomy}{8}{subsection.2.2.2}
-\contentsline {section}{\numberline {2.3}Case Study}{8}{section.2.3}
-\contentsline {chapter}{\numberline {3}Related Work}{9}{chapter.3}
-\contentsline {section}{\numberline {3.1}\acl {cql}}{9}{section.3.1}
-\contentsline {section}{\numberline {3.2}Distributed Transactions}{10}{section.3.2}
-\contentsline {subsection}{\numberline {3.2.1}Two-phase commit protocol}{10}{subsection.3.2.1}
-\contentsline {subsection}{\numberline {3.2.2}Three-phase commit protocol}{10}{subsection.3.2.2}
-\contentsline {section}{\numberline {3.3}\emph {Sharding}}{10}{section.3.3}
-\contentsline {chapter}{\numberline {4}Derby}{13}{chapter.4}
-\contentsline {section}{\numberline {4.1}Data Model}{14}{section.4.1}
-\contentsline {section}{\numberline {4.2}Querying}{14}{section.4.2}
-\contentsline {section}{\numberline {4.3}Consistency}{14}{section.4.3}
-\contentsline {section}{\numberline {4.4}Patching Derby}{15}{section.4.4}
-\contentsline {subsection}{\numberline {4.4.1}Records}{15}{subsection.4.4.1}
-\contentsline {subsection}{\numberline {4.4.2}Indexing}{16}{subsection.4.4.2}
-\contentsline {subsubsection}{Derby Indexes}{16}{section*.25}
-\contentsline {subsection}{\numberline {4.4.3}Scans}{17}{subsection.4.4.3}
-\contentsline {subsubsection}{Scanning with indexes}{18}{section*.26}
-\contentsline {chapter}{\numberline {5}Cassandra}{21}{chapter.5}
-\contentsline {section}{\numberline {5.1}Data Model}{23}{section.5.1}
-\contentsline {subsection}{\numberline {5.1.1}Partitioners}{25}{subsection.5.1.1}
-\contentsline {section}{\numberline {5.2}Querying}{26}{section.5.2}
-\contentsline {section}{\numberline {5.3}Consistency}{26}{section.5.3}
-\contentsline {section}{\numberline {5.4}Cassandra as a data store for Derby}{27}{section.5.4}
-\contentsline {subsection}{\numberline {5.4.1}Adopted data model}{27}{subsection.5.4.1}
-\contentsline {subsubsection}{Indexing in Cassandra}{27}{section*.28}
-\contentsline {subsection}{\numberline {5.4.2}Derby operations in Cassandra}{29}{subsection.5.4.2}
-\contentsline {subsubsection}{Keyspace operations}{29}{section*.29}
-\contentsline {subsubsection}{Row operations}{29}{section*.30}
-\contentsline {subsubsection}{Scan operations}{30}{section*.31}
-\contentsline {chapter}{\numberline {6}Fully Distributed Transactional Model}{33}{chapter.6}
-\contentsline {section}{\numberline {6.1}Algorithm}{33}{section.6.1}
-\contentsline {section}{\numberline {6.2}Locks}{34}{section.6.2}
-\contentsline {subsection}{\numberline {6.2.1}Cages}{34}{subsection.6.2.1}
-\contentsline {subsection}{\numberline {6.2.2}Zookeeper}{34}{subsection.6.2.2}
-\contentsline {chapter}{\numberline {7}Results and Performance Analysis}{35}{chapter.7}
-\contentsline {chapter}{\numberline {8}Conclusions}{37}{chapter.8}
-\contentsline {chapter}{Bibliography}{38}{chapter.8}
+\contentsline {section}{\numberline {1.1}Problem Statement}{4}{section.1.1}
+\contentsline {section}{\numberline {1.2}Objectives}{5}{section.1.2}
+\contentsline {section}{\numberline {1.3}Contributions}{6}{section.1.3}
+\contentsline {section}{\numberline {1.4}Dissertation Outline}{6}{section.1.4}
+\contentsline {chapter}{\numberline {2}VLSDs}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}Project Voldemort}{8}{section.2.1}
+\contentsline {subsubsection}{Data Storage}{8}{section*.20}
+\contentsline {subsubsection}{Clustering and Replication}{8}{section*.21}
+\contentsline {section}{\numberline {2.2}Riak}{9}{section.2.2}
+\contentsline {subsubsection}{Data Storage}{9}{section*.22}
+\contentsline {subsubsection}{Clustering and Replication}{10}{section*.26}
+\contentsline {section}{\numberline {2.3}Apache HBase}{11}{section.2.3}
+\contentsline {subsubsection}{Data Storage}{11}{section*.27}
+\contentsline {subsubsection}{Clustering and Replication}{11}{section*.28}
+\contentsline {section}{\numberline {2.4}Cassandra}{12}{section.2.4}
+\contentsline {subsection}{\numberline {2.4.1}Data Model}{13}{subsection.2.4.1}
+\contentsline {subsubsection}{Partitioners}{15}{section*.34}
+\contentsline {subsection}{\numberline {2.4.2}Querying}{16}{subsection.2.4.2}
+\contentsline {subsection}{\numberline {2.4.3}Consistency}{17}{subsection.2.4.3}
+\contentsline {chapter}{\numberline {3}SQL}{19}{chapter.3}
+\contentsline {section}{\numberline {3.1}SQL Statements}{20}{section.3.1}
+\contentsline {subsection}{\numberline {3.1.1}Create}{20}{subsection.3.1.1}
+\contentsline {subsection}{\numberline {3.1.2}Insert}{21}{subsection.3.1.2}
+\contentsline {subsection}{\numberline {3.1.3}Update}{22}{subsection.3.1.3}
+\contentsline {subsubsection}{Where}{23}{section*.37}
+\contentsline {subsection}{\numberline {3.1.4}Select}{23}{subsection.3.1.4}
+\contentsline {subsection}{\numberline {3.1.5}Delete}{25}{subsection.3.1.5}
+\contentsline {section}{\numberline {3.2}Special Operators}{26}{section.3.2}
+\contentsline {subsection}{\numberline {3.2.1}In}{26}{subsection.3.2.1}
+\contentsline {subsection}{\numberline {3.2.2}Between}{26}{subsection.3.2.2}
+\contentsline {subsection}{\numberline {3.2.3}Like}{26}{subsection.3.2.3}
+\contentsline {subsection}{\numberline {3.2.4}Is Null}{27}{subsection.3.2.4}
+\contentsline {section}{\numberline {3.3}Stored Procedures}{27}{section.3.3}
+\contentsline {chapter}{\numberline {4}SQL over a VLSD}{29}{chapter.4}
+\contentsline {section}{\numberline {4.1}Abstraction Layer}{30}{section.4.1}
+\contentsline {subsection}{\numberline {4.1.1}Derby}{30}{subsection.4.1.1}
+\contentsline {subsection}{\numberline {4.1.2}Adopted data model}{32}{subsection.4.1.2}
+\contentsline {subsection}{\numberline {4.1.3}Records}{33}{subsection.4.1.3}
+\contentsline {subsubsection}{Keyspace operations}{34}{section*.42}
+\contentsline {subsubsection}{Row operations}{34}{section*.43}
+\contentsline {subsection}{\numberline {4.1.4}Indexing}{36}{subsection.4.1.4}
+\contentsline {subsubsection}{Derby Indexes}{37}{section*.45}
+\contentsline {subsubsection}{Indexing in Cassandra}{37}{section*.46}
+\contentsline {subsection}{\numberline {4.1.5}Scans}{38}{subsection.4.1.5}
+\contentsline {subsubsection}{Scanning with indexes}{39}{section*.48}
+\contentsline {chapter}{\numberline {5}Fully Distributed Transactional Model}{41}{chapter.5}
+\contentsline {section}{\numberline {5.1}Algorithm}{41}{section.5.1}
+\contentsline {subsection}{\numberline {5.1.1}API}{42}{subsection.5.1.1}
+\contentsline {subsubsection}{Deletes}{43}{section*.50}
+\contentsline {section}{\numberline {5.2}Caching}{44}{section.5.2}
+\contentsline {subsection}{\numberline {5.2.1}Read-your-own-writes consistency}{44}{subsection.5.2.1}
+\contentsline {subsection}{\numberline {5.2.2}Merging data from disk and memory}{44}{subsection.5.2.2}
+\contentsline {section}{\numberline {5.3}Locks}{45}{section.5.3}
+\contentsline {subsection}{\numberline {5.3.1}Zookeeper}{46}{subsection.5.3.1}
+\contentsline {subsection}{\numberline {5.3.2}Cages}{47}{subsection.5.3.2}
+\contentsline {subsubsection}{ZooKeeper Observers}{48}{section*.53}
+\contentsline {section}{\numberline {5.4}Recovery from failure}{49}{section.5.4}
+\contentsline {subsection}{\numberline {5.4.1}Write-ahead Log}{49}{subsection.5.4.1}
+\contentsline {section}{\numberline {5.5}Pre-processing difficult transactions}{51}{section.5.5}
+\contentsline {section}{\numberline {5.6}Connecting client to server}{53}{section.5.6}
+\contentsline {chapter}{\numberline {6}Results and Performance Analysis}{55}{chapter.6}
+\contentsline {section}{\numberline {6.1}Testing Environment}{55}{section.6.1}
+\contentsline {section}{\numberline {6.2}TPC-W Benchmark}{55}{section.6.2}
+\contentsline {section}{\numberline {6.3}Yahoo! Cloud Serving Benchmark}{57}{section.6.3}
+\contentsline {section}{\numberline {6.4}Scaling out}{58}{section.6.4}
+\contentsline {chapter}{\numberline {7}Related Work}{61}{chapter.7}
+\contentsline {section}{\numberline {7.1}SQL over Memory}{61}{section.7.1}
+\contentsline {section}{\numberline {7.2}Distributed Transactions}{61}{section.7.2}
+\contentsline {subsubsection}{Two-phase commit protocol}{62}{section*.59}
+\contentsline {subsection}{\numberline {7.2.1}CloudTPS}{63}{subsection.7.2.1}
+\contentsline {section}{\numberline {7.3}High Level Interfaces for a \ac {vlsd}}{64}{section.7.3}
+\contentsline {subsection}{\numberline {7.3.1}Object Mapper}{64}{subsection.7.3.1}
+\contentsline {subsection}{\numberline {7.3.2}Hive}{64}{subsection.7.3.2}
+\contentsline {subsection}{\numberline {7.3.3}\acl {cql}}{65}{subsection.7.3.3}
+\contentsline {chapter}{\numberline {8}Conclusions}{67}{chapter.8}
+\contentsline {section}{\numberline {8.1}Future Work}{68}{section.8.1}
+\contentsline {chapter}{\numberline {A}Code}{77}{appendix.A}
+\contentsline {section}{\numberline {A.1}Transactional System Initialization}{77}{section.A.1}
